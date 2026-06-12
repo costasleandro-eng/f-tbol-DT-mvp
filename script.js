@@ -2,6 +2,7 @@ const form = document.querySelector('#sessionForm');
 const output = document.querySelector('#output');
 const copyBtn = document.querySelector('#copyBtn');
 const pitchDiagram = document.querySelector('#pitchDiagram');
+const techNote = document.querySelector('#techNote');
 
 const ageGuidance = {
   'sub-9': 'lenguaje simple, mucha demostración, reglas cortas y foco lúdico',
@@ -30,6 +31,19 @@ function splitDuration(total) {
   return { warmup, main, game, close };
 }
 
+function techniqueForObjective(objective) {
+  if (objective.includes('conducción')) {
+    return 'Conducción: usar toques cortos con interior/exterior para orientar la pelota; empeine si quiere acelerar; planta para frenar, pisar y cambiar de dirección.';
+  }
+  if (objective.includes('pase')) {
+    return 'Pase: usar principalmente el interior del pie para precisión; perfilar el cuerpo antes de recibir y orientar el primer control.';
+  }
+  if (objective.includes('finalización')) {
+    return 'Finalización: empeine para potencia, interior para colocar, y control orientado antes del remate si hay presión.';
+  }
+  return 'Técnica: ajustar superficie de contacto según la acción: interior para precisión, exterior para orientar, empeine para potencia/aceleración y planta para pausa/cambio.';
+}
+
 function renderPitchDiagram(data) {
   const objective = data.objective;
   const isBuildUp = objective.includes('salida');
@@ -49,6 +63,10 @@ function renderPitchDiagram(data) {
           ['blue', 6, 210, 210], ['blue', 8, 330, 160], ['blue', 10, 450, 250], ['blue', 7, 330, 350],
           ['red', 5, 520, 175], ['red', 6, 585, 255], ['red', 8, 520, 335]
         ];
+
+  if (techNote) {
+    techNote.innerHTML = `<strong>Técnica:</strong> ${techniqueForObjective(objective)}`;
+  }
 
   const playerSvg = players.map(([team, n, x, y]) => `
     <g class="player ${team}">
@@ -81,11 +99,36 @@ function renderPitchDiagram(data) {
 
       <path class="arrow-pass" d="M250 170 L390 255" />
       <path class="arrow-pass" d="M390 255 L520 180" />
-      <path class="arrow-run" d="M330 350 C390 380 470 365 535 315" />
-      <path class="arrow-dribble" d="M210 210 C250 250 285 190 325 230 S390 285 450 250" />
+      <path id="runTrack" class="arrow-run" d="M330 350 C390 380 470 365 535 315" />
+      <path id="dribbleTrack" class="arrow-dribble" d="M210 210 C250 250 285 190 325 230 S390 285 450 250" />
       <circle class="ball" cx="250" cy="170" r="10" />
 
       ${playerSvg}
+
+      <g class="motion-shadow">
+        <circle cx="210" cy="210" r="22" fill="#1c4fb3" stroke="#fff" stroke-width="2" />
+        <circle cx="210" cy="210" r="10" fill="#fff" stroke="#111" stroke-width="2" />
+      </g>
+
+      <g class="animated-player">
+        <circle cx="0" cy="0" r="20"></circle>
+        <text x="0" y="0">6</text>
+        <animateMotion dur="4.8s" repeatCount="indefinite" rotate="auto">
+          <mpath href="#dribbleTrack" />
+        </animateMotion>
+      </g>
+
+      <circle class="animated-ball" r="9">
+        <animateMotion dur="4.8s" repeatCount="indefinite" rotate="auto">
+          <mpath href="#dribbleTrack" />
+        </animateMotion>
+      </circle>
+
+      <g>
+        <circle class="foot-contact" cx="455" cy="250" r="8" />
+        <text class="contact-label" x="470" y="238">toques cortos</text>
+        <text class="contact-label" x="470" y="254">interior/exterior</text>
+      </g>
     </svg>`;
 }
 
@@ -143,6 +186,16 @@ Para ${data.branch}: ${branchGuidance[data.branch]}.
 
 ADAPTACIÓN POR NIVEL
 Para nivel ${data.level}: ${levelGuidance[data.level]}.
+
+TÉCNICA CON PELOTA
+${techniqueForObjective(data.objective)}
+
+LECTURA DEL GRÁFICO
+- Círculos grandes: jugadores.
+- Círculo pequeño: pelota.
+- Flecha blanca: pase.
+- Flecha amarilla punteada: carrera o desmarque.
+- Flecha celeste curva: conducción con pelota.
 
 VARIANTE SI FALTA MATERIAL O JUGADORES
 - Si faltan conos: marcar zonas con líneas del campo o referencias naturales.

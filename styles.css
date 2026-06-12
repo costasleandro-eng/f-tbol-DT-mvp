@@ -65,3 +65,11 @@ button:hover { background: var(--accent-dark); transform: translateY(-1px); }
 .line { width: 34px; height: 0; border-top: 3px solid #333; display: inline-block; }
 .line.dashed { border-top-style: dashed; border-color: #b59b00; }
 .line.wavy { border: 0; height: 10px; background: repeating-radial-gradient(ellipse at center, transparent 0 4px, #00a8c8 5px 6px); }
+
+.tech-note { margin: 14px 0 4px; padding: 12px 14px; border-radius: 16px; background: rgba(255,255,255,.78); border: 1px solid rgba(255,255,255,.35); color: #233423; line-height: 1.45; }
+.motion-shadow { opacity: .24; }
+.animated-player circle { fill: #1c4fb3; stroke: #fff; stroke-width: 2; filter: drop-shadow(0 4px 6px rgba(0,0,0,.35)); }
+.animated-player text { fill: #fff; font-weight: 900; font-size: 13px; text-anchor: middle; dominant-baseline: central; }
+.animated-ball { fill: #fff; stroke: #111; stroke-width: 2; filter: drop-shadow(0 3px 4px rgba(0,0,0,.35)); }
+.foot-contact { fill: rgba(255,255,255,.92); stroke: #37e0ff; stroke-width: 2; }
+.contact-label { fill: #fff; font-size: 12px; font-weight: 850; paint-order: stroke; stroke: rgba(0,0,0,.45); stroke-width: 3px; }
