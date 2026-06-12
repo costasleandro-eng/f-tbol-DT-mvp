@@ -1,6 +1,7 @@
 const form = document.querySelector('#sessionForm');
 const output = document.querySelector('#output');
 const copyBtn = document.querySelector('#copyBtn');
+const pitchDiagram = document.querySelector('#pitchDiagram');
 
 const ageGuidance = {
   'sub-9': 'lenguaje simple, mucha demostración, reglas cortas y foco lúdico',
@@ -27,6 +28,65 @@ function splitDuration(total) {
   const game = Math.round(total * 0.30);
   const close = total - warmup - main - game;
   return { warmup, main, game, close };
+}
+
+function renderPitchDiagram(data) {
+  const objective = data.objective;
+  const isBuildUp = objective.includes('salida');
+  const isFinish = objective.includes('finalización');
+
+  const players = isBuildUp
+    ? [
+        ['blue', 1, 145, 255], ['blue', 2, 250, 170], ['blue', 3, 250, 340], ['blue', 4, 390, 255],
+        ['red', 7, 520, 180], ['red', 9, 560, 255], ['red', 11, 520, 330]
+      ]
+    : isFinish
+      ? [
+          ['blue', 8, 250, 255], ['blue', 10, 370, 180], ['blue', 9, 510, 255], ['blue', 11, 370, 330],
+          ['red', 4, 575, 215], ['red', 5, 575, 295], ['red', 1, 650, 255]
+        ]
+      : [
+          ['blue', 6, 210, 210], ['blue', 8, 330, 160], ['blue', 10, 450, 250], ['blue', 7, 330, 350],
+          ['red', 5, 520, 175], ['red', 6, 585, 255], ['red', 8, 520, 335]
+        ];
+
+  const playerSvg = players.map(([team, n, x, y]) => `
+    <g class="player ${team}">
+      <circle cx="${x}" cy="${y}" r="22"></circle>
+      <text x="${x}" y="${y}">${n}</text>
+    </g>`).join('');
+
+  pitchDiagram.innerHTML = `
+    <svg class="pitch" viewBox="0 0 760 520" role="img" aria-label="Cancha con jugadores, pelota y movimientos">
+      <defs>
+        <marker id="arrowHead" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L0,6 L9,3 z" fill="#fff" />
+        </marker>
+        <marker id="runHead" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L0,6 L9,3 z" fill="#ffe45c" />
+        </marker>
+        <marker id="dribbleHead" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L0,6 L9,3 z" fill="#37e0ff" />
+        </marker>
+      </defs>
+
+      <rect x="20" y="20" width="720" height="480" rx="18" fill="#157b42" stroke="#ffffff" stroke-width="4" />
+      <line x1="380" y1="20" x2="380" y2="500" stroke="#fff" stroke-width="3" opacity=".85" />
+      <circle cx="380" cy="260" r="68" fill="none" stroke="#fff" stroke-width="3" opacity=".85" />
+      <circle cx="380" cy="260" r="5" fill="#fff" />
+      <rect x="20" y="150" width="105" height="220" fill="none" stroke="#fff" stroke-width="3" opacity=".85" />
+      <rect x="635" y="150" width="105" height="220" fill="none" stroke="#fff" stroke-width="3" opacity=".85" />
+      <rect x="20" y="210" width="42" height="100" fill="none" stroke="#fff" stroke-width="3" opacity=".85" />
+      <rect x="698" y="210" width="42" height="100" fill="none" stroke="#fff" stroke-width="3" opacity=".85" />
+
+      <path class="arrow-pass" d="M250 170 L390 255" />
+      <path class="arrow-pass" d="M390 255 L520 180" />
+      <path class="arrow-run" d="M330 350 C390 380 470 365 535 315" />
+      <path class="arrow-dribble" d="M210 210 C250 250 285 190 325 230 S390 285 450 250" />
+      <circle class="ball" cx="250" cy="170" r="10" />
+
+      ${playerSvg}
+    </svg>`;
 }
 
 function generateSession(data) {
@@ -107,7 +167,10 @@ form.addEventListener('submit', (event) => {
   };
   output.classList.remove('empty');
   output.textContent = generateSession(data);
+  renderPitchDiagram(data);
 });
+
+renderPitchDiagram({ objective: 'conducción y pase' });
 
 copyBtn.addEventListener('click', async () => {
   const text = output.textContent.trim();
