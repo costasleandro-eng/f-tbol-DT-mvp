@@ -34,6 +34,14 @@
     .zone { fill:rgba(255,255,255,.08); stroke:#fff; stroke-width:2; stroke-dasharray:10 8; }
     .loss-zone { fill:rgba(255,228,92,.13); stroke:#ffe45c; stroke-width:3; }
     .countdown { fill:#ffe45c; font-size:24px; font-weight:950; paint-order:stroke; stroke:rgba(0,0,0,.65); stroke-width:5px; }
+    .phase-list { display:grid; grid-template-columns: repeat(5, 1fr); gap:10px; margin-top:14px; }
+    .phase { background:#f7fbf7; border:1px solid var(--line); border-radius:14px; padding:11px; font-size:14px; line-height:1.35; }
+    .phase b { color:var(--accent-dark); display:block; margin-bottom:4px; }
+    .pulse-zone { fill:rgba(255,228,92,.08); stroke:#ffe45c; stroke-width:3; stroke-dasharray:10 8; }
+    .moving-blue { fill:#2067d1; stroke:#fff; stroke-width:2; filter: drop-shadow(0 4px 6px rgba(0,0,0,.35)); }
+    .moving-red { fill:#d43a37; stroke:#fff; stroke-width:2; filter: drop-shadow(0 4px 6px rgba(0,0,0,.35)); }
+    .moving-label { fill:#fff; font-weight:900; font-size:13px; text-anchor:middle; dominant-baseline:central; }
+    @media (max-width: 900px) { .phase-list { grid-template-columns:1fr; } }
     .timeline-row { display:grid; grid-template-columns:90px 1fr; gap:12px; align-items:center; }
     .bar { height:16px; border-radius:999px; background:linear-gradient(90deg, #1f7a3f, #76c893); }
     .bar.warm { width:35%; } .bar.main { width:75%; } .bar.game { width:55%; } .bar.close { width:25%; }
@@ -160,7 +168,82 @@
       </article>
     </section>
 
-    <h2 class="section-title">Ejercicio 2 · Juego condicionado 6v6 + apoyos</h2>
+
+
+    <h2 class="section-title">Secuencia animada · 30 segundos de juego</h2>
+    <section class="card diagram-card">
+      <div class="output-header"><h3>Cómo se desarrolla la acción</h3><span class="badge">30s</span></div>
+      <p class="hint">La idea no es decorar: es mostrar el ejercicio completo. Los azules empiezan en posesión, los rojos roban, aparece la presión tras pérdida y luego los rojos intentan salir.</p>
+      <div class="pitch-wrap">
+        <svg class="pitch" viewBox="0 0 900 560" role="img" aria-label="Secuencia animada de 30 segundos del ejercicio">
+          <defs>
+            <marker id="seqWhite" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#fff" /></marker>
+            <marker id="seqYellow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#ffe45c" /></marker>
+            <marker id="seqCyan" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#37e0ff" /></marker>
+          </defs>
+          <rect x="35" y="55" width="830" height="450" rx="18" fill="#157b42" stroke="#fff" stroke-width="4" />
+          <rect class="zone" x="95" y="115" width="560" height="330" rx="14" />
+          <rect class="pulse-zone" x="655" y="190" width="155" height="170" rx="14" />
+          <text class="svg-label" x="108" y="100">Secuencia: posesión → robo → presión → salida</text>
+          <text class="svg-small" x="672" y="180">zona de salida roja</text>
+
+          <path class="arrow-pass" marker-end="url(#seqWhite)" d="M165 280 L300 180" />
+          <path class="arrow-pass" marker-end="url(#seqWhite)" d="M300 180 L455 260" />
+          <path class="arrow-pass" marker-end="url(#seqWhite)" d="M455 260 L310 365" />
+          <text class="svg-small" x="240" y="155">0-8s: azules circulan</text>
+
+          <path class="arrow-pass" marker-end="url(#seqWhite)" d="M455 260 L585 275" />
+          <text class="svg-small" x="490" y="245">8-12s: rojo roba</text>
+
+          <path class="arrow-run" marker-end="url(#seqYellow)" d="M455 360 C500 330 545 300 585 275" />
+          <path class="arrow-run" marker-end="url(#seqYellow)" d="M300 365 C390 370 500 340 570 305" />
+          <path class="arrow-run" marker-end="url(#seqYellow)" d="M300 180 C390 205 475 235 555 260" />
+          <text class="svg-small" x="390" y="405">12-20s: presión tras pérdida + cierres</text>
+
+          <path id="redExit" class="arrow-dribble" marker-end="url(#seqCyan)" d="M585 275 C650 255 675 310 740 320" />
+          <text class="svg-small" x="655" y="245">20-30s: si escapa, conduce/sale</text>
+
+          <g class="player blue"><circle cx="165" cy="280" r="22"/><text x="165" y="280">2</text></g>
+          <g class="player blue"><circle cx="300" cy="180" r="22"/><text x="300" y="180">6</text></g>
+          <g class="player blue"><circle cx="310" cy="365" r="22"/><text x="310" y="365">8</text></g>
+          <g class="player blue"><circle cx="455" cy="260" r="22"/><text x="455" y="260">10</text></g>
+          <g class="player blue"><circle cx="455" cy="360" r="22"/><text x="455" y="360">7</text></g>
+          <g class="player red"><circle cx="585" cy="275" r="22"/><text x="585" y="275">5</text></g>
+          <g class="player red"><circle cx="590" cy="180" r="22"/><text x="590" y="180">9</text></g>
+          <g class="player red"><circle cx="600" cy="380" r="22"/><text x="600" y="380">11</text></g>
+
+          <path id="ballSequence" d="M165 280 L300 180 L455 260 L310 365 L455 260 L585 275 C650 255 675 310 740 320" fill="none" stroke="none" />
+          <circle class="animated-ball" r="10">
+            <animateMotion dur="30s" repeatCount="indefinite" rotate="auto" keyPoints="0;0.16;0.32;0.48;0.60;0.72;1" keyTimes="0;0.16;0.32;0.48;0.60;0.72;1" calcMode="linear">
+              <mpath href="#ballSequence" />
+            </animateMotion>
+          </circle>
+
+          <path id="bluePress7" d="M455 360 C500 330 545 300 585 275" fill="none" stroke="none" />
+          <g>
+            <circle class="moving-blue" cx="0" cy="0" r="20" />
+            <text class="moving-label" x="0" y="0">7</text>
+            <animateMotion dur="30s" repeatCount="indefinite" keyPoints="0;0;1;1" keyTimes="0;0.42;0.68;1" calcMode="linear"><mpath href="#bluePress7" /></animateMotion>
+          </g>
+
+          <path id="redCarry5" d="M585 275 C650 255 675 310 740 320" fill="none" stroke="none" />
+          <g>
+            <circle class="moving-red" cx="0" cy="0" r="20" />
+            <text class="moving-label" x="0" y="0">5</text>
+            <animateMotion dur="30s" repeatCount="indefinite" keyPoints="0;0;1;1" keyTimes="0;0.68;0.95;1" calcMode="linear"><mpath href="#redCarry5" /></animateMotion>
+          </g>
+        </svg>
+      </div>
+      <div class="phase-list">
+        <div class="phase"><b>0-8s</b>Azules circulan para atraer la presión.</div>
+        <div class="phase"><b>8-12s</b>Rojo roba/intercepta un pase.</div>
+        <div class="phase"><b>12-20s</b>Azules activan presión tras pérdida.</div>
+        <div class="phase"><b>20-25s</b>Rojos intentan salir de la zona caliente.</div>
+        <div class="phase"><b>25-30s</b>Se define: recuperación azul o salida roja.</div>
+      </div>
+    </section>
+
+        <h2 class="section-title">Ejercicio 2 · Juego condicionado 6v6 + apoyos</h2>
     <section class="exercise">
       <article class="card exercise-info">
         <h3>Organización</h3>
