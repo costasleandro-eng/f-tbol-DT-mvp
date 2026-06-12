@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Asistente para Técnicos - MVP</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <p class="eyebrow">MVP · Asistente para técnicos</p>
+      <h1>Planificá una sesión de entrenamiento en minutos</h1>
+      <p class="subtitle">Ingresá categoría, nivel, objetivo y recursos. El asistente genera una sesión lista para usar, adaptada a tu equipo.</p>
+    </section>
+
+    <section class="grid">
+      <form id="sessionForm" class="card form-card">
+        <h2>Datos de la sesión</h2>
+
+        <label>
+          Categoría / edad
+          <select id="category" required>
+            <option value="sub-9">Sub-9</option>
+            <option value="sub-10">Sub-10</option>
+            <option value="sub-15" selected>Sub-15</option>
+            <option value="mayores">Mayores</option>
+          </select>
+        </label>
+
+        <label>
+          Rama / contexto
+          <select id="branch" required>
+            <option value="masculino" selected>Masculino</option>
+            <option value="femenino">Femenino</option>
+            <option value="mixto">Mixto / formativo</option>
+          </select>
+        </label>
+
+        <label>
+          Nivel competitivo
+          <select id="level" required>
+            <option value="amateur" selected>Amateur</option>
+            <option value="universitario">Universitario</option>
+            <option value="profesional">Profesional</option>
+          </select>
+        </label>
+
+        <label>
+          Objetivo principal
+          <select id="objective" required>
+            <option value="conducción y pase">Conducción y pase</option>
+            <option value="presión tras pérdida">Presión tras pérdida</option>
+            <option value="finalización">Finalización</option>
+            <option value="salida desde el fondo">Salida desde el fondo</option>
+            <option value="defensa en bloque">Defensa en bloque</option>
+          </select>
+        </label>
+
+        <div class="row">
+          <label>
+            Duración
+            <select id="duration" required>
+              <option value="60">60 min</option>
+              <option value="75" selected>75 min</option>
+              <option value="90">90 min</option>
+            </select>
+          </label>
+
+          <label>
+            Jugadores
+            <input id="players" type="number" min="6" max="30" value="16" required />
+          </label>
+        </div>
+
+        <label>
+          Material disponible
+          <input id="equipment" value="conos, pecheras, pelotas" />
+        </label>
+
+        <label>
+          Espacio disponible
+          <input id="space" value="media cancha" />
+        </label>
+
+        <button type="submit">Generar sesión</button>
+      </form>
+
+      <section class="card output-card">
+        <div class="output-header">
+          <h2>Sesión generada</h2>
+          <button id="copyBtn" class="secondary" type="button">Copiar</button>
+        </div>
+        <article id="output" class="output empty">
+          Completá el formulario y generá una sesión.
+        </article>
+      </section>
+    </section>
+  </main>
+
+  <script src="./script.js"></script>
+</body>
+</html>

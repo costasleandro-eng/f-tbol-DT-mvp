@@ -1,0 +1,44 @@
+:root {
+  color-scheme: light;
+  --bg: #f4f7f3;
+  --card: #ffffff;
+  --ink: #172317;
+  --muted: #5f6f61;
+  --line: #dce7dc;
+  --accent: #1f7a3f;
+  --accent-dark: #14552b;
+  --soft: #eaf4ec;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: radial-gradient(circle at top left, #dff2df, transparent 34rem), var(--bg);
+  color: var(--ink);
+}
+.shell { width: min(1120px, calc(100% - 32px)); margin: 0 auto; padding: 48px 0; }
+.hero { max-width: 760px; margin-bottom: 28px; }
+.eyebrow { color: var(--accent); font-weight: 800; letter-spacing: .08em; text-transform: uppercase; font-size: 13px; }
+h1 { font-size: clamp(34px, 6vw, 64px); line-height: .95; margin: 8px 0 16px; }
+.subtitle { color: var(--muted); font-size: 19px; line-height: 1.55; }
+.grid { display: grid; grid-template-columns: 420px 1fr; gap: 22px; align-items: start; }
+.card { background: rgba(255,255,255,.86); border: 1px solid var(--line); border-radius: 24px; padding: 24px; box-shadow: 0 18px 60px rgba(28, 62, 35, .09); backdrop-filter: blur(10px); }
+h2 { margin: 0 0 18px; font-size: 22px; }
+form { display: grid; gap: 16px; }
+label { display: grid; gap: 7px; color: var(--muted); font-size: 14px; font-weight: 700; }
+input, select { width: 100%; border: 1px solid var(--line); border-radius: 14px; padding: 13px 14px; font: inherit; color: var(--ink); background: #fff; outline: none; }
+input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--soft); }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+button { border: 0; border-radius: 16px; padding: 14px 18px; background: var(--accent); color: #fff; font-weight: 850; font-size: 15px; cursor: pointer; transition: transform .15s ease, background .15s ease; }
+button:hover { background: var(--accent-dark); transform: translateY(-1px); }
+.secondary { background: var(--soft); color: var(--accent-dark); padding: 10px 14px; }
+.secondary:hover { background: #d8ebdc; }
+.output-header { display: flex; justify-content: space-between; gap: 12px; align-items: center; }
+.output { white-space: pre-wrap; line-height: 1.58; color: #243024; }
+.output.empty { color: var(--muted); min-height: 360px; display: grid; place-items: center; text-align: center; }
+
+@media (max-width: 900px) {
+  .grid { grid-template-columns: 1fr; }
+  .shell { padding: 28px 0; }
+}
