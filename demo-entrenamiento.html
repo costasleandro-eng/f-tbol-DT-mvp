@@ -173,7 +173,7 @@
     <h2 class="section-title">Secuencia animada · 30 segundos de juego</h2>
     <section class="card diagram-card">
       <div class="output-header"><h3>Cómo se desarrolla la acción</h3><span class="badge">30s</span></div>
-      <p class="hint">La idea no es decorar: es mostrar el ejercicio completo. En esta versión animada se eliminan flechas: el movimiento de fichas y pelota tiene que contar la jugada.</p>
+      <p class="hint">La idea no es decorar: es mostrar el ejercicio completo. En esta versión animada se eliminan flechas: el movimiento de fichas y pelota cuenta la jugada. La pelota va pegada al jugador, no dentro de la ficha.</p>
       <div class="pitch-wrap">
         <svg class="pitch sequence-board" viewBox="0 0 900 560" role="img" aria-label="Secuencia animada de 30 segundos del ejercicio sin flechas">
           <defs>
@@ -204,7 +204,8 @@
           <g class="player red"><circle cx="590" cy="180" r="22"/><text x="590" y="180">9</text></g>
           <g class="player red"><circle cx="600" cy="380" r="22"/><text x="600" y="380">11</text></g>
 
-          <path id="ballSequence" d="M165 280 L300 180 L455 260 L310 365 L455 260 L585 275 C650 255 675 310 740 320" fill="none" stroke="none" />
+          <!-- La pelota pasa por puntos cercanos a los pies/costados de cada jugador, no por el centro de las fichas. -->
+          <path id="ballSequence" d="M190 292 L325 192 L480 272 L335 377 L480 272 L610 287 C650 270 682 315 762 334" fill="none" stroke="none" />
           <circle class="animated-ball" r="10">
             <animateMotion dur="30s" repeatCount="indefinite" rotate="auto" keyPoints="0;0.16;0.32;0.48;0.60;0.72;1" keyTimes="0;0.16;0.32;0.48;0.60;0.72;1" calcMode="linear">
               <mpath href="#ballSequence" />
@@ -218,7 +219,7 @@
             <animateMotion dur="30s" repeatCount="indefinite" keyPoints="0;0;1;1" keyTimes="0;0.42;0.68;1" calcMode="linear"><mpath href="#bluePress7" /></animateMotion>
           </g>
 
-          <path id="redCarry5" d="M585 275 C650 255 675 310 740 320" fill="none" stroke="none" />
+          <path id="redCarry5" d="M585 275 C630 265 668 300 735 318" fill="none" stroke="none" />
           <g>
             <circle class="moving-red" cx="0" cy="0" r="20" />
             <text class="moving-label" x="0" y="0">5</text>
