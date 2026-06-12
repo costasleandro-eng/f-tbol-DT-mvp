@@ -173,9 +173,9 @@
     <h2 class="section-title">Secuencia animada · 30 segundos de juego</h2>
     <section class="card diagram-card">
       <div class="output-header"><h3>Cómo se desarrolla la acción</h3><span class="badge">30s</span></div>
-      <p class="hint">La idea no es decorar: es mostrar el ejercicio completo. Los azules empiezan en posesión, los rojos roban, aparece la presión tras pérdida y luego los rojos intentan salir.</p>
+      <p class="hint">La idea no es decorar: es mostrar el ejercicio completo. En esta versión animada se eliminan flechas: el movimiento de fichas y pelota tiene que contar la jugada.</p>
       <div class="pitch-wrap">
-        <svg class="pitch" viewBox="0 0 900 560" role="img" aria-label="Secuencia animada de 30 segundos del ejercicio">
+        <svg class="pitch sequence-board" viewBox="0 0 900 560" role="img" aria-label="Secuencia animada de 30 segundos del ejercicio sin flechas">
           <defs>
             <marker id="seqWhite" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#fff" /></marker>
             <marker id="seqYellow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#ffe45c" /></marker>
@@ -187,20 +187,12 @@
           <text class="svg-label" x="108" y="100">Secuencia: posesión → robo → presión → salida</text>
           <text class="svg-small" x="672" y="180">zona de salida roja</text>
 
-          <path class="arrow-pass" marker-end="url(#seqWhite)" d="M165 280 L300 180" />
-          <path class="arrow-pass" marker-end="url(#seqWhite)" d="M300 180 L455 260" />
-          <path class="arrow-pass" marker-end="url(#seqWhite)" d="M455 260 L310 365" />
           <text class="svg-small" x="240" y="155">0-8s: azules circulan</text>
 
-          <path class="arrow-pass" marker-end="url(#seqWhite)" d="M455 260 L585 275" />
           <text class="svg-small" x="490" y="245">8-12s: rojo roba</text>
 
-          <path class="arrow-run" marker-end="url(#seqYellow)" d="M455 360 C500 330 545 300 585 275" />
-          <path class="arrow-run" marker-end="url(#seqYellow)" d="M300 365 C390 370 500 340 570 305" />
-          <path class="arrow-run" marker-end="url(#seqYellow)" d="M300 180 C390 205 475 235 555 260" />
           <text class="svg-small" x="390" y="405">12-20s: presión tras pérdida + cierres</text>
 
-          <path id="redExit" class="arrow-dribble" marker-end="url(#seqCyan)" d="M585 275 C650 255 675 310 740 320" />
           <text class="svg-small" x="655" y="245">20-30s: si escapa, conduce/sale</text>
 
           <g class="player blue"><circle cx="165" cy="280" r="22"/><text x="165" y="280">2</text></g>
@@ -235,6 +227,7 @@
         </svg>
       </div>
       <div class="phase-list">
+        <div class="phase"><b>Criterio visual</b>Sin flechas: en animación manda el movimiento.</div>
         <div class="phase"><b>0-8s</b>Azules circulan para atraer la presión.</div>
         <div class="phase"><b>8-12s</b>Rojo roba/intercepta un pase.</div>
         <div class="phase"><b>12-20s</b>Azules activan presión tras pérdida.</div>
