@@ -26,6 +26,14 @@
     .pdf-note { font-size:13px; color:var(--muted); }
     .pitch.small { min-width: 520px; }
     .timeline { display:grid; gap:10px; }
+    .steps { display:grid; gap:10px; margin-top:14px; }
+    .step { display:grid; grid-template-columns:34px 1fr; gap:10px; align-items:start; background:#f7fbf7; border:1px solid var(--line); border-radius:14px; padding:10px; }
+    .step b { width:28px; height:28px; border-radius:50%; background:var(--accent); color:#fff; display:grid; place-items:center; }
+    .svg-label { fill:#fff; font-size:16px; font-weight:900; paint-order:stroke; stroke:rgba(0,0,0,.55); stroke-width:4px; }
+    .svg-small { fill:#fff; font-size:12px; font-weight:800; paint-order:stroke; stroke:rgba(0,0,0,.55); stroke-width:3px; }
+    .zone { fill:rgba(255,255,255,.08); stroke:#fff; stroke-width:2; stroke-dasharray:10 8; }
+    .loss-zone { fill:rgba(255,228,92,.13); stroke:#ffe45c; stroke-width:3; }
+    .countdown { fill:#ffe45c; font-size:24px; font-weight:950; paint-order:stroke; stroke:rgba(0,0,0,.65); stroke-width:5px; }
     .timeline-row { display:grid; grid-template-columns:90px 1fr; gap:12px; align-items:center; }
     .bar { height:16px; border-radius:999px; background:linear-gradient(90deg, #1f7a3f, #76c893); }
     .bar.warm { width:35%; } .bar.main { width:75%; } .bar.game { width:55%; } .bar.close { width:25%; }
@@ -83,12 +91,18 @@
     <h2 class="section-title">Ejercicio 1 · Rondo direccional con reacción</h2>
     <section class="exercise">
       <article class="card exercise-info">
+        <h3>Cómo se juega</h3>
+        <div class="steps">
+          <div class="step"><b>1</b><span><strong>5 azules contra 3 rojos</strong> dentro del rectángulo. Los azules intentan conservar la pelota y conectar pases.</span></div>
+          <div class="step"><b>2</b><span>Los rojos presionan para robar. Si roban, intentan salir conduciendo o pasar hacia una mini-zona de salida.</span></div>
+          <div class="step"><b>3</b><span>Cuando los azules pierden, tienen <strong>6 segundos</strong> para recuperar: el más cercano presiona y los demás cierran líneas de pase.</span></div>
+          <div class="step"><b>4</b><span>Si recuperan en 6 segundos, suman 2 puntos. Si no, se reinicia desde el entrenador.</span></div>
+        </div>
         <h3>Organización</h3>
         <ul>
           <li>Espacio: 22x18 m.</li>
-          <li>Jugadores: 5 azules vs 3 rojos + 2 apoyos exteriores.</li>
-          <li>Objetivo: mantener posesión y reaccionar apenas se pierde.</li>
-          <li>Regla: si el equipo que pierde recupera en 6 segundos, suma 2 puntos.</li>
+          <li>Jugadores: 5 azules vs 3 rojos.</li>
+          <li>Objetivo: que el gráfico muestre la lógica: posesión → pérdida → presión tras pérdida.</li>
         </ul>
         <h3>Consignas</h3>
         <ul>
@@ -107,22 +121,39 @@
               <marker id="arrowCyan" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#37e0ff" /></marker>
             </defs>
             <rect x="35" y="55" width="690" height="410" rx="16" fill="#157b42" stroke="#fff" stroke-width="4" />
-            <line x1="380" y1="55" x2="380" y2="465" stroke="#fff" stroke-width="3" opacity=".7" />
-            <path id="pressRun" class="arrow-run" marker-end="url(#arrowYellow)" d="M545 260 C500 250 460 245 420 238" />
-            <path id="coverRun" class="arrow-run" marker-end="url(#arrowYellow)" d="M520 350 C485 330 450 300 420 260" />
-            <path class="arrow-pass" marker-end="url(#arrowWhite)" d="M250 220 L390 238" />
-            <path id="dribbleDemo" class="arrow-dribble" marker-end="url(#arrowCyan)" d="M250 310 C305 345 345 270 405 300" />
-            <g class="player blue"><circle cx="210" cy="170" r="22"/><text x="210" y="170">2</text></g>
-            <g class="player blue"><circle cx="250" cy="220" r="22"/><text x="250" y="220">6</text></g>
-            <g class="player blue"><circle cx="250" cy="310" r="22"/><text x="250" y="310">8</text></g>
-            <g class="player blue"><circle cx="360" cy="170" r="22"/><text x="360" y="170">10</text></g>
+            <rect class="zone" x="95" y="115" width="470" height="290" rx="14" />
+            <rect class="loss-zone" x="565" y="190" width="115" height="140" rx="12" />
+            <text class="svg-label" x="112" y="102">Juego: 5 azules vs 3 rojos</text>
+            <text class="svg-small" x="580" y="180">zona de salida rival</text>
+            <text class="countdown" x="565" y="365">6'' tras pérdida</text>
+
+            <path class="arrow-pass" marker-end="url(#arrowWhite)" d="M170 245 L290 170" />
+            <path class="arrow-pass" marker-end="url(#arrowWhite)" d="M290 170 L410 245" />
+            <path class="arrow-pass" marker-end="url(#arrowWhite)" d="M410 245 L285 330" />
+            <text class="svg-small" x="255" y="145">1) conservar</text>
+
+            <path id="lossPass" class="arrow-pass" marker-end="url(#arrowWhite)" d="M410 245 L545 260" />
+            <text class="svg-small" x="455" y="226">2) pérdida/robo</text>
+
+            <path id="pressRun" class="arrow-run" marker-end="url(#arrowYellow)" d="M405 330 C445 305 490 280 545 260" />
+            <path id="coverRun" class="arrow-run" marker-end="url(#arrowYellow)" d="M290 330 C350 335 430 315 505 285" />
+            <path class="arrow-run" marker-end="url(#arrowYellow)" d="M290 170 C350 190 410 215 470 250" />
+            <text class="svg-small" x="350" y="382">3) presión + cierres</text>
+
+            <path id="dribbleDemo" class="arrow-dribble" marker-end="url(#arrowCyan)" d="M545 260 C585 245 610 270 635 300" />
+            <text class="svg-small" x="590" y="235">si escapa: conduce</text>
+
+            <g class="player blue"><circle cx="170" cy="245" r="22"/><text x="170" y="245">2</text></g>
+            <g class="player blue"><circle cx="290" cy="170" r="22"/><text x="290" y="170">6</text></g>
+            <g class="player blue"><circle cx="285" cy="330" r="22"/><text x="285" y="330">8</text></g>
+            <g class="player blue"><circle cx="410" cy="245" r="22"/><text x="410" y="245">10</text></g>
             <g class="player blue"><circle cx="405" cy="330" r="22"/><text x="405" y="330">7</text></g>
             <g class="player red"><circle cx="545" cy="260" r="22"/><text x="545" y="260">5</text></g>
-            <g class="player red"><circle cx="520" cy="350" r="22"/><text x="520" y="350">9</text></g>
-            <g class="player red"><circle cx="560" cy="170" r="22"/><text x="560" y="170">11</text></g>
-            <circle class="ball" cx="250" cy="220" r="10" />
-            <g class="animated-player"><circle cx="0" cy="0" r="20"/><text x="0" y="0">5</text><animateMotion dur="3.4s" repeatCount="indefinite" rotate="auto"><mpath href="#pressRun" /></animateMotion></g>
-            <circle class="animated-ball" r="9"><animateMotion dur="3.4s" repeatCount="indefinite" rotate="auto"><mpath href="#dribbleDemo" /></animateMotion></circle>
+            <g class="player red"><circle cx="500" cy="180" r="22"/><text x="500" y="180">9</text></g>
+            <g class="player red"><circle cx="505" cy="345" r="22"/><text x="505" y="345">11</text></g>
+            <circle class="ball" cx="410" cy="245" r="10" />
+            <g class="animated-player"><circle cx="0" cy="0" r="20"/><text x="0" y="0">7</text><animateMotion dur="4s" repeatCount="indefinite" rotate="auto"><mpath href="#pressRun" /></animateMotion></g>
+            <circle class="animated-ball" r="9"><animateMotion dur="4s" repeatCount="indefinite" rotate="auto"><mpath href="#lossPass" /></animateMotion></circle>
           </svg>
         </div>
         <div class="legend"><span><i class="line solid"></i> Pase</span><span><i class="line dashed"></i> Presión/carrera</span><span><i class="line wavy"></i> Conducción</span></div>
