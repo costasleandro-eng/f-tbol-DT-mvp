@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Demo entrenamiento · Presión tras pérdida Sub-15</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <style>
+    body { background: #eef4ee; }
+    .demo-shell { width: min(1180px, calc(100% - 32px)); margin: 0 auto; padding: 34px 0 70px; }
+    .demo-top { display:flex; justify-content:space-between; gap:18px; align-items:flex-start; margin-bottom:20px; }
+    .demo-title { background: linear-gradient(135deg, #103f25, #1f7a3f); color:#fff; border-radius:28px; padding:30px; box-shadow:0 18px 60px rgba(16,63,37,.18); flex:1; }
+    .demo-title h1 { margin: 8px 0 12px; font-size: clamp(34px, 5vw, 58px); }
+    .demo-title p { color: rgba(255,255,255,.82); font-size:18px; line-height:1.5; max-width:760px; }
+    .demo-actions { display:grid; gap:10px; min-width:210px; }
+    .demo-actions a, .demo-actions button { text-align:center; text-decoration:none; }
+    .meta-grid { display:grid; grid-template-columns: repeat(4, 1fr); gap:12px; margin:18px 0; }
+    .meta { background:#fff; border:1px solid var(--line); border-radius:18px; padding:14px; }
+    .meta b { display:block; color:var(--accent-dark); font-size:13px; text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px; }
+    .section-title { margin: 30px 0 12px; font-size:28px; }
+    .exercise { display:grid; grid-template-columns: 1fr 1.15fr; gap:18px; align-items:start; margin:16px 0 26px; }
+    .exercise-info ul { margin: 10px 0 0 20px; padding:0; line-height:1.55; }
+    .exercise-info li { margin: 6px 0; }
+    .coach-box { background:#fff7da; border-color:#f0d36b; }
+    .player-box { background:#eaf4ff; border-color:#b8d9ff; }
+    .pdf-note { font-size:13px; color:var(--muted); }
+    .pitch.small { min-width: 520px; }
+    .timeline { display:grid; gap:10px; }
+    .timeline-row { display:grid; grid-template-columns:90px 1fr; gap:12px; align-items:center; }
+    .bar { height:16px; border-radius:999px; background:linear-gradient(90deg, #1f7a3f, #76c893); }
+    .bar.warm { width:35%; } .bar.main { width:75%; } .bar.game { width:55%; } .bar.close { width:25%; }
+    @media print {
+      .demo-actions, .back-link { display:none !important; }
+      body { background:#fff; }
+      .demo-shell { width:100%; padding:0; }
+      .card, .demo-title { box-shadow:none; break-inside: avoid; }
+      .exercise { break-inside: avoid; }
+    }
+    @media (max-width: 900px) {
+      .demo-top, .exercise { grid-template-columns:1fr; display:grid; }
+      .meta-grid { grid-template-columns:1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="demo-shell">
+    <a class="back-link" href="./index.html">← Volver al generador</a>
+    <section class="demo-top">
+      <div class="demo-title">
+        <p class="eyebrow" style="color:#bdf0c9">Demo de paquete listo</p>
+        <h1>Entrenamiento Sub-15: presión tras pérdida</h1>
+        <p>Ejemplo completo de cómo podría verse un paquete entregable: planificación, canchitas, movimientos animados, consignas para el técnico y explicación simple para jugadores.</p>
+      </div>
+      <div class="demo-actions">
+        <button onclick="window.print()">Descargar / imprimir PDF</button>
+        <a class="secondary" href="https://github.com/costasleandro-eng/f-tbol-DT-mvp" target="_blank" rel="noreferrer">Ver repo</a>
+        <span class="pdf-note">Usá “Guardar como PDF” desde el cuadro de impresión.</span>
+      </div>
+    </section>
+
+    <section class="meta-grid">
+      <div class="meta"><b>Categoría</b>Sub-15 · formativo</div>
+      <div class="meta"><b>Duración</b>75 minutos</div>
+      <div class="meta"><b>Jugadores</b>16 jugadores</div>
+      <div class="meta"><b>Espacio</b>Media cancha / 45x35 m</div>
+      <div class="meta"><b>Intensidad</b>Alta, bloques cortos</div>
+      <div class="meta"><b>Dificultad</b>Media → alta</div>
+      <div class="meta"><b>Material</b>Conos, pecheras, 8 pelotas</div>
+      <div class="meta"><b>Entrega</b>PDF + video/pizarra</div>
+    </section>
+
+    <section class="card">
+      <h2>Objetivo del entrenamiento</h2>
+      <p>Mejorar la reacción colectiva inmediata después de perder la pelota: achicar distancia, orientar la presión, cerrar líneas de pase cercanas y recuperar en menos de 6 segundos.</p>
+      <div class="timeline">
+        <div class="timeline-row"><b>12 min</b><span class="bar warm"></span> Activación con pelota</div>
+        <div class="timeline-row"><b>25 min</b><span class="bar main"></span> Rondos direccionales con pérdida</div>
+        <div class="timeline-row"><b>28 min</b><span class="bar game"></span> Juego condicionado 6v6 + apoyos</div>
+        <div class="timeline-row"><b>10 min</b><span class="bar close"></span> Cierre y feedback</div>
+      </div>
+    </section>
+
+    <h2 class="section-title">Ejercicio 1 · Rondo direccional con reacción</h2>
+    <section class="exercise">
+      <article class="card exercise-info">
+        <h3>Organización</h3>
+        <ul>
+          <li>Espacio: 22x18 m.</li>
+          <li>Jugadores: 5 azules vs 3 rojos + 2 apoyos exteriores.</li>
+          <li>Objetivo: mantener posesión y reaccionar apenas se pierde.</li>
+          <li>Regla: si el equipo que pierde recupera en 6 segundos, suma 2 puntos.</li>
+        </ul>
+        <h3>Consignas</h3>
+        <ul>
+          <li>Jugador más cercano presiona la pelota.</li>
+          <li>Segundo jugador cierra pase interior.</li>
+          <li>Resto achica y orienta hacia banda.</li>
+        </ul>
+      </article>
+      <article class="card diagram-card">
+        <div class="output-header"><h3>Canchita animada</h3><span class="badge">Pizarra</span></div>
+        <div class="pitch-wrap">
+          <svg class="pitch small" viewBox="0 0 760 520" role="img" aria-label="Ejercicio animado presión tras pérdida">
+            <defs>
+              <marker id="arrowWhite" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#fff" /></marker>
+              <marker id="arrowYellow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#ffe45c" /></marker>
+              <marker id="arrowCyan" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#37e0ff" /></marker>
+            </defs>
+            <rect x="35" y="55" width="690" height="410" rx="16" fill="#157b42" stroke="#fff" stroke-width="4" />
+            <line x1="380" y1="55" x2="380" y2="465" stroke="#fff" stroke-width="3" opacity=".7" />
+            <path id="pressRun" class="arrow-run" marker-end="url(#arrowYellow)" d="M545 260 C500 250 460 245 420 238" />
+            <path id="coverRun" class="arrow-run" marker-end="url(#arrowYellow)" d="M520 350 C485 330 450 300 420 260" />
+            <path class="arrow-pass" marker-end="url(#arrowWhite)" d="M250 220 L390 238" />
+            <path id="dribbleDemo" class="arrow-dribble" marker-end="url(#arrowCyan)" d="M250 310 C305 345 345 270 405 300" />
+            <g class="player blue"><circle cx="210" cy="170" r="22"/><text x="210" y="170">2</text></g>
+            <g class="player blue"><circle cx="250" cy="220" r="22"/><text x="250" y="220">6</text></g>
+            <g class="player blue"><circle cx="250" cy="310" r="22"/><text x="250" y="310">8</text></g>
+            <g class="player blue"><circle cx="360" cy="170" r="22"/><text x="360" y="170">10</text></g>
+            <g class="player blue"><circle cx="405" cy="330" r="22"/><text x="405" y="330">7</text></g>
+            <g class="player red"><circle cx="545" cy="260" r="22"/><text x="545" y="260">5</text></g>
+            <g class="player red"><circle cx="520" cy="350" r="22"/><text x="520" y="350">9</text></g>
+            <g class="player red"><circle cx="560" cy="170" r="22"/><text x="560" y="170">11</text></g>
+            <circle class="ball" cx="250" cy="220" r="10" />
+            <g class="animated-player"><circle cx="0" cy="0" r="20"/><text x="0" y="0">5</text><animateMotion dur="3.4s" repeatCount="indefinite" rotate="auto"><mpath href="#pressRun" /></animateMotion></g>
+            <circle class="animated-ball" r="9"><animateMotion dur="3.4s" repeatCount="indefinite" rotate="auto"><mpath href="#dribbleDemo" /></animateMotion></circle>
+          </svg>
+        </div>
+        <div class="legend"><span><i class="line solid"></i> Pase</span><span><i class="line dashed"></i> Presión/carrera</span><span><i class="line wavy"></i> Conducción</span></div>
+      </article>
+    </section>
+
+    <h2 class="section-title">Ejercicio 2 · Juego condicionado 6v6 + apoyos</h2>
+    <section class="exercise">
+      <article class="card exercise-info">
+        <h3>Organización</h3>
+        <ul>
+          <li>Espacio: 45x35 m.</li>
+          <li>6v6 dentro + 2 apoyos por fuera.</li>
+          <li>Al perder, el equipo tiene 6 segundos para recuperar.</li>
+          <li>Si no recupera, repliega detrás de línea marcada.</li>
+        </ul>
+        <h3>Puntos de corrección</h3>
+        <ul>
+          <li>Distancia entre jugadores: no quedar partidos.</li>
+          <li>Orientar al rival hacia zonas preparadas.</li>
+          <li>Comunicación corta: “voy”, “cierro”, “espalda”.</li>
+        </ul>
+      </article>
+      <article class="card coach-box">
+        <h3>Guion para video del técnico</h3>
+        <p>“La clave no es correr todos hacia la pelota. El primero presiona, el segundo tapa el pase más peligroso y el bloque achica. Queremos recuperar rápido o forzar un pase malo.”</p>
+        <h3>Guion para jugadores</h3>
+        <p>“Si perdemos la pelota, reaccionamos juntos. Uno va a presionar, los demás cierran opciones. Seis segundos fuertes y ordenados.”</p>
+      </article>
+    </section>
+
+    <section class="card player-box">
+      <h2>Resumen simple para mostrar al plantel</h2>
+      <p>Hoy vamos a trabajar qué hacemos justo después de perder la pelota. No alcanza con correr: tenemos que correr organizados. El más cercano aprieta, los demás cierran pases y achican espacios.</p>
+    </section>
+  </main>
+</body>
+</html>
