@@ -45,32 +45,43 @@ function techniqueForObjective(objective) {
 }
 
 const tacticalExercise = {
+  name: 'Presión tras pérdida en carril central: 5v5 + 2 comodines',
   scene: { width: 760, height: 520, durationSec: 30 },
   players: [
-    { id: 'b6', team: 'blue', n: 6, x: 205, y: 255 },
-    { id: 'b8', team: 'blue', n: 8, x: 320, y: 160 },
-    { id: 'b10', team: 'blue', n: 10, x: 455, y: 255 },
-    { id: 'b7', team: 'blue', n: 7, x: 320, y: 350 },
-    { id: 'r5', team: 'red', n: 5, x: 545, y: 175 },
-    { id: 'r6', team: 'red', n: 6, x: 585, y: 255 },
-    { id: 'r8', team: 'red', n: 8, x: 545, y: 335 }
+    { id: 'b4', team: 'blue', n: 4, x: 205, y: 185 },
+    { id: 'b6', team: 'blue', n: 6, x: 265, y: 260 },
+    { id: 'b8', team: 'blue', n: 8, x: 350, y: 155 },
+    { id: 'b10', team: 'blue', n: 10, x: 420, y: 260 },
+    { id: 'b11', team: 'blue', n: 11, x: 350, y: 365 },
+    { id: 'r5', team: 'red', n: 5, x: 500, y: 170 },
+    { id: 'r6', team: 'red', n: 6, x: 535, y: 260 },
+    { id: 'r8', team: 'red', n: 8, x: 500, y: 350 },
+    { id: 'r9', team: 'red', n: 9, x: 610, y: 220 },
+    { id: 'r10', team: 'red', n: 10, x: 610, y: 300 },
+    { id: 'n1', team: 'neutral', n: 'C', x: 150, y: 260 },
+    { id: 'n2', team: 'neutral', n: 'C', x: 640, y: 260 }
   ],
   phases: [
-    { from: 0, to: 6, label: '0-6s · Azul circula para atraer la presión' },
-    { from: 6, to: 12, label: '6-12s · Cambio de lado: rojo salta a presionar' },
-    { from: 12, to: 18, label: '12-18s · Rojo roba: transición inmediata' },
-    { from: 18, to: 24, label: '18-24s · Rojo contraataca hacia mini-arco' },
-    { from: 24, to: 30, label: '24-30s · Azul recupera y reinicia la tarea' }
+    { from: 0, to: 7, label: '0-7s · Azul conserva con comodines y busca pase interior' },
+    { from: 7, to: 10, label: '7-10s · Rojo intercepta: pérdida azul en carril central' },
+    { from: 10, to: 16, label: '10-16s · Azul activa 5s: presiona balón y cierra pase vertical' },
+    { from: 16, to: 21, label: '16-21s · Azul recupera y asegura primer pase al comodín' },
+    { from: 21, to: 30, label: '21-30s · Variante: rojo supera presión y entra en zona objetivo' }
   ],
   tracks: {
-    b6: [[0,205,255],[6,225,255],[12,245,270],[18,315,285],[24,300,270],[30,205,255]],
-    b8: [[0,320,160],[6,335,150],[12,355,170],[18,365,205],[24,330,165],[30,320,160]],
-    b10:[[0,455,255],[6,470,245],[12,430,270],[18,395,260],[24,450,255],[30,455,255]],
-    b7: [[0,320,350],[6,335,365],[12,370,340],[18,415,330],[24,335,350],[30,320,350]],
-    r5: [[0,545,175],[6,500,205],[12,430,240],[18,455,260],[24,540,185],[30,545,175]],
-    r6: [[0,585,255],[6,535,255],[12,455,265],[18,520,260],[24,600,255],[30,585,255]],
-    r8: [[0,545,335],[6,500,320],[12,455,300],[18,535,310],[24,548,335],[30,545,335]],
-    ball:[[0,227,267],[3,340,172],[6,477,267],[9,340,362],[12,247,282],[15,455,265],[18,542,260],[21,650,265],[24,322,282],[30,227,267]]
+    b4: [[0,205,185],[7,235,195],[10,310,215],[16,390,230],[21,235,195],[30,205,185]],
+    b6: [[0,265,260],[7,305,260],[10,365,260],[16,420,260],[21,280,260],[30,265,260]],
+    b8: [[0,350,155],[7,365,165],[10,410,195],[16,455,215],[21,360,155],[30,350,155]],
+    b10:[[0,420,260],[7,445,260],[10,500,260],[16,470,270],[21,430,260],[30,420,260]],
+    b11:[[0,350,365],[7,365,350],[10,420,315],[16,455,300],[21,360,365],[30,350,365]],
+    r5: [[0,500,170],[7,455,195],[10,390,235],[16,430,235],[21,500,175],[30,500,170]],
+    r6: [[0,535,260],[7,500,260],[10,430,260],[16,410,260],[21,530,260],[30,535,260]],
+    r8: [[0,500,350],[7,465,325],[10,420,290],[16,435,290],[21,500,345],[30,500,350]],
+    r9: [[0,610,220],[7,575,230],[10,520,245],[16,520,245],[21,565,235],[24,620,230],[30,650,230]],
+    r10:[[0,610,300],[7,575,295],[10,525,285],[16,525,285],[21,565,300],[24,620,310],[30,650,310]],
+    n1: [[0,150,260],[30,150,260]],
+    n2: [[0,640,260],[30,640,260]],
+    ball:[[0,150,260],[3,265,260],[6,420,260],[8,430,260],[10,390,235],[13,415,255],[16,470,270],[19,640,260],[21,430,260],[24,565,300],[27,650,310],[30,650,310]]
   }
 };
 
@@ -79,7 +90,7 @@ function renderPitchDiagram(data) {
   const duration = tacticalExercise.scene.durationSec;
 
   if (techNote) {
-    techNote.innerHTML = `<strong>Demo animada ${duration}s:</strong> juego 4v3 de ${objective}. Azul conserva y progresa; rojo presiona, roba y ataca mini-arco. Usá los controles para pausar, revisar segundo a segundo o reiniciar la escena.`;
+    techNote.innerHTML = `<strong>Demo animada ${duration}s:</strong> ${tacticalExercise.name}. Azul ataca/conserva con comodines; rojo defiende, roba y busca zona objetivo. Usá los controles para pausar, revisar segundo a segundo o reiniciar la escena.`;
   }
 
   const playerSvg = tacticalExercise.players.map((p) => `
@@ -89,7 +100,7 @@ function renderPitchDiagram(data) {
     </g>`).join('');
 
   pitchDiagram.innerHTML = `
-    <svg class="pitch" viewBox="0 0 760 520" role="img" aria-label="Animación táctica de 30 segundos: azul conserva, rojo roba y contraataca">
+    <svg class="pitch" viewBox="0 0 760 520" role="img" aria-label="Animación táctica de 30 segundos: presión tras pérdida, recuperación y transición rival">
       <rect x="20" y="20" width="720" height="480" rx="18" fill="#157b42" stroke="#ffffff" stroke-width="4" />
       <line x1="380" y1="20" x2="380" y2="500" stroke="#fff" stroke-width="3" opacity=".85" />
       <circle cx="380" cy="260" r="68" fill="none" stroke="#fff" stroke-width="3" opacity=".85" />
@@ -100,9 +111,12 @@ function renderPitchDiagram(data) {
       <rect x="698" y="210" width="42" height="100" fill="none" stroke="#fff" stroke-width="3" opacity=".85" />
 
       <rect x="145" y="110" width="500" height="300" rx="16" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.55)" stroke-dasharray="10 9" />
-      <rect x="642" y="230" width="16" height="70" rx="4" fill="rgba(255,255,255,.9)" />
-      <text id="phaseLabel" class="phase-label" x="42" y="52">0-6s · Azul inicia y atrae presión</text>
-      <text class="phase-help" x="42" y="482">Regla: si rojo roba, tiene 6s para finalizar. Si azul recupera, reinicia conservación.</text>
+      <line x1="312" y1="110" x2="312" y2="410" stroke="rgba(255,255,255,.45)" stroke-width="2" stroke-dasharray="7 7" />
+      <line x1="478" y1="110" x2="478" y2="410" stroke="rgba(255,255,255,.45)" stroke-width="2" stroke-dasharray="7 7" />
+      <rect x="120" y="218" width="24" height="84" rx="5" fill="rgba(255,255,255,.85)" />
+      <rect x="646" y="218" width="24" height="84" rx="5" fill="rgba(255,255,255,.85)" />
+      <text id="phaseLabel" class="phase-label" x="42" y="52">0-7s · Azul conserva con comodines</text>
+      <text class="phase-help" x="42" y="482">Regla: si azul pierde, tiene 5s para recuperar o cerrar el pase vertical. Si rojo sale, ataca zona objetivo.</text>
 
       ${playerSvg}
       <circle id="ball" class="ball" cx="227" cy="267" r="10" />
@@ -263,7 +277,8 @@ ${techniqueForObjective(data.objective)}
 LECTURA DE LA ANIMACIÓN
 - Círculos grandes: jugadores.
 - Círculo pequeño: pelota, siempre al pie/lado del poseedor.
-- La secuencia dura 30 segundos: azul conserva, rojo presiona, rojo roba, contraataca y azul reinicia.
+- La secuencia dura 30 segundos: azul conserva, pierde, presiona 5 segundos, recupera o concede salida rival.
+- Roles: azul ataca y hace contrapresión; rojo defiende, recupera y busca zona objetivo; comodines apoyan al poseedor.
 - En animación no usamos flechas: el movimiento debe explicar la acción.
 
 VARIANTE SI FALTA MATERIAL O JUGADORES
