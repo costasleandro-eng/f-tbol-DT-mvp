@@ -68,6 +68,16 @@ const tacticalExercise = {
     { from: 16, to: 21, label: '16-21s · Azul recupera y asegura primer pase al comodín' },
     { from: 21, to: 30, label: '21-30s · Variante: rojo supera presión y entra en zona objetivo' }
   ],
+  possessions: [
+    { from: 0, to: 2.7, player: 'n1', label: 'Comodín izquierdo', offset: { x: 22, y: 8 } },
+    { from: 3.3, to: 5.6, player: 'b6', label: 'Azul 6', offset: { x: 22, y: 10 } },
+    { from: 6.2, to: 7.4, player: 'b10', label: 'Azul 10', offset: { x: 22, y: 8 } },
+    { from: 8.4, to: 10.8, player: 'r5', label: 'Rojo 5 intercepta', offset: { x: -22, y: 10 } },
+    { from: 12.8, to: 15.8, player: 'b10', label: 'Azul 10 recupera', offset: { x: -22, y: 10 } },
+    { from: 17.2, to: 20.6, player: 'n2', label: 'Comodín derecho', offset: { x: -22, y: 8 } },
+    { from: 21.2, to: 23.8, player: 'b10', label: 'Azul 10 reinicia', offset: { x: 22, y: 8 } },
+    { from: 24.3, to: 30, player: 'r10', label: 'Rojo 10 sale de presión', offset: { x: 22, y: 8 } }
+  ],
   tracks: {
     b4: [[0,205,185],[7,235,195],[10,310,215],[16,390,230],[21,235,195],[30,205,185]],
     b6: [[0,265,260],[7,305,260],[10,365,260],[16,420,260],[21,280,260],[30,265,260]],
@@ -95,6 +105,7 @@ function renderPitchDiagram(data) {
 
   const playerSvg = tacticalExercise.players.map((p) => `
     <g id="${p.id}" class="player ${p.team}" transform="translate(${p.x} ${p.y})">
+      <circle class="holder-ring" r="28"></circle>
       <circle r="22"></circle>
       <text>${p.n}</text>
     </g>`).join('');
@@ -116,6 +127,7 @@ function renderPitchDiagram(data) {
       <rect x="120" y="218" width="24" height="84" rx="5" fill="rgba(255,255,255,.85)" />
       <rect x="646" y="218" width="24" height="84" rx="5" fill="rgba(255,255,255,.85)" />
       <text id="phaseLabel" class="phase-label" x="42" y="52">0-7s · Azul conserva con comodines</text>
+      <text id="possessionLabel" class="possession-label" x="42" y="78">Poseedor: comodín izquierdo</text>
       <text class="phase-help" x="42" y="482">Regla: si azul pierde, tiene 5s para recuperar o cerrar el pase vertical. Si rojo sale, ataca zona objetivo.</text>
 
       ${playerSvg}
@@ -159,20 +171,33 @@ function startTacticalAnimation(svg, root, exercise) {
   }
 
   function renderAt(t) {
+    const playerPositions = {};
     exercise.players.forEach(({ id }) => {
       const [x, y] = pointAt(exercise.tracks[id], t);
+      playerPositions[id] = { x, y };
       const el = svg.querySelector(`#${id}`);
       if (el) el.setAttribute('transform', `translate(${x} ${y})`);
     });
-    const [bx, by] = pointAt(exercise.tracks.ball, t);
+
+    svg.querySelectorAll('.holder-ring').forEach((ring) => ring.classList.remove('active'));
+    const holder = exercise.possessions.find(({ from, to }) => t >= from && t < to);
+    const holderPosition = holder ? playerPositions[holder.player] : null;
+    const [pathBallX, pathBallY] = pointAt(exercise.tracks.ball, t);
+    const ballX = holderPosition ? holderPosition.x + holder.offset.x : pathBallX;
+    const ballY = holderPosition ? holderPosition.y + holder.offset.y : pathBallY;
     const ball = svg.querySelector('#ball');
     if (ball) {
-      ball.setAttribute('cx', bx);
-      ball.setAttribute('cy', by);
+      ball.setAttribute('cx', ballX);
+      ball.setAttribute('cy', ballY);
     }
+    const holderRing = holder ? svg.querySelector(`#${holder.player} .holder-ring`) : null;
+    if (holderRing) holderRing.classList.add('active');
+
     const phase = exercise.phases.find(({ from, to }) => t >= from && t < to) || exercise.phases[0];
     const label = svg.querySelector('#phaseLabel');
     if (label) label.textContent = phase.label;
+    const possessionLabel = svg.querySelector('#possessionLabel');
+    if (possessionLabel) possessionLabel.textContent = holder ? `Poseedor: ${holder.label}` : 'Pelota en viaje: pase / disputa';
     if (timeline) timeline.value = t.toFixed(1);
     if (timeReadout) timeReadout.textContent = `${t.toFixed(1)}s / ${duration}s`;
   }

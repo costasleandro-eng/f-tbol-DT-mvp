@@ -83,3 +83,6 @@ button:hover { background: var(--accent-dark); transform: translateY(-1px); }
 .phase-label, .phase-help { fill: #fff; font-weight: 900; paint-order: stroke; stroke: rgba(0,0,0,.48); stroke-width: 4px; }
 .phase-label { font-size: 16px; }
 .phase-help { font-size: 13px; }
+.holder-ring { fill: none; stroke: transparent; stroke-width: 4; opacity: 0; }
+.holder-ring.active { stroke: #ffe45c; opacity: .95; }
+.possession-label { fill: #ffe45c; font-size: 13px; font-weight: 900; paint-order: stroke; stroke: rgba(0,0,0,.55); stroke-width: 4px; }
