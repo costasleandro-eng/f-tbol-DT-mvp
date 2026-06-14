@@ -44,50 +44,52 @@ function techniqueForObjective(objective) {
   return 'Técnica: ajustar superficie de contacto según la acción: interior para precisión, exterior para orientar, empeine para potencia/aceleración y planta para pausa/cambio.';
 }
 
+const tacticalExercise = {
+  scene: { width: 760, height: 520, durationSec: 30 },
+  players: [
+    { id: 'b6', team: 'blue', n: 6, x: 205, y: 255 },
+    { id: 'b8', team: 'blue', n: 8, x: 320, y: 160 },
+    { id: 'b10', team: 'blue', n: 10, x: 455, y: 255 },
+    { id: 'b7', team: 'blue', n: 7, x: 320, y: 350 },
+    { id: 'r5', team: 'red', n: 5, x: 545, y: 175 },
+    { id: 'r6', team: 'red', n: 6, x: 585, y: 255 },
+    { id: 'r8', team: 'red', n: 8, x: 545, y: 335 }
+  ],
+  phases: [
+    { from: 0, to: 6, label: '0-6s · Azul circula para atraer la presión' },
+    { from: 6, to: 12, label: '6-12s · Cambio de lado: rojo salta a presionar' },
+    { from: 12, to: 18, label: '12-18s · Rojo roba: transición inmediata' },
+    { from: 18, to: 24, label: '18-24s · Rojo contraataca hacia mini-arco' },
+    { from: 24, to: 30, label: '24-30s · Azul recupera y reinicia la tarea' }
+  ],
+  tracks: {
+    b6: [[0,205,255],[6,225,255],[12,245,270],[18,315,285],[24,300,270],[30,205,255]],
+    b8: [[0,320,160],[6,335,150],[12,355,170],[18,365,205],[24,330,165],[30,320,160]],
+    b10:[[0,455,255],[6,470,245],[12,430,270],[18,395,260],[24,450,255],[30,455,255]],
+    b7: [[0,320,350],[6,335,365],[12,370,340],[18,415,330],[24,335,350],[30,320,350]],
+    r5: [[0,545,175],[6,500,205],[12,430,240],[18,455,260],[24,540,185],[30,545,175]],
+    r6: [[0,585,255],[6,535,255],[12,455,265],[18,520,260],[24,600,255],[30,585,255]],
+    r8: [[0,545,335],[6,500,320],[12,455,300],[18,535,310],[24,548,335],[30,545,335]],
+    ball:[[0,227,267],[3,340,172],[6,477,267],[9,340,362],[12,247,282],[15,455,265],[18,542,260],[21,650,265],[24,322,282],[30,227,267]]
+  }
+};
+
 function renderPitchDiagram(data) {
   const objective = data.objective;
-  const isBuildUp = objective.includes('salida');
-  const isFinish = objective.includes('finalización');
-
-  const players = isBuildUp
-    ? [
-        ['blue', 1, 145, 255], ['blue', 2, 250, 170], ['blue', 3, 250, 340], ['blue', 4, 390, 255],
-        ['red', 7, 520, 180], ['red', 9, 560, 255], ['red', 11, 520, 330]
-      ]
-    : isFinish
-      ? [
-          ['blue', 8, 250, 255], ['blue', 10, 370, 180], ['blue', 9, 510, 255], ['blue', 11, 370, 330],
-          ['red', 4, 575, 215], ['red', 5, 575, 295], ['red', 1, 650, 255]
-        ]
-      : [
-          ['blue', 6, 210, 210], ['blue', 8, 330, 160], ['blue', 10, 450, 250], ['blue', 7, 330, 350],
-          ['red', 5, 520, 175], ['red', 6, 585, 255], ['red', 8, 520, 335]
-        ];
+  const duration = tacticalExercise.scene.durationSec;
 
   if (techNote) {
-    techNote.innerHTML = `<strong>Técnica:</strong> ${techniqueForObjective(objective)}`;
+    techNote.innerHTML = `<strong>Demo animada ${duration}s:</strong> juego 4v3 de ${objective}. Azul conserva y progresa; rojo presiona, roba y ataca mini-arco. Usá los controles para pausar, revisar segundo a segundo o reiniciar la escena.`;
   }
 
-  const playerSvg = players.map(([team, n, x, y]) => `
-    <g class="player ${team}">
-      <circle cx="${x}" cy="${y}" r="22"></circle>
-      <text x="${x}" y="${y}">${n}</text>
+  const playerSvg = tacticalExercise.players.map((p) => `
+    <g id="${p.id}" class="player ${p.team}" transform="translate(${p.x} ${p.y})">
+      <circle r="22"></circle>
+      <text>${p.n}</text>
     </g>`).join('');
 
   pitchDiagram.innerHTML = `
-    <svg class="pitch" viewBox="0 0 760 520" role="img" aria-label="Cancha con jugadores, pelota y movimientos">
-      <defs>
-        <marker id="arrowHead" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
-          <path d="M0,0 L0,6 L9,3 z" fill="#fff" />
-        </marker>
-        <marker id="runHead" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
-          <path d="M0,0 L0,6 L9,3 z" fill="#ffe45c" />
-        </marker>
-        <marker id="dribbleHead" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
-          <path d="M0,0 L0,6 L9,3 z" fill="#37e0ff" />
-        </marker>
-      </defs>
-
+    <svg class="pitch" viewBox="0 0 760 520" role="img" aria-label="Animación táctica de 30 segundos: azul conserva, rojo roba y contraataca">
       <rect x="20" y="20" width="720" height="480" rx="18" fill="#157b42" stroke="#ffffff" stroke-width="4" />
       <line x1="380" y1="20" x2="380" y2="500" stroke="#fff" stroke-width="3" opacity=".85" />
       <circle cx="380" cy="260" r="68" fill="none" stroke="#fff" stroke-width="3" opacity=".85" />
@@ -97,39 +99,107 @@ function renderPitchDiagram(data) {
       <rect x="20" y="210" width="42" height="100" fill="none" stroke="#fff" stroke-width="3" opacity=".85" />
       <rect x="698" y="210" width="42" height="100" fill="none" stroke="#fff" stroke-width="3" opacity=".85" />
 
-      <path class="arrow-pass" d="M250 170 L390 255" />
-      <path class="arrow-pass" d="M390 255 L520 180" />
-      <path id="runTrack" class="arrow-run" d="M330 350 C390 380 470 365 535 315" />
-      <path id="dribbleTrack" class="arrow-dribble" d="M210 210 C250 250 285 190 325 230 S390 285 450 250" />
-      <circle class="ball" cx="250" cy="170" r="10" />
+      <rect x="145" y="110" width="500" height="300" rx="16" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.55)" stroke-dasharray="10 9" />
+      <rect x="642" y="230" width="16" height="70" rx="4" fill="rgba(255,255,255,.9)" />
+      <text id="phaseLabel" class="phase-label" x="42" y="52">0-6s · Azul inicia y atrae presión</text>
+      <text class="phase-help" x="42" y="482">Regla: si rojo roba, tiene 6s para finalizar. Si azul recupera, reinicia conservación.</text>
 
       ${playerSvg}
+      <circle id="ball" class="ball" cx="227" cy="267" r="10" />
+    </svg>
+    <div class="animation-controls" aria-label="Controles de la animación táctica">
+      <button id="playPauseBtn" type="button">Pausar</button>
+      <button id="restartAnimationBtn" class="secondary" type="button">Reiniciar</button>
+      <label class="timeline-control">
+        <span id="timeReadout">0.0s / ${duration}s</span>
+        <input id="animationTimeline" type="range" min="0" max="${duration}" value="0" step="0.1" />
+      </label>
+    </div>`;
 
-      <g class="motion-shadow">
-        <circle cx="210" cy="210" r="22" fill="#1c4fb3" stroke="#fff" stroke-width="2" />
-        <circle cx="210" cy="210" r="10" fill="#fff" stroke="#111" stroke-width="2" />
-      </g>
+  startTacticalAnimation(pitchDiagram.querySelector('svg'), pitchDiagram, tacticalExercise);
+}
 
-      <g class="animated-player">
-        <circle cx="0" cy="0" r="20"></circle>
-        <text x="0" y="0">6</text>
-        <animateMotion dur="4.8s" repeatCount="indefinite" rotate="auto">
-          <mpath href="#dribbleTrack" />
-        </animateMotion>
-      </g>
+function startTacticalAnimation(svg, root, exercise) {
+  if (!svg) return;
+  if (window.tacticalAnimationTimer) clearInterval(window.tacticalAnimationTimer);
+  const duration = exercise.scene.durationSec;
+  const playPauseBtn = root.querySelector('#playPauseBtn');
+  const restartBtn = root.querySelector('#restartAnimationBtn');
+  const timeline = root.querySelector('#animationTimeline');
+  const timeReadout = root.querySelector('#timeReadout');
+  let currentTime = 0;
+  let isPlaying = true;
+  let lastTick = performance.now();
 
-      <circle class="animated-ball" r="9">
-        <animateMotion dur="4.8s" repeatCount="indefinite" rotate="auto">
-          <mpath href="#dribbleTrack" />
-        </animateMotion>
-      </circle>
+  const lerp = (a, b, t) => a + (b - a) * t;
+  function pointAt(points, t) {
+    for (let i = 0; i < points.length - 1; i++) {
+      const [t0, x0, y0] = points[i];
+      const [t1, x1, y1] = points[i + 1];
+      if (t >= t0 && t <= t1) {
+        const k = (t - t0) / (t1 - t0 || 1);
+        return [lerp(x0, x1, k), lerp(y0, y1, k)];
+      }
+    }
+    return points[points.length - 1].slice(1);
+  }
 
-      <g>
-        <circle class="foot-contact" cx="455" cy="250" r="8" />
-        <text class="contact-label" x="470" y="238">toques cortos</text>
-        <text class="contact-label" x="470" y="254">interior/exterior</text>
-      </g>
-    </svg>`;
+  function renderAt(t) {
+    exercise.players.forEach(({ id }) => {
+      const [x, y] = pointAt(exercise.tracks[id], t);
+      const el = svg.querySelector(`#${id}`);
+      if (el) el.setAttribute('transform', `translate(${x} ${y})`);
+    });
+    const [bx, by] = pointAt(exercise.tracks.ball, t);
+    const ball = svg.querySelector('#ball');
+    if (ball) {
+      ball.setAttribute('cx', bx);
+      ball.setAttribute('cy', by);
+    }
+    const phase = exercise.phases.find(({ from, to }) => t >= from && t < to) || exercise.phases[0];
+    const label = svg.querySelector('#phaseLabel');
+    if (label) label.textContent = phase.label;
+    if (timeline) timeline.value = t.toFixed(1);
+    if (timeReadout) timeReadout.textContent = `${t.toFixed(1)}s / ${duration}s`;
+  }
+
+  function tick(now) {
+    const delta = (now - lastTick) / 1000;
+    lastTick = now;
+    if (isPlaying) {
+      currentTime = (currentTime + delta) % duration;
+      renderAt(currentTime);
+    }
+  }
+
+  function setPlaying(value) {
+    isPlaying = value;
+    lastTick = performance.now();
+    if (playPauseBtn) playPauseBtn.textContent = isPlaying ? 'Pausar' : 'Reproducir';
+  }
+
+  if (playPauseBtn) {
+    playPauseBtn.addEventListener('click', () => setPlaying(!isPlaying));
+  }
+
+  if (restartBtn) {
+    restartBtn.addEventListener('click', () => {
+      currentTime = 0;
+      setPlaying(true);
+      renderAt(currentTime);
+    });
+  }
+
+  if (timeline) {
+    timeline.addEventListener('input', () => {
+      currentTime = Number(timeline.value);
+      setPlaying(false);
+      renderAt(currentTime);
+    });
+  }
+
+  renderAt(currentTime);
+  window.tacticalAnimationTimer = setInterval(() => tick(performance.now()), 80);
 }
 
 function generateSession(data) {
@@ -190,12 +260,11 @@ Para nivel ${data.level}: ${levelGuidance[data.level]}.
 TÉCNICA CON PELOTA
 ${techniqueForObjective(data.objective)}
 
-LECTURA DEL GRÁFICO
+LECTURA DE LA ANIMACIÓN
 - Círculos grandes: jugadores.
-- Círculo pequeño: pelota.
-- Flecha blanca: pase.
-- Flecha amarilla punteada: carrera o desmarque.
-- Flecha celeste curva: conducción con pelota.
+- Círculo pequeño: pelota, siempre al pie/lado del poseedor.
+- La secuencia dura 30 segundos: azul conserva, rojo presiona, rojo roba, contraataca y azul reinicia.
+- En animación no usamos flechas: el movimiento debe explicar la acción.
 
 VARIANTE SI FALTA MATERIAL O JUGADORES
 - Si faltan conos: marcar zonas con líneas del campo o referencias naturales.
