@@ -48,10 +48,15 @@ button:hover { background: var(--accent-dark); transform: translateY(-1px); }
 .hint { color: var(--muted); margin: -8px 0 16px; }
 .pitch-wrap { width: 100%; overflow: auto; border-radius: 22px; background: #126b38; border: 1px solid #0f582f; }
 .pitch { display: block; width: 100%; min-width: 720px; height: auto; }
-.animation-controls { display: flex; align-items: center; gap: 12px; min-width: 720px; padding: 12px; background: #0f582f; border-top: 1px solid rgba(255,255,255,.18); }
+.animation-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; min-width: 720px; padding: 12px; background: #0f582f; border-top: 1px solid rgba(255,255,255,.18); }
 .animation-controls button { flex: 0 0 auto; padding: 10px 14px; border-radius: 12px; }
-.timeline-control { flex: 1; display: grid; grid-template-columns: 84px 1fr; align-items: center; gap: 10px; color: rgba(255,255,255,.9); font-size: 13px; font-weight: 850; }
+.timeline-control { flex: 1 1 360px; display: grid; grid-template-columns: 84px 1fr; align-items: center; gap: 10px; color: rgba(255,255,255,.9); font-size: 13px; font-weight: 850; }
 .timeline-control input { padding: 0; accent-color: #ffe45c; background: transparent; box-shadow: none; }
+.phase-jump-list { flex: 1 0 100%; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.phase-jump-list .phase-jump { min-height: 42px; padding: 8px 10px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.86); font-size: 11px; line-height: 1.2; text-align: left; }
+.phase-jump-list .phase-jump.active { background: #ffe45c; color: #21310f; border-color: #fff3a3; box-shadow: 0 0 0 2px rgba(255,255,255,.26) inset; }
+.phase-jump-list .phase-jump:hover { transform: none; background: rgba(255,255,255,.2); }
+.phase-jump-list .phase-jump.active:hover { background: #ffe45c; }
 .player text { fill: #fff; font-weight: 900; font-size: 13px; text-anchor: middle; dominant-baseline: central; }
 .player circle { stroke: rgba(255,255,255,.85); stroke-width: 2; filter: drop-shadow(0 3px 4px rgba(0,0,0,.28)); }
 .player.blue circle { fill: #2067d1; }
@@ -88,3 +93,7 @@ button:hover { background: var(--accent-dark); transform: translateY(-1px); }
 .holder-ring { fill: none; stroke: transparent; stroke-width: 4; opacity: 0; }
 .holder-ring.active { stroke: #ffe45c; opacity: .95; }
 .possession-label { fill: #ffe45c; font-size: 13px; font-weight: 900; paint-order: stroke; stroke: rgba(0,0,0,.55); stroke-width: 4px; }
+
+@media (max-width: 900px) {
+  .phase-jump-list { grid-template-columns: 1fr; }
+}

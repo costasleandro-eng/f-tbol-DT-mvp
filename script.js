@@ -186,6 +186,10 @@ function renderPitchDiagram(data) {
         <span id="timeReadout">0.0s / ${duration}s</span>
         <input id="animationTimeline" type="range" min="0" max="${duration}" value="0" step="0.1" />
       </label>
+      <div class="phase-jump-list" aria-label="Saltar a una fase de la animación">
+        ${tacticalExercise.phases.map((phase, index) => `
+          <button class="phase-jump" type="button" data-phase-index="${index}">${phase.label}</button>`).join('')}
+      </div>
     </div>`;
 
   startTacticalAnimation(pitchDiagram.querySelector('svg'), pitchDiagram, tacticalExercise);
@@ -199,6 +203,7 @@ function startTacticalAnimation(svg, root, exercise) {
   const restartBtn = root.querySelector('#restartAnimationBtn');
   const timeline = root.querySelector('#animationTimeline');
   const timeReadout = root.querySelector('#timeReadout');
+  const phaseJumpButtons = Array.from(root.querySelectorAll('.phase-jump'));
   let currentTime = 0;
   let isPlaying = true;
   let lastTick = performance.now();
@@ -258,7 +263,10 @@ function startTacticalAnimation(svg, root, exercise) {
     const holderRing = holder ? svg.querySelector(`#${holder.player} .holder-ring`) : null;
     if (holderRing) holderRing.classList.add('active');
 
-    const phase = exercise.phases.find(({ from, to }) => t >= from && t < to) || exercise.phases[0];
+    const phaseIndex = exercise.phases.findIndex(({ from, to }) => t >= from && t < to);
+    const activePhaseIndex = phaseIndex === -1 ? 0 : phaseIndex;
+    const phase = exercise.phases[activePhaseIndex] || exercise.phases[0];
+    phaseJumpButtons.forEach((button, index) => button.classList.toggle('active', index === activePhaseIndex));
     const label = svg.querySelector('#phaseLabel');
     if (label) label.textContent = phase.label;
     const possessionLabel = svg.querySelector('#possessionLabel');
@@ -305,6 +313,16 @@ function startTacticalAnimation(svg, root, exercise) {
       renderAt(currentTime);
     });
   }
+
+  phaseJumpButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const phase = exercise.phases[Number(button.dataset.phaseIndex)];
+      if (!phase) return;
+      currentTime = phase.from;
+      setPlaying(false);
+      renderAt(currentTime);
+    });
+  });
 
   renderAt(currentTime);
   window.tacticalAnimationTimer = setInterval(() => tick(performance.now()), 80);

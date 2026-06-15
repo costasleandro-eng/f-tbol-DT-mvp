@@ -42,3 +42,9 @@
 - Actualicé `script.js` para que el plan generado explique responsabilidades de azul, rojo y comodines durante ataque, pérdida, recuperación y salida rival.
 - Actualicé `subagent-exercise-designer.md` con la misma ficha animable para que futuras animaciones de 30s tengan roles claros y observables.
 - Verificación: `node --check script.js` OK.
+
+## 2026-06-15 12:30 UTC — animation worker
+- Mejora elegida: controles de salto por fase para que la animación se pueda revisar como pizarra didáctica, no solo como reproducción lineal.
+- Actualicé `script.js` para generar botones desde `tacticalExercise.phases`; cada botón salta al inicio de la fase, pausa la escena y mantiene sincronizados timeline, textos, poseedor y pelota al pie/lado.
+- Actualicé `styles.css` con una fila de botones de fase, estado activo amarillo y adaptación simple en mobile.
+- Verificación: `node --check script.js` OK.
