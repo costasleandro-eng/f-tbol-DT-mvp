@@ -90,11 +90,11 @@ const tacticalExercise = {
     { id: 'n2', team: 'neutral', n: 'C', x: 640, y: 260 }
   ],
   phases: [
-    { from: 0, to: 7, label: '0-7s · Azul conserva con comodines y busca pase interior' },
-    { from: 7, to: 10, label: '7-10s · Rojo intercepta: pérdida azul en carril central' },
-    { from: 10, to: 16, label: '10-16s · Azul activa 5s: presiona balón y cierra pase vertical' },
-    { from: 16, to: 21, label: '16-21s · Azul recupera y asegura primer pase al comodín' },
-    { from: 21, to: 30, label: '21-30s · Variante: rojo supera presión y entra en zona objetivo' }
+    { from: 0, to: 7, label: '0-7s · Azul conserva con comodines y busca pase interior', cue: 'Objetivo azul: atraer por fuera y encontrar al 10 entre líneas.' },
+    { from: 7, to: 10, label: '7-10s · Rojo intercepta: pérdida azul en carril central', cue: 'Disparador: rojo roba y azul debe reaccionar sin ir todos al balón.' },
+    { from: 10, to: 16, label: '10-16s · Azul activa 5s: presiona balón y cierra pase vertical', cue: 'Regla clave: el cercano presiona, los demás tapan centro y apoyo.' },
+    { from: 16, to: 21, label: '16-21s · Azul recupera y asegura primer pase al comodín', cue: 'Tras recuperar: primer pase seguro antes de volver a progresar.' },
+    { from: 21, to: 30, label: '21-30s · Variante: rojo supera presión y entra en zona objetivo', cue: 'Si rojo sale: azul temporiza y reorganiza para no quedar partido.' }
   ],
   possessions: [
     { from: 0, to: 2.7, player: 'n1', label: 'Comodín izquierdo', offset: { x: 22, y: 8 } },
@@ -156,6 +156,7 @@ function renderPitchDiagram(data) {
       <rect x="646" y="218" width="24" height="84" rx="5" fill="rgba(255,255,255,.85)" />
       <text id="phaseLabel" class="phase-label" x="42" y="52">0-7s · Azul conserva con comodines</text>
       <text id="possessionLabel" class="possession-label" x="42" y="78">Poseedor: comodín izquierdo</text>
+      <text id="phaseCue" class="phase-cue" x="42" y="103">Objetivo azul: atraer por fuera y encontrar al 10 entre líneas.</text>
       <text class="phase-help" x="42" y="482">Regla: si azul pierde, tiene 5s para recuperar o cerrar el pase vertical. Si rojo sale, ataca zona objetivo.</text>
 
       ${playerSvg}
@@ -226,6 +227,8 @@ function startTacticalAnimation(svg, root, exercise) {
     if (label) label.textContent = phase.label;
     const possessionLabel = svg.querySelector('#possessionLabel');
     if (possessionLabel) possessionLabel.textContent = holder ? `Poseedor: ${holder.label}` : 'Pelota en viaje: pase / disputa';
+    const phaseCue = svg.querySelector('#phaseCue');
+    if (phaseCue) phaseCue.textContent = phase.cue;
     if (timeline) timeline.value = t.toFixed(1);
     if (timeReadout) timeReadout.textContent = `${t.toFixed(1)}s / ${duration}s`;
   }
@@ -350,6 +353,7 @@ LECTURA DE LA ANIMACIÓN
 - Círculos grandes: jugadores.
 - Círculo pequeño: pelota, siempre al pie/lado del poseedor.
 - La secuencia dura 30 segundos: azul conserva, pierde, presiona 5 segundos, recupera o concede salida rival.
+- La tercera línea superior cambia por fase y explica qué debe mirar el entrenador: objetivo, disparador, regla o consecuencia.
 - Roles: azul ataca y hace contrapresión; rojo defiende, recupera y busca zona objetivo; comodines apoyan al poseedor.
 - En animación no usamos flechas: el movimiento debe explicar la acción.
 

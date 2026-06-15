@@ -17,3 +17,10 @@
 - Mejora pequeña: enriquecí `script.js` con una ficha estructurada del ejercicio demo “Presión tras pérdida en carril central: 5v5 + 2 comodines”.
 - Ahora el plan generado explicita problema táctico, objetivo observable, quién ataca, quién defiende, reglas, transiciones, criterios de éxito y coaching points.
 - Prioridad cubierta: hacer más claro qué debe verse en una animación de 30 segundos y cómo evaluar la tarea en campo.
+
+## 2026-06-15 00:30 UTC — animation worker
+- Mejora elegida: agregar una línea de lectura por fase dentro de la pizarra animada.
+- Actualicé `tacticalExercise.phases` con `cue` para explicar qué debe mirar el entrenador en cada tramo: objetivo, disparador, regla o consecuencia.
+- Añadí el texto SVG `phaseCue` bajo fase y poseedor, para que la animación no solo muestre movimientos sino también la intención táctica del momento.
+- Ajusté `styles.css` con `.phase-cue` para diferenciar esa consigna sin sumar dependencias.
+- Verificación: `node --check script.js` OK.
