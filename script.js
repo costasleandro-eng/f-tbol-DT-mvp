@@ -77,6 +77,18 @@ const tacticalExercise = {
     'Rojo solo puntúa doble si el primer pase tras robo rompe hacia delante y no es un despeje sin control.',
     'La animación permite identificar claramente poseedor, presionante, coberturas y zona objetivo.'
   ],
+  stopRules: [
+    'Parar solo si el primer azul presiona sin ángulo y permite giro hacia carril central.',
+    'Parar si dos azules van al mismo rival y dejan libre el pase vertical.',
+    'No parar por un pase lateral rojo: el objetivo azul también es orientar fuera y reorganizar.',
+    'Repetir inmediatamente si la recuperación azul termina en pérdida por no asegurar el primer pase.'
+  ],
+  coachInterventions: [
+    'Congelar en 10s: señalar quién presiona, quién tapa pase vertical y quién equilibra.',
+    'Congelar en 15s: preguntar si conviene robar, temporizar o hacer falta táctica no lesiva según distancia.',
+    'Congelar en 18s: revisar primer pase tras recuperar; debe ir a apoyo libre, no al tráfico.',
+    'Congelar en 24s: si rojo salió, pedir repliegue protegiendo centro antes que persecución individual.'
+  ],
   animationChecklist: [
     '0-7s: azul ataca/conserva; rojo ajusta distancias sin desordenarse.',
     '7-10s: rojo defiende y roba; se ve claramente quién recupera.',
@@ -404,6 +416,12 @@ ${tacticalExercise.roleResponsibilities.map((role) => `- ${role}`).join('\n')}
 
 Criterios de éxito:
 ${tacticalExercise.successCriteria.map((criterion) => `- ${criterion}`).join('\n')}
+
+Cuándo parar y corregir:
+${tacticalExercise.stopRules.map((rule) => `- ${rule}`).join('\n')}
+
+Intervenciones del entrenador durante la animación:
+${tacticalExercise.coachInterventions.map((intervention) => `- ${intervention}`).join('\n')}
 
 Checklist para animación de 30 segundos:
 ${tacticalExercise.animationChecklist.map((item) => `- ${item}`).join('\n')}

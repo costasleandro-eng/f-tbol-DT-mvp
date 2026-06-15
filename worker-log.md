@@ -48,3 +48,9 @@
 - Actualicé `script.js` para generar botones desde `tacticalExercise.phases`; cada botón salta al inicio de la fase, pausa la escena y mantiene sincronizados timeline, textos, poseedor y pelota al pie/lado.
 - Actualicé `styles.css` con una fila de botones de fase, estado activo amarillo y adaptación simple en mobile.
 - Verificación: `node --check script.js` OK.
+
+## 2026-06-15 18:01 UTC — exercise-worker
+- Mejora pequeña: añadidas reglas de “cuándo parar y corregir” para el ejercicio demo de presión tras pérdida.
+- Actualicé `subagent-exercise-designer.md` con intervenciones concretas para congelar la animación en 10s/15s/18s/24s.
+- Actualicé `script.js` para que el plan generado muestre esas reglas e intervenciones junto a criterios de éxito.
+- Validación: `node --check script.js` correcto.

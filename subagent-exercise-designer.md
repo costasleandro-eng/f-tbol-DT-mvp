@@ -346,6 +346,20 @@ Entrenar la reacción colectiva tras pérdida: presionar al poseedor, cerrar lí
 - La recuperación termina con pase seguro, no con nueva pérdida inmediata.
 - Si no se puede robar, el equipo temporiza y reorganiza.
 
+## Cuándo parar y corregir en campo
+
+- Parar solo si el primer defensor presiona sin ángulo y permite giro limpio por carril central.
+- Parar si dos jugadores saltan al mismo rival y dejan libre el pase vertical.
+- No parar si el rival juega lateral o atrás: eso también cumple el objetivo de impedir progresión central.
+- Repetir inmediatamente si la recuperación termina en nueva pérdida por no asegurar el primer pase.
+
+## Intervenciones sugeridas para una animación de 30s
+
+- 10s: congelar la imagen y nombrar tres roles: presionante, cierre vertical y equilibrio.
+- 15s: preguntar si conviene robar, temporizar o reorganizar según distancia al poseedor.
+- 18s: revisar el primer pase tras recuperar; debe ir al apoyo libre, no al tráfico.
+- 24s: si rojo supera la presión, pedir repliegue protegiendo centro antes que persecución individual.
+
 ## Coaching points
 
 - Cinco segundos de máxima intensidad mental y física.
