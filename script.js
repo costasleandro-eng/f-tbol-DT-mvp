@@ -46,6 +46,34 @@ function techniqueForObjective(objective) {
 
 const tacticalExercise = {
   name: 'Presión tras pérdida en carril central: 5v5 + 2 comodines',
+  problem: 'Nos parten por dentro después de perder la pelota.',
+  objective: 'Recuperar en 5 segundos o impedir que el rival progrese por carril central.',
+  attackers: 'Azul conserva/progresa con 5 jugadores + 2 comodines; tras pérdida activa contrapresión.',
+  defenders: 'Rojo defiende, roba y busca salir hacia zona objetivo antes de que azul reorganice.',
+  setup: '32 x 26 m, tres carriles longitudinales, dos zonas objetivo en extremos y comodines laterales.',
+  rules: [
+    'Azul suma si conecta 6 pases o entra conduciendo en zona objetivo.',
+    'Si azul pierde, tiene 5 segundos para recuperar o forzar pase lateral/atrás.',
+    'Rojo suma doble si supera la primera presión y entra en zona objetivo.',
+    'Comodines juegan con el poseedor a máximo 2 toques.'
+  ],
+  transitionRules: [
+    'Tras pérdida azul: el más cercano presiona balón; dos compañeros cierran pase vertical y apoyo cercano.',
+    'Tras recuperación azul: primer pase seguro al comodín libre antes de volver a progresar.',
+    'Tras recuperación roja: primer control hacia delante y pase diagonal para salir de la jaula.'
+  ],
+  successCriteria: [
+    'Primer defensor llega en menos de 2 segundos sin quedar vendido.',
+    'El pase vertical queda cerrado durante la ventana de 5 segundos.',
+    'El equipo que recupera asegura el primer pase y evita una segunda pérdida inmediata.',
+    'La animación permite identificar claramente poseedor, presionante, coberturas y zona objetivo.'
+  ],
+  coachingPoints: [
+    'No todos van al balón: presionar, tapar avance y proteger centro son roles distintos.',
+    'Cuerpo orientado para robar o forzar pase malo, no solo correr fuerte.',
+    'Si no se roba, temporizar y reorganizar antes de quedar partido.',
+    'Después de recuperar, respirar con un pase seguro si no hay ventaja clara.'
+  ],
   scene: { width: 760, height: 520, durationSec: 30 },
   players: [
     { id: 'b4', team: 'blue', n: 4, x: 205, y: 185 },
@@ -298,6 +326,25 @@ Para nivel ${data.level}: ${levelGuidance[data.level]}.
 
 TÉCNICA CON PELOTA
 ${techniqueForObjective(data.objective)}
+
+EJERCICIO ANIMADO DEL MVP — ${tacticalExercise.name}
+Problema táctico: ${tacticalExercise.problem}
+Objetivo observable: ${tacticalExercise.objective}
+Organización: ${tacticalExercise.setup}
+Quién ataca: ${tacticalExercise.attackers}
+Quién defiende: ${tacticalExercise.defenders}
+
+Reglas clave:
+${tacticalExercise.rules.map((rule) => `- ${rule}`).join('\n')}
+
+Transiciones:
+${tacticalExercise.transitionRules.map((rule) => `- ${rule}`).join('\n')}
+
+Criterios de éxito:
+${tacticalExercise.successCriteria.map((criterion) => `- ${criterion}`).join('\n')}
+
+Coaching points:
+${tacticalExercise.coachingPoints.map((point) => `- ${point}`).join('\n')}
 
 LECTURA DE LA ANIMACIÓN
 - Círculos grandes: jugadores.

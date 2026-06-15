@@ -12,3 +12,8 @@
 - La pelota ahora se pega al costado del poseedor durante las posesiones y vuelve al track libre cuando está en viaje/disputa.
 - Agregué aro amarillo sobre el poseedor y texto `Poseedor: ...` para explicar mejor el juego mientras corre el timeline.
 - Verificación: `node --check script.js` OK.
+
+## 2026-06-15 — exercise-worker
+- Mejora pequeña: enriquecí `script.js` con una ficha estructurada del ejercicio demo “Presión tras pérdida en carril central: 5v5 + 2 comodines”.
+- Ahora el plan generado explicita problema táctico, objetivo observable, quién ataca, quién defiende, reglas, transiciones, criterios de éxito y coaching points.
+- Prioridad cubierta: hacer más claro qué debe verse en una animación de 30 segundos y cómo evaluar la tarea en campo.
