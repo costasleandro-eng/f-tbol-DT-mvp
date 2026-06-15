@@ -313,6 +313,15 @@ Entrenar la reacción colectiva tras pérdida: presionar al poseedor, cerrar lí
 7. Si azul recupera, juega rápido con comodín libre.
 8. Si rojo sale de la presión, progresa a zona objetivo.
 
+## Mapa de roles para animación
+
+- Azul poseedor: conserva/progresa; si pierde, cambia inmediatamente a presión tras pérdida.
+- Azul más cercano a la pérdida: presiona al nuevo poseedor sin quedar vendido.
+- Azules cercanos 2 y 3: cierran pase vertical y apoyo interior; no van todos a la pelota.
+- Azules lejanos: achican hacia el centro y preparan reorganización si rojo supera la primera presión.
+- Rojo que recupera: primer control hacia delante si hay ventaja; si no, protege y busca pase diagonal.
+- Rojos de apoyo: uno ofrece salida corta y otro amenaza zona objetivo para castigar la presión.
+
 ## Qué debe verse en la animación de 30s
 
 - 0-7s: posesión azul con comodines, circulación y búsqueda de pase interior.

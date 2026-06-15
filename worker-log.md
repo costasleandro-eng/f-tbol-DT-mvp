@@ -36,3 +36,9 @@
 - Durante 10-15s la escena muestra una cuenta atrás explícita de los 5s de presión tras pérdida, reforzando la regla central del ejercicio.
 - Ajusté `styles.css` con `.phase-timer` en amarillo para separar esta guía de fase/poseedor sin sumar dependencias.
 - Verificación: `node --check script.js` OK.
+
+## 2026-06-15 12:01 UTC — exercise worker
+- Mejora pequeña: agregué un “mapa de roles por momento” para el ejercicio demo de presión tras pérdida.
+- Actualicé `script.js` para que el plan generado explique responsabilidades de azul, rojo y comodines durante ataque, pérdida, recuperación y salida rival.
+- Actualicé `subagent-exercise-designer.md` con la misma ficha animable para que futuras animaciones de 30s tengan roles claros y observables.
+- Verificación: `node --check script.js` OK.

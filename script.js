@@ -62,6 +62,14 @@ const tacticalExercise = {
     'Tras recuperación azul: primer pase seguro al comodín libre antes de volver a progresar.',
     'Tras recuperación roja: primer control hacia delante y pase diagonal para salir de la jaula.'
   ],
+  roleResponsibilities: [
+    'Azul poseedor: conservar/progresar con apoyo de comodines; si pierde, cambia inmediatamente a presión tras pérdida.',
+    'Azul más cercano a la pérdida: presiona al nuevo poseedor sin lanzarse al suelo ni ser superado fácil.',
+    'Azules cercanos 2 y 3: cierran pase vertical y apoyo interior; no duplican todos sobre la pelota.',
+    'Azules lejanos: achican hacia el centro y preparan reorganización si rojo supera la primera presión.',
+    'Rojo que recupera: primer control hacia delante si hay ventaja; si no, protege y busca pase diagonal.',
+    'Rojos de apoyo: uno ofrece salida corta y otro amenaza zona objetivo para castigar la presión.'
+  ],
   successCriteria: [
     'Primer defensor llega en menos de 2 segundos sin quedar vendido.',
     'El pase vertical queda cerrado durante la ventana de 5 segundos.',
@@ -372,6 +380,9 @@ ${tacticalExercise.rules.map((rule) => `- ${rule}`).join('\n')}
 
 Transiciones:
 ${tacticalExercise.transitionRules.map((rule) => `- ${rule}`).join('\n')}
+
+Mapa de roles por momento:
+${tacticalExercise.roleResponsibilities.map((role) => `- ${role}`).join('\n')}
 
 Criterios de éxito:
 ${tacticalExercise.successCriteria.map((criterion) => `- ${criterion}`).join('\n')}
