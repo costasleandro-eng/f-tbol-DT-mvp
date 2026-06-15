@@ -66,7 +66,15 @@ const tacticalExercise = {
     'Primer defensor llega en menos de 2 segundos sin quedar vendido.',
     'El pase vertical queda cerrado durante la ventana de 5 segundos.',
     'El equipo que recupera asegura el primer pase y evita una segunda pérdida inmediata.',
+    'Rojo solo puntúa doble si el primer pase tras robo rompe hacia delante y no es un despeje sin control.',
     'La animación permite identificar claramente poseedor, presionante, coberturas y zona objetivo.'
+  ],
+  animationChecklist: [
+    '0-7s: azul ataca/conserva; rojo ajusta distancias sin desordenarse.',
+    '7-10s: rojo defiende y roba; se ve claramente quién recupera.',
+    '10-16s: transición tras pérdida azul: uno presiona, dos cierran carril central, dos equilibran.',
+    '16-21s: si azul recupera, primer pase seguro al comodín antes de volver a acelerar.',
+    '21-30s: si rojo supera la presión, ataca zona objetivo y azul temporiza/reorganiza.'
   ],
   coachingPoints: [
     'No todos van al balón: presionar, tapar avance y proteger centro son roles distintos.',
@@ -346,6 +354,9 @@ ${tacticalExercise.transitionRules.map((rule) => `- ${rule}`).join('\n')}
 Criterios de éxito:
 ${tacticalExercise.successCriteria.map((criterion) => `- ${criterion}`).join('\n')}
 
+Checklist para animación de 30 segundos:
+${tacticalExercise.animationChecklist.map((item) => `- ${item}`).join('\n')}
+
 Coaching points:
 ${tacticalExercise.coachingPoints.map((point) => `- ${point}`).join('\n')}
 
@@ -353,6 +364,7 @@ LECTURA DE LA ANIMACIÓN
 - Círculos grandes: jugadores.
 - Círculo pequeño: pelota, siempre al pie/lado del poseedor.
 - La secuencia dura 30 segundos: azul conserva, pierde, presiona 5 segundos, recupera o concede salida rival.
+- Cada bloque temporal tiene una intención única: ataque, robo, reacción tras pérdida, primer pase tras recuperación y reorganización si el rival sale.
 - La tercera línea superior cambia por fase y explica qué debe mirar el entrenador: objetivo, disparador, regla o consecuencia.
 - Roles: azul ataca y hace contrapresión; rojo defiende, recupera y busca zona objetivo; comodines apoyan al poseedor.
 - En animación no usamos flechas: el movimiento debe explicar la acción.

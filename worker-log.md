@@ -24,3 +24,8 @@
 - Añadí el texto SVG `phaseCue` bajo fase y poseedor, para que la animación no solo muestre movimientos sino también la intención táctica del momento.
 - Ajusté `styles.css` con `.phase-cue` para diferenciar esa consigna sin sumar dependencias.
 - Verificación: `node --check script.js` OK.
+
+## 2026-06-15 06:01 UTC — exercise worker
+- Mejora pequeña: añadí `animationChecklist` al ejercicio animado del MVP para que la escena de 30s tenga bloques observables por segundo: ataque, robo, transición tras pérdida, primer pase tras recuperación y reorganización.
+- Ajusté criterios de éxito: el rojo solo puntúa doble si el primer pase tras robo rompe hacia delante con control, no con despeje.
+- Actualicé la lectura generada de la animación en `script.js` para hacer explícitas las fases y roles.
