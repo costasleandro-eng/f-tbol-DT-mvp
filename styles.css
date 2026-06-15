@@ -93,6 +93,8 @@ button:hover { background: var(--accent-dark); transform: translateY(-1px); }
 .holder-ring { fill: none; stroke: transparent; stroke-width: 4; opacity: 0; }
 .holder-ring.active { stroke: #ffe45c; opacity: .95; }
 .possession-label { fill: #ffe45c; font-size: 13px; font-weight: 900; paint-order: stroke; stroke: rgba(0,0,0,.55); stroke-width: 4px; }
+.role-cue { opacity: 0; fill: #fff7b0; font-size: 12px; font-weight: 950; text-anchor: middle; text-transform: uppercase; letter-spacing: .03em; paint-order: stroke; stroke: rgba(0,0,0,.62); stroke-width: 5px; }
+.role-cue.visible { opacity: 1; }
 
 @media (max-width: 900px) {
   .phase-jump-list { grid-template-columns: 1fr; }

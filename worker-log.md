@@ -54,3 +54,10 @@
 - Actualicé `subagent-exercise-designer.md` con intervenciones concretas para congelar la animación en 10s/15s/18s/24s.
 - Actualicé `script.js` para que el plan generado muestre esas reglas e intervenciones junto a criterios de éxito.
 - Validación: `node --check script.js` correcto.
+
+## 2026-06-15 18:30 UTC — animation worker
+- Mejora elegida: etiquetas breves de rol activo sobre jugadores clave durante cada fase de la pizarra animada.
+- Añadí `roleCues` en `tacticalExercise` para mostrar, según el segundo: apoyo/recibir, roba/pierde, presiona/tapa vertical/cubre apoyo, asegura/pase seguro y salida/temporiza.
+- Actualicé el render SVG para posicionar hasta 3 etiquetas sobre los jugadores mientras se mueven, sin flechas ni dependencias, manteniendo la pelota al pie/lado del poseedor.
+- Ajusté `styles.css` con `.role-cue` para que las etiquetas sean legibles sobre la cancha.
+- Verificación: `node --check script.js` OK.

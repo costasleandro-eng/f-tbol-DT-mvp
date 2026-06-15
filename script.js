@@ -134,6 +134,19 @@ const tacticalExercise = {
     { from: 21.2, to: 23.8, player: 'b10', label: 'Azul 10 reinicia', offset: { x: 22, y: 8 } },
     { from: 24.3, to: 30, player: 'r10', label: 'Rojo 10 sale de presión', offset: { x: 22, y: 8 } }
   ],
+  roleCues: [
+    { from: 0, to: 7, player: 'n1', text: 'apoyo' },
+    { from: 0, to: 7, player: 'b10', text: 'recibir' },
+    { from: 7, to: 10, player: 'r5', text: 'roba' },
+    { from: 7, to: 10, player: 'b10', text: 'pierde' },
+    { from: 10, to: 16, player: 'b10', text: 'presiona' },
+    { from: 10, to: 16, player: 'b6', text: 'tapa vertical' },
+    { from: 10, to: 16, player: 'b11', text: 'cubre apoyo' },
+    { from: 16, to: 21, player: 'b10', text: 'asegura' },
+    { from: 16, to: 21, player: 'n2', text: 'pase seguro' },
+    { from: 21, to: 30, player: 'r10', text: 'salida' },
+    { from: 21, to: 30, player: 'b6', text: 'temporiza' }
+  ],
   tracks: {
     b4: [[0,205,185],[7,235,195],[10,310,215],[16,390,230],[21,235,195],[30,205,185]],
     b6: [[0,265,260],[7,305,260],[10,365,260],[16,420,260],[21,280,260],[30,265,260]],
@@ -189,6 +202,11 @@ function renderPitchDiagram(data) {
       <text class="phase-help" x="42" y="482">Regla: si azul pierde, tiene 5s para recuperar o cerrar el pase vertical. Si rojo sale, ataca zona objetivo.</text>
 
       ${playerSvg}
+      <g id="roleCueLayer" aria-hidden="true">
+        <text class="role-cue" data-cue-index="0"></text>
+        <text class="role-cue" data-cue-index="1"></text>
+        <text class="role-cue" data-cue-index="2"></text>
+      </g>
       <circle id="ball" class="ball" cx="227" cy="267" r="10" />
     </svg>
     <div class="animation-controls" aria-label="Controles de la animación táctica">
@@ -274,6 +292,21 @@ function startTacticalAnimation(svg, root, exercise) {
     }
     const holderRing = holder ? svg.querySelector(`#${holder.player} .holder-ring`) : null;
     if (holderRing) holderRing.classList.add('active');
+
+    const activeRoleCues = (exercise.roleCues || []).filter(({ from, to }) => t >= from && t < to).slice(0, 3);
+    svg.querySelectorAll('.role-cue').forEach((cueEl, index) => {
+      const cue = activeRoleCues[index];
+      const position = cue ? playerPositions[cue.player] : null;
+      if (!cue || !position) {
+        cueEl.textContent = '';
+        cueEl.classList.remove('visible');
+        return;
+      }
+      cueEl.textContent = cue.text;
+      cueEl.setAttribute('x', position.x);
+      cueEl.setAttribute('y', position.y - 33);
+      cueEl.classList.add('visible');
+    });
 
     const phaseIndex = exercise.phases.findIndex(({ from, to }) => t >= from && t < to);
     const activePhaseIndex = phaseIndex === -1 ? 0 : phaseIndex;
@@ -436,6 +469,7 @@ LECTURA DE LA ANIMACIÓN
 - Cada bloque temporal tiene una intención única: ataque, robo, reacción tras pérdida, primer pase tras recuperación y reorganización si el rival sale.
 - La tercera línea superior cambia por fase y explica qué debe mirar el entrenador: objetivo, disparador, regla o consecuencia.
 - La cuarta línea da una instrucción contextual: poseedor, robo, cuenta atrás de contrapresión, primer pase seguro o reorganización defensiva.
+- Las etiquetas cortas sobre jugadores marcan el rol activo de la fase: apoyo, roba, presiona, tapa vertical, cubre apoyo, asegura o temporiza.
 - Roles: azul ataca y hace contrapresión; rojo defiende, recupera y busca zona objetivo; comodines apoyan al poseedor.
 - En animación no usamos flechas: el movimiento debe explicar la acción.
 
