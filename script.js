@@ -165,6 +165,7 @@ function renderPitchDiagram(data) {
       <text id="phaseLabel" class="phase-label" x="42" y="52">0-7s · Azul conserva con comodines</text>
       <text id="possessionLabel" class="possession-label" x="42" y="78">Poseedor: comodín izquierdo</text>
       <text id="phaseCue" class="phase-cue" x="42" y="103">Objetivo azul: atraer por fuera y encontrar al 10 entre líneas.</text>
+      <text id="phaseTimer" class="phase-timer" x="42" y="130">Ventana de decisión: circular y perfilar antes del pase interior.</text>
       <text class="phase-help" x="42" y="482">Regla: si azul pierde, tiene 5s para recuperar o cerrar el pase vertical. Si rojo sale, ataca zona objetivo.</text>
 
       ${playerSvg}
@@ -207,6 +208,25 @@ function startTacticalAnimation(svg, root, exercise) {
     return points[points.length - 1].slice(1);
   }
 
+  function instructionForTime(t, holder) {
+    if (t >= 10 && t < 15) {
+      return `Cuenta atrás contrapresión: ${Math.ceil(15 - t)}s para recuperar o cerrar pase vertical.`;
+    }
+    if (t >= 15 && t < 16) {
+      return 'Fin de ventana: si no hay robo, azul debe temporizar y reorganizar.';
+    }
+    if (t >= 7 && t < 10) {
+      return 'Robo rojo: identificá quién pierde, quién recupera y primer pase posible.';
+    }
+    if (t >= 16 && t < 21) {
+      return 'Recuperación azul: primer pase seguro al comodín antes de acelerar.';
+    }
+    if (t >= 21) {
+      return 'Variante rival: rojo supera presión; azul protege centro y retrocede ordenado.';
+    }
+    return holder ? `Pelota al pie/lado de ${holder.label}: mirar apoyos cercanos y pase interior.` : 'Pelota en viaje: seguir receptor y presión más cercana.';
+  }
+
   function renderAt(t) {
     const playerPositions = {};
     exercise.players.forEach(({ id }) => {
@@ -237,6 +257,8 @@ function startTacticalAnimation(svg, root, exercise) {
     if (possessionLabel) possessionLabel.textContent = holder ? `Poseedor: ${holder.label}` : 'Pelota en viaje: pase / disputa';
     const phaseCue = svg.querySelector('#phaseCue');
     if (phaseCue) phaseCue.textContent = phase.cue;
+    const phaseTimer = svg.querySelector('#phaseTimer');
+    if (phaseTimer) phaseTimer.textContent = instructionForTime(t, holder);
     if (timeline) timeline.value = t.toFixed(1);
     if (timeReadout) timeReadout.textContent = `${t.toFixed(1)}s / ${duration}s`;
   }
@@ -366,6 +388,7 @@ LECTURA DE LA ANIMACIÓN
 - La secuencia dura 30 segundos: azul conserva, pierde, presiona 5 segundos, recupera o concede salida rival.
 - Cada bloque temporal tiene una intención única: ataque, robo, reacción tras pérdida, primer pase tras recuperación y reorganización si el rival sale.
 - La tercera línea superior cambia por fase y explica qué debe mirar el entrenador: objetivo, disparador, regla o consecuencia.
+- La cuarta línea da una instrucción contextual: poseedor, robo, cuenta atrás de contrapresión, primer pase seguro o reorganización defensiva.
 - Roles: azul ataca y hace contrapresión; rojo defiende, recupera y busca zona objetivo; comodines apoyan al poseedor.
 - En animación no usamos flechas: el movimiento debe explicar la acción.
 

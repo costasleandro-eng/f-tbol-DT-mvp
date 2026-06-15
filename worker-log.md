@@ -29,3 +29,10 @@
 - Mejora pequeña: añadí `animationChecklist` al ejercicio animado del MVP para que la escena de 30s tenga bloques observables por segundo: ataque, robo, transición tras pérdida, primer pase tras recuperación y reorganización.
 - Ajusté criterios de éxito: el rojo solo puntúa doble si el primer pase tras robo rompe hacia delante con control, no con despeje.
 - Actualicé la lectura generada de la animación en `script.js` para hacer explícitas las fases y roles.
+
+## 2026-06-15 06:30 UTC — animation worker
+- Mejora elegida: añadir una cuarta línea de instrucción contextual dentro de la pizarra animada.
+- Actualicé `script.js` con `instructionForTime(t, holder)` para explicar, según el segundo, qué mirar: poseedor, robo rojo, cuenta atrás de contrapresión, primer pase seguro o reorganización.
+- Durante 10-15s la escena muestra una cuenta atrás explícita de los 5s de presión tras pérdida, reforzando la regla central del ejercicio.
+- Ajusté `styles.css` con `.phase-timer` en amarillo para separar esta guía de fase/poseedor sin sumar dependencias.
+- Verificación: `node --check script.js` OK.
