@@ -59,9 +59,9 @@ button:hover { background: var(--accent-dark); transform: translateY(-1px); }
 .phase-jump-list .phase-jump.active:hover { background: #ffe45c; }
 .player text { fill: #fff; font-weight: 900; font-size: 13px; text-anchor: middle; dominant-baseline: central; }
 .player circle { stroke: rgba(255,255,255,.85); stroke-width: 2; filter: drop-shadow(0 3px 4px rgba(0,0,0,.28)); }
-.player.blue circle { fill: #2067d1; }
-.player.red circle { fill: #d43a37; }
-.player.neutral circle { fill: #f0b429; }
+.player.blue circle:not(.holder-ring) { fill: #2067d1; }
+.player.red circle:not(.holder-ring) { fill: #d43a37; }
+.player.neutral circle:not(.holder-ring) { fill: #f0b429; }
 .ball { fill: #fff; stroke: #101810; stroke-width: 2; filter: drop-shadow(0 2px 3px rgba(0,0,0,.35)); }
 .arrow-pass { stroke: #ffffff; stroke-width: 4; fill: none; marker-end: url(#arrowHead); }
 .arrow-run { stroke: #ffe45c; stroke-width: 4; fill: none; stroke-dasharray: 12 10; marker-end: url(#runHead); }
@@ -90,8 +90,8 @@ button:hover { background: var(--accent-dark); transform: translateY(-1px); }
 .phase-help { font-size: 13px; }
 .phase-cue { fill: #d8f8ff; font-size: 13px; }
 .phase-timer { fill: #ffe45c; font-size: 13px; }
-.holder-ring { fill: none; stroke: transparent; stroke-width: 4; opacity: 0; }
-.holder-ring.active { stroke: #ffe45c; opacity: .95; }
+.holder-ring { fill: none; stroke: transparent; stroke-width: 4; opacity: 0; pointer-events: none; }
+.holder-ring.active { fill: none; stroke: #ffe45c; opacity: .95; }
 .possession-label { fill: #ffe45c; font-size: 13px; font-weight: 900; paint-order: stroke; stroke: rgba(0,0,0,.55); stroke-width: 4px; }
 .role-cue { opacity: 0; fill: #fff7b0; font-size: 12px; font-weight: 950; text-anchor: middle; text-transform: uppercase; letter-spacing: .03em; paint-order: stroke; stroke: rgba(0,0,0,.62); stroke-width: 5px; }
 .role-cue.visible { opacity: 1; }

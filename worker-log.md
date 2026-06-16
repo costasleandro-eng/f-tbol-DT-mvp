@@ -67,3 +67,9 @@
 - Cambios: `script.js` ahora incluye esos criterios en el plan generado; `subagent-exercise-designer.md` documenta el mismo marcador para mantener alineados producto y contenido.
 - Valor para MVP: deja más claro en 30 segundos quién ataca, quién defiende, qué ocurre tras pérdida/recuperación y cuándo una escena cuenta como éxito observable.
 - Verificación: `node --check script.js` OK.
+
+## 2026-06-16 00:30 UTC — animation worker
+- Mejora pequeña aplicada: corregí el aro de posesión para que sea solo un contorno amarillo y no otro círculo relleno encima/debajo del jugador.
+- Cambios: `styles.css` ahora aplica color de equipo solo a los círculos del jugador, excluyendo `.holder-ring`, y fuerza el aro activo con `fill: none`.
+- Valor para MVP: la posesión se lee más clara durante la animación; pelota al pie/lado + aro limpio señalan al poseedor sin tapar número, color ni rol.
+- Verificación: `node --check script.js` OK.
