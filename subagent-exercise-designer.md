@@ -354,6 +354,14 @@ Entrenar la reacción colectiva tras pérdida: presionar al poseedor, cerrar lí
 - 16-21s recuperación azul: la acción solo cuenta como éxito si termina con pase seguro controlado al comodín.
 - 21-30s salida roja: si rojo supera la presión, azul temporiza protegiendo carril central antes de perseguir.
 
+## Reglas de decisión para entrenar la transición
+
+- Al perder: si el poseedor rojo está de espaldas o mal perfilado, azul busca robo inmediato; si está de cara, azul cierra centro y temporiza.
+- Primer azul: llega con carrera curva para tapar el pase vertical, no en línea recta que permita giro interior.
+- Segundo y tercer azul: priorizan sombra sobre receptor interior y apoyo cercano; solo saltan si el balón queda mal controlado.
+- Tras recuperar: si hay compañero libre de cara, pase seguro; si el robo deja ventaja clara, conducción corta y pase antes del segundo toque defensivo.
+- Si rojo supera: azul abandona la persecución individual y protege carril central hasta reorganizar 2+3 detrás del balón.
+
 ## Cuándo parar y corregir en campo
 
 - Parar solo si el primer defensor presiona sin ángulo y permite giro limpio por carril central.

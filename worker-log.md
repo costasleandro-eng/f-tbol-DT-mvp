@@ -73,3 +73,8 @@
 - Cambios: `styles.css` ahora aplica color de equipo solo a los círculos del jugador, excluyendo `.holder-ring`, y fuerza el aro activo con `fill: none`.
 - Valor para MVP: la posesión se lee más clara durante la animación; pelota al pie/lado + aro limpio señalan al poseedor sin tapar número, color ni rol.
 - Verificación: `node --check script.js` OK.
+
+## 2026-06-16 06:01 UTC — exercise worker
+- Mejora pequeña aplicada: añadí “Reglas de decisión para entrenar la transición” al ejercicio demo de presión tras pérdida.
+- Cambios: `script.js` ahora incluye `decisionGates` en el plan generado; `subagent-exercise-designer.md` documenta las mismas decisiones por rol/momento.
+- Valor para MVP: la animación de 30s no solo muestra movimientos, también aclara cuándo robar, cuándo temporizar, cómo cerrar el pase vertical, qué hacer tras recuperar y cómo reorganizar si rojo supera la presión.

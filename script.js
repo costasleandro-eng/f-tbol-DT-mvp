@@ -84,6 +84,13 @@ const tacticalExercise = {
     '16-21s recuperación azul: la acción cuenta como éxito solo si termina con pase seguro controlado al comodín.',
     '21-30s salida roja: si rojo supera presión, azul temporiza protegiendo carril central antes de perseguir.'
   ],
+  decisionGates: [
+    'Al perder: si el poseedor rojo está de espaldas o mal perfilado, azul busca robo inmediato; si está de cara, azul cierra centro y temporiza.',
+    'Primer azul: llega con carrera curva para tapar el pase vertical, no en línea recta que permita giro interior.',
+    'Segundo y tercer azul: priorizan sombra sobre receptor interior y apoyo cercano; solo saltan si el balón queda mal controlado.',
+    'Tras recuperar: si hay compañero libre de cara, pase seguro; si el robo deja ventaja clara, conducción corta y pase antes del segundo toque defensivo.',
+    'Si rojo supera: azul abandona la persecución individual y protege carril central hasta reorganizar 2+3 detrás del balón.'
+  ],
   stopRules: [
     'Parar solo si el primer azul presiona sin ángulo y permite giro hacia carril central.',
     'Parar si dos azules van al mismo rival y dejan libre el pase vertical.',
@@ -459,6 +466,9 @@ ${tacticalExercise.successCriteria.map((criterion) => `- ${criterion}`).join('\n
 
 Marcador observable de la animación:
 ${tacticalExercise.observableScorecard.map((item) => `- ${item}`).join('\n')}
+
+Reglas de decisión para entrenar la transición:
+${tacticalExercise.decisionGates.map((gate) => `- ${gate}`).join('\n')}
 
 Cuándo parar y corregir:
 ${tacticalExercise.stopRules.map((rule) => `- ${rule}`).join('\n')}
