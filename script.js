@@ -228,6 +228,12 @@ function renderPitchDiagram(data) {
       <circle r="22"></circle>
       <text>${p.n}</text>
     </g>`).join('');
+  const possessionRail = tacticalExercise.possessions.map((segment, index) => {
+    const player = tacticalExercise.players.find(({ id }) => id === segment.player);
+    const team = player?.team || 'loose';
+    const durationSec = Math.max(segment.to - segment.from, 0.1);
+    return `<span class="possession-segment ${team}" data-possession-index="${index}" style="flex-grow:${durationSec}" title="${segment.from}-${segment.to}s · ${segment.label}">${segment.label}</span>`;
+  }).join('');
 
   pitchDiagram.innerHTML = `
     <svg class="pitch" viewBox="0 0 760 520" role="img" aria-label="Animación táctica de 30 segundos: presión tras pérdida, recuperación y transición rival">
@@ -270,6 +276,9 @@ function renderPitchDiagram(data) {
         <input id="animationTimeline" type="range" min="0" max="${duration}" value="0" step="0.1" />
       </label>
       <span id="possessionStatus" class="possession-status neutral">Posesión: comodín</span>
+      <div class="possession-rail" aria-label="Línea de posesión: quién tiene la pelota en cada momento">
+        ${possessionRail}
+      </div>
       <div class="phase-jump-list" aria-label="Saltar a una fase de la animación">
         ${tacticalExercise.phases.map((phase, index) => `
           <button class="phase-jump" type="button" data-phase-index="${index}">${phase.label}</button>`).join('')}
@@ -288,6 +297,7 @@ function startTacticalAnimation(svg, root, exercise) {
   const timeline = root.querySelector('#animationTimeline');
   const timeReadout = root.querySelector('#timeReadout');
   const possessionStatus = root.querySelector('#possessionStatus');
+  const possessionSegments = Array.from(root.querySelectorAll('.possession-segment'));
   const phaseJumpButtons = Array.from(root.querySelectorAll('.phase-jump'));
   let currentTime = 0;
   let isPlaying = true;
@@ -345,7 +355,9 @@ function startTacticalAnimation(svg, root, exercise) {
     });
 
     svg.querySelectorAll('.holder-ring').forEach((ring) => ring.classList.remove('active'));
-    const holder = exercise.possessions.find(({ from, to }) => t >= from && t < to);
+    const activePossessionIndex = exercise.possessions.findIndex(({ from, to }) => t >= from && t < to);
+    const holder = activePossessionIndex === -1 ? null : exercise.possessions[activePossessionIndex];
+    possessionSegments.forEach((segment, index) => segment.classList.toggle('active', index === activePossessionIndex));
     const holderPosition = holder ? playerPositions[holder.player] : null;
     const [pathBallX, pathBallY] = pointAt(exercise.tracks.ball, t);
     const ballX = holderPosition ? holderPosition.x + holder.offset.x : pathBallX;
@@ -573,6 +585,7 @@ LECTURA DE LA ANIMACIÓN
 - Círculo pequeño: pelota, siempre al pie/lado del poseedor.
 - La secuencia dura 30 segundos: azul conserva, pierde, presiona 5 segundos, recupera o concede salida rival.
 - Cada bloque temporal tiene una intención única: ataque, robo, reacción tras pérdida, primer pase tras recuperación y reorganización si el rival sale.
+- La barra de posesión debajo de los controles resume quién tiene la pelota en cada tramo y se ilumina al avanzar la animación.
 - La tercera línea superior cambia por fase y explica qué debe mirar el entrenador: objetivo, disparador, regla o consecuencia.
 - La cuarta línea da una instrucción contextual: poseedor, robo, cuenta atrás de contrapresión, primer pase seguro o reorganización defensiva.
 - Las etiquetas cortas sobre jugadores marcan el rol activo de la fase: apoyo, roba, presiona, tapa vertical, cubre apoyo, asegura o temporiza.

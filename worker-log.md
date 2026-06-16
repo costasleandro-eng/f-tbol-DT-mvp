@@ -102,3 +102,11 @@
 - Cambios: `script.js` incorpora `outcome` en cada fase, lo muestra dentro de la pizarra y lo incluye en el plan generado; `styles.css` agrega estilo para esa línea; `subagent-exercise-designer.md` documenta los mismos marcadores.
 - Valor para MVP: el entrenador puede distinguir en 30s cuándo una acción cuenta como éxito o fallo para azul/rojo, especialmente en pérdida, recuperación, primer pase y salida rival.
 - Verificación: `node --check script.js` y `git diff --check` OK.
+
+## 2026-06-16 18:30 UTC — animation worker
+
+- Revisé `script.js`, `styles.css`, `index.html` y `subagent-animation-engineer.md`.
+- Mejora pequeña implementada: agregué una **barra de posesión** debajo de los controles de la animación. Cada tramo muestra quién tiene la pelota y se ilumina en tiempo real junto con el timeline, reforzando la lectura de fases, poseedor y pelota al pie/lado.
+- Archivos modificados: `script.js`, `styles.css`.
+- Verificación: `node --check script.js` OK.
+- Sin push externo.

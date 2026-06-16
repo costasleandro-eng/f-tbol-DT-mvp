@@ -57,6 +57,14 @@ button:hover { background: var(--accent-dark); transform: translateY(-1px); }
 .possession-status.red { background: #d43a37; }
 .possession-status.neutral { background: #b77b00; }
 .possession-status.loose { background: #2d3d2f; }
+.possession-rail { flex: 1 0 100%; display: flex; min-height: 34px; overflow: hidden; border: 1px solid rgba(255,255,255,.28); border-radius: 999px; background: rgba(0,0,0,.16); }
+.possession-segment { display: grid; place-items: center; min-width: 42px; padding: 0 8px; color: rgba(255,255,255,.78); font-size: 10px; font-weight: 950; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-right: 1px solid rgba(255,255,255,.22); opacity: .62; transition: opacity .15s ease, box-shadow .15s ease, color .15s ease; }
+.possession-segment:last-child { border-right: 0; }
+.possession-segment.blue { background: #2067d1; }
+.possession-segment.red { background: #d43a37; }
+.possession-segment.neutral { background: #b77b00; }
+.possession-segment.loose { background: #2d3d2f; }
+.possession-segment.active { color: #fff; opacity: 1; box-shadow: 0 0 0 3px #ffe45c inset; }
 .phase-jump-list { flex: 1 0 100%; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
 .phase-jump-list .phase-jump { min-height: 42px; padding: 8px 10px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.86); font-size: 11px; line-height: 1.2; text-align: left; }
 .phase-jump-list .phase-jump.active { background: #ffe45c; color: #21310f; border-color: #fff3a3; box-shadow: 0 0 0 2px rgba(255,255,255,.26) inset; }
