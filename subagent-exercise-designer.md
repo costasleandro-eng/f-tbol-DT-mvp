@@ -361,6 +361,14 @@ Entrenar la reacción colectiva tras pérdida: presionar al poseedor, cerrar lí
 - 16-21s recuperación azul: la acción solo cuenta como éxito si termina con pase seguro controlado al comodín.
 - 21-30s salida roja: si rojo supera la presión, azul temporiza protegiendo carril central antes de perseguir.
 
+## Marcadores de éxito/fallo por fase para animación
+
+- 0-7s · ataque azul: éxito si atrae a rojo y encuentra receptor interior perfilado; fallo si fuerza pase sin apoyos cercanos.
+- 7-10s · robo rojo: éxito si la recuperación sale con primer control orientado; fallo si es despeje o robo sin continuidad.
+- 10-16s · contrapresión azul: éxito si recupera o encierra fuera; fallo si dos saltan al balón y queda pase vertical libre.
+- 16-21s · recuperación azul: éxito si asegura primer pase al comodín; fallo si recupera y juega otra vez al tráfico.
+- 21-30s · salida roja / reorganización azul: éxito rojo si entra controlado en zona objetivo; éxito azul alternativo si temporiza protegiendo carril central.
+
 ## Reglas de decisión para entrenar la transición
 
 - Al perder: si el poseedor rojo está de espaldas o mal perfilado, azul busca robo inmediato; si está de cara, azul cierra centro y temporiza.

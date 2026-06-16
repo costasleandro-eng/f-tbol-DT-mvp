@@ -90,11 +90,12 @@ button:hover { background: var(--accent-dark); transform: translateY(-1px); }
 .contact-label { fill: #fff; font-size: 12px; font-weight: 850; paint-order: stroke; stroke: rgba(0,0,0,.45); stroke-width: 3px; }
 .demo-link { display:block; text-align:center; text-decoration:none; border-radius:16px; padding:13px 16px; font-weight:850; }
 
-.phase-label, .phase-help, .phase-cue, .phase-timer { fill: #fff; font-weight: 900; paint-order: stroke; stroke: rgba(0,0,0,.48); stroke-width: 4px; }
+.phase-label, .phase-help, .phase-cue, .phase-timer, .phase-outcome { fill: #fff; font-weight: 900; paint-order: stroke; stroke: rgba(0,0,0,.48); stroke-width: 4px; }
 .phase-label { font-size: 16px; }
 .phase-help { font-size: 13px; }
 .phase-cue { fill: #d8f8ff; font-size: 13px; }
 .phase-timer { fill: #ffe45c; font-size: 13px; }
+.phase-outcome { fill: #fff7b0; font-size: 12px; }
 .holder-ring { fill: none; stroke: transparent; stroke-width: 4; opacity: 0; pointer-events: none; }
 .holder-ring.active { fill: none; stroke: #ffe45c; opacity: .95; }
 .possession-label { fill: #ffe45c; font-size: 13px; font-weight: 900; paint-order: stroke; stroke: rgba(0,0,0,.55); stroke-width: 4px; }

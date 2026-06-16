@@ -138,11 +138,41 @@ const tacticalExercise = {
     { id: 'n2', team: 'neutral', n: 'C', x: 640, y: 260 }
   ],
   phases: [
-    { from: 0, to: 7, label: '0-7s · Azul conserva con comodines y busca pase interior', cue: 'Objetivo azul: atraer por fuera y encontrar al 10 entre líneas.' },
-    { from: 7, to: 10, label: '7-10s · Rojo intercepta: pérdida azul en carril central', cue: 'Disparador: rojo roba y azul debe reaccionar sin ir todos al balón.' },
-    { from: 10, to: 16, label: '10-16s · Azul activa 5s: presiona balón y cierra pase vertical', cue: 'Regla clave: el cercano presiona, los demás tapan centro y apoyo.' },
-    { from: 16, to: 21, label: '16-21s · Azul recupera y asegura primer pase al comodín', cue: 'Tras recuperar: primer pase seguro antes de volver a progresar.' },
-    { from: 21, to: 30, label: '21-30s · Variante: rojo supera presión y entra en zona objetivo', cue: 'Si rojo sale: azul temporiza y reorganiza para no quedar partido.' }
+    {
+      from: 0,
+      to: 7,
+      label: '0-7s · Azul conserva con comodines y busca pase interior',
+      cue: 'Objetivo azul: atraer por fuera y encontrar al 10 entre líneas.',
+      outcome: 'Éxito: azul atrae a rojo y encuentra receptor interior perfilado. Fallo: pase forzado sin apoyos.'
+    },
+    {
+      from: 7,
+      to: 10,
+      label: '7-10s · Rojo intercepta: pérdida azul en carril central',
+      cue: 'Disparador: rojo roba y azul debe reaccionar sin ir todos al balón.',
+      outcome: 'Éxito rojo: robo orientado con primer control hacia salida. Fallo rojo: despeje o robo sin apoyo.'
+    },
+    {
+      from: 10,
+      to: 16,
+      label: '10-16s · Azul activa 5s: presiona balón y cierra pase vertical',
+      cue: 'Regla clave: el cercano presiona, los demás tapan centro y apoyo.',
+      outcome: 'Éxito azul: recuperar o encerrar fuera. Fallo azul: dos saltan al balón y queda pase vertical libre.'
+    },
+    {
+      from: 16,
+      to: 21,
+      label: '16-21s · Azul recupera y asegura primer pase al comodín',
+      cue: 'Tras recuperar: primer pase seguro antes de volver a progresar.',
+      outcome: 'Éxito: primer pase limpio al comodín. Fallo: recuperar y volver a perder por jugar al tráfico.'
+    },
+    {
+      from: 21,
+      to: 30,
+      label: '21-30s · Variante: rojo supera presión y entra en zona objetivo',
+      cue: 'Si rojo sale: azul temporiza y reorganiza para no quedar partido.',
+      outcome: 'Éxito rojo: sale controlado a zona objetivo. Éxito azul alternativo: temporiza protegiendo carril central.'
+    }
   ],
   possessions: [
     { from: 0, to: 2.7, player: 'n1', label: 'Comodín izquierdo', offset: { x: 22, y: 8 } },
@@ -219,6 +249,7 @@ function renderPitchDiagram(data) {
       <text id="possessionLabel" class="possession-label" x="42" y="78">Poseedor: comodín izquierdo</text>
       <text id="phaseCue" class="phase-cue" x="42" y="103">Objetivo azul: atraer por fuera y encontrar al 10 entre líneas.</text>
       <text id="phaseTimer" class="phase-timer" x="42" y="130">Ventana de decisión: circular y perfilar antes del pase interior.</text>
+      <text id="phaseOutcome" class="phase-outcome" x="42" y="456">Éxito: azul atrae a rojo y encuentra receptor interior perfilado. Fallo: pase forzado sin apoyos.</text>
       <text class="phase-help" x="42" y="482">Regla: si azul pierde, tiene 5s para recuperar o cerrar el pase vertical. Si rojo sale, ataca zona objetivo.</text>
 
       ${playerSvg}
@@ -381,6 +412,8 @@ function startTacticalAnimation(svg, root, exercise) {
     if (phaseCue) phaseCue.textContent = phase.cue;
     const phaseTimer = svg.querySelector('#phaseTimer');
     if (phaseTimer) phaseTimer.textContent = instructionForTime(t, holder);
+    const phaseOutcome = svg.querySelector('#phaseOutcome');
+    if (phaseOutcome) phaseOutcome.textContent = phase.outcome || '';
     if (timeline) timeline.value = t.toFixed(1);
     if (timeReadout) timeReadout.textContent = `${t.toFixed(1)}s / ${duration}s`;
   }
@@ -528,6 +561,9 @@ ${tacticalExercise.coachInterventions.map((intervention) => `- ${intervention}`)
 
 Checklist para animación de 30 segundos:
 ${tacticalExercise.animationChecklist.map((item) => `- ${item}`).join('\n')}
+
+Marcadores de éxito/fallo por fase:
+${tacticalExercise.phases.map((phase) => `- ${phase.label}: ${phase.outcome}`).join('\n')}
 
 Coaching points:
 ${tacticalExercise.coachingPoints.map((point) => `- ${point}`).join('\n')}

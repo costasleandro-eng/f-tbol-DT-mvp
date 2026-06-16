@@ -96,3 +96,9 @@
 - Cambios: `script.js` ahora dibuja un punto de contacto entre el jugador poseedor y la pelota, etiqueta “al pie derecho/izquierdo” según el offset y oculta ese indicador cuando la pelota está en viaje/disputa.
 - Valor para MVP: refuerza la prioridad actual de pelota al pie/lado del poseedor y permite explicar mejor quién controla la jugada al pausar o saltar fases.
 - Verificación: `node --check script.js` OK.
+
+## 2026-06-16 18:01 UTC — exercise worker
+- Mejora pequeña aplicada: añadí marcadores de éxito/fallo por fase para la animación demo “Presión tras pérdida en carril central”.
+- Cambios: `script.js` incorpora `outcome` en cada fase, lo muestra dentro de la pizarra y lo incluye en el plan generado; `styles.css` agrega estilo para esa línea; `subagent-exercise-designer.md` documenta los mismos marcadores.
+- Valor para MVP: el entrenador puede distinguir en 30s cuándo una acción cuenta como éxito o fallo para azul/rojo, especialmente en pérdida, recuperación, primer pase y salida rival.
+- Verificación: `node --check script.js` y `git diff --check` OK.
