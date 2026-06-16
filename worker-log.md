@@ -90,3 +90,9 @@
 - En `subagent-exercise-designer.md` ahora queda claro cómo encajar la repetición en 30s, cuándo reiniciar, cómo puntuar y cuándo repetir sin punto.
 - En `script.js` el plan generado incluye el mismo protocolo, reforzando quién ataca/defiende, transición tras pérdida/recuperación y criterios observables.
 - Verificación: `node --check script.js` OK.
+
+## 2026-06-16 12:30 UTC — animation worker
+- Mejora pequeña aplicada: añadí un marcador visual de contacto pie-pelota para que la posesión no dependa solo del aro o la píldora de estado.
+- Cambios: `script.js` ahora dibuja un punto de contacto entre el jugador poseedor y la pelota, etiqueta “al pie derecho/izquierdo” según el offset y oculta ese indicador cuando la pelota está en viaje/disputa.
+- Valor para MVP: refuerza la prioridad actual de pelota al pie/lado del poseedor y permite explicar mejor quién controla la jugada al pausar o saltar fases.
+- Verificación: `node --check script.js` OK.

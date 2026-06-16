@@ -227,7 +227,9 @@ function renderPitchDiagram(data) {
         <text class="role-cue" data-cue-index="1"></text>
         <text class="role-cue" data-cue-index="2"></text>
       </g>
+      <circle id="footContact" class="foot-contact" cx="227" cy="267" r="5" />
       <circle id="ball" class="ball" cx="227" cy="267" r="10" />
+      <text id="footContactLabel" class="contact-label" x="242" y="252">al pie</text>
     </svg>
     <div class="animation-controls" aria-label="Controles de la animación táctica">
       <button id="playPauseBtn" type="button">Pausar</button>
@@ -322,6 +324,25 @@ function startTacticalAnimation(svg, root, exercise) {
       ball.setAttribute('cx', ballX);
       ball.setAttribute('cy', ballY);
     }
+    const footContact = svg.querySelector('#footContact');
+    const footContactLabel = svg.querySelector('#footContactLabel');
+    if (footContact && footContactLabel) {
+      if (holderPosition) {
+        const footX = holderPosition.x + holder.offset.x * 0.72;
+        const footY = holderPosition.y + holder.offset.y * 0.72;
+        const side = holder.offset.x >= 0 ? 'pie derecho' : 'pie izquierdo';
+        footContact.setAttribute('cx', footX);
+        footContact.setAttribute('cy', footY);
+        footContact.removeAttribute('hidden');
+        footContactLabel.setAttribute('x', ballX + (holder.offset.x >= 0 ? 15 : -72));
+        footContactLabel.setAttribute('y', ballY - 16);
+        footContactLabel.textContent = `al ${side}`;
+        footContactLabel.removeAttribute('hidden');
+      } else {
+        footContact.setAttribute('hidden', 'true');
+        footContactLabel.setAttribute('hidden', 'true');
+      }
+    }
     const holderRing = holder ? svg.querySelector(`#${holder.player} .holder-ring`) : null;
     if (holderRing) holderRing.classList.add('active');
     if (possessionStatus) {
@@ -352,7 +373,10 @@ function startTacticalAnimation(svg, root, exercise) {
     const label = svg.querySelector('#phaseLabel');
     if (label) label.textContent = phase.label;
     const possessionLabel = svg.querySelector('#possessionLabel');
-    if (possessionLabel) possessionLabel.textContent = holder ? `Poseedor: ${holder.label}` : 'Pelota en viaje: pase / disputa';
+    if (possessionLabel) {
+      const side = holder?.offset?.x >= 0 ? 'derecho' : 'izquierdo';
+      possessionLabel.textContent = holder ? `Poseedor: ${holder.label} · pelota al pie ${side}` : 'Pelota en viaje: pase / disputa';
+    }
     const phaseCue = svg.querySelector('#phaseCue');
     if (phaseCue) phaseCue.textContent = phase.cue;
     const phaseTimer = svg.querySelector('#phaseTimer');
