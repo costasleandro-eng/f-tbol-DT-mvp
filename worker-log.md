@@ -61,3 +61,9 @@
 - Actualicé el render SVG para posicionar hasta 3 etiquetas sobre los jugadores mientras se mueven, sin flechas ni dependencias, manteniendo la pelota al pie/lado del poseedor.
 - Ajusté `styles.css` con `.role-cue` para que las etiquetas sean legibles sobre la cancha.
 - Verificación: `node --check script.js` OK.
+
+## 2026-06-16 00:01 UTC — exercise worker
+- Mejora pequeña aplicada: agregué un “Marcador observable de la animación” para el ejercicio demo de presión tras pérdida 5v5 + 2 comodines.
+- Cambios: `script.js` ahora incluye esos criterios en el plan generado; `subagent-exercise-designer.md` documenta el mismo marcador para mantener alineados producto y contenido.
+- Valor para MVP: deja más claro en 30 segundos quién ataca, quién defiende, qué ocurre tras pérdida/recuperación y cuándo una escena cuenta como éxito observable.
+- Verificación: `node --check script.js` OK.

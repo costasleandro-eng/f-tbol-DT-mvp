@@ -346,6 +346,14 @@ Entrenar la reacción colectiva tras pérdida: presionar al poseedor, cerrar lí
 - La recuperación termina con pase seguro, no con nueva pérdida inmediata.
 - Si no se puede robar, el equipo temporiza y reorganiza.
 
+## Marcador observable para animación de 30 segundos
+
+- 0-7s ataque azul: mínimo tres apoyos visibles alrededor del poseedor y un intento claro de pase interior.
+- 7-10s defensa roja: la recuperación debe verse como intercepción o robo, no como pelota suelta sin intención.
+- 10-16s transición azul tras pérdida: un jugador presiona balón, dos cierran línea vertical/apoyo y dos equilibran hacia dentro.
+- 16-21s recuperación azul: la acción solo cuenta como éxito si termina con pase seguro controlado al comodín.
+- 21-30s salida roja: si rojo supera la presión, azul temporiza protegiendo carril central antes de perseguir.
+
 ## Cuándo parar y corregir en campo
 
 - Parar solo si el primer defensor presiona sin ángulo y permite giro limpio por carril central.

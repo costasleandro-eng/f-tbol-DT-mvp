@@ -77,6 +77,13 @@ const tacticalExercise = {
     'Rojo solo puntúa doble si el primer pase tras robo rompe hacia delante y no es un despeje sin control.',
     'La animación permite identificar claramente poseedor, presionante, coberturas y zona objetivo.'
   ],
+  observableScorecard: [
+    '0-7s ataque azul: mínimo 3 apoyos visibles alrededor del poseedor y un intento claro de pase interior.',
+    '7-10s defensa roja: la recuperación debe verse como intercepción/robo, no como pelota suelta sin intención.',
+    '10-16s transición azul tras pérdida: 1 presiona balón, 2 cierran línea vertical/apoyo y 2 equilibran hacia dentro.',
+    '16-21s recuperación azul: la acción cuenta como éxito solo si termina con pase seguro controlado al comodín.',
+    '21-30s salida roja: si rojo supera presión, azul temporiza protegiendo carril central antes de perseguir.'
+  ],
   stopRules: [
     'Parar solo si el primer azul presiona sin ángulo y permite giro hacia carril central.',
     'Parar si dos azules van al mismo rival y dejan libre el pase vertical.',
@@ -449,6 +456,9 @@ ${tacticalExercise.roleResponsibilities.map((role) => `- ${role}`).join('\n')}
 
 Criterios de éxito:
 ${tacticalExercise.successCriteria.map((criterion) => `- ${criterion}`).join('\n')}
+
+Marcador observable de la animación:
+${tacticalExercise.observableScorecard.map((item) => `- ${item}`).join('\n')}
 
 Cuándo parar y corregir:
 ${tacticalExercise.stopRules.map((rule) => `- ${rule}`).join('\n')}
