@@ -78,3 +78,9 @@
 - Mejora pequeña aplicada: añadí “Reglas de decisión para entrenar la transición” al ejercicio demo de presión tras pérdida.
 - Cambios: `script.js` ahora incluye `decisionGates` en el plan generado; `subagent-exercise-designer.md` documenta las mismas decisiones por rol/momento.
 - Valor para MVP: la animación de 30s no solo muestra movimientos, también aclara cuándo robar, cuándo temporizar, cómo cerrar el pase vertical, qué hacer tras recuperar y cómo reorganizar si rojo supera la presión.
+
+## 2026-06-16 06:30 UTC — animation worker
+- Mejora pequeña aplicada: añadí una píldora de estado de posesión junto a los controles de la animación.
+- Cambios: `script.js` calcula el equipo del poseedor actual y actualiza `#possessionStatus` en cada frame; `styles.css` colorea el estado por azul, rojo, comodín o pelota en viaje/disputa.
+- Valor para MVP: además del aro y la pelota al pie/lado, el entrenador puede leer de un vistazo quién tiene la pelota mientras salta fases o revisa el timeline.
+- Verificación: `node --check script.js` OK.

@@ -230,6 +230,7 @@ function renderPitchDiagram(data) {
         <span id="timeReadout">0.0s / ${duration}s</span>
         <input id="animationTimeline" type="range" min="0" max="${duration}" value="0" step="0.1" />
       </label>
+      <span id="possessionStatus" class="possession-status neutral">Posesión: comodín</span>
       <div class="phase-jump-list" aria-label="Saltar a una fase de la animación">
         ${tacticalExercise.phases.map((phase, index) => `
           <button class="phase-jump" type="button" data-phase-index="${index}">${phase.label}</button>`).join('')}
@@ -247,6 +248,7 @@ function startTacticalAnimation(svg, root, exercise) {
   const restartBtn = root.querySelector('#restartAnimationBtn');
   const timeline = root.querySelector('#animationTimeline');
   const timeReadout = root.querySelector('#timeReadout');
+  const possessionStatus = root.querySelector('#possessionStatus');
   const phaseJumpButtons = Array.from(root.querySelectorAll('.phase-jump'));
   let currentTime = 0;
   let isPlaying = true;
@@ -284,6 +286,16 @@ function startTacticalAnimation(svg, root, exercise) {
     return holder ? `Pelota al pie/lado de ${holder.label}: mirar apoyos cercanos y pase interior.` : 'Pelota en viaje: seguir receptor y presión más cercana.';
   }
 
+  function teamLabelForHolder(holder) {
+    if (!holder) return { className: 'loose', text: 'Pelota en viaje / disputa' };
+    const player = exercise.players.find(({ id }) => id === holder.player);
+    const labels = { blue: 'Azul', red: 'Rojo', neutral: 'Comodín' };
+    return {
+      className: player ? player.team : 'loose',
+      text: `Posesión: ${labels[player?.team] || 'equipo'} · ${holder.label}`
+    };
+  }
+
   function renderAt(t) {
     const playerPositions = {};
     exercise.players.forEach(({ id }) => {
@@ -306,6 +318,11 @@ function startTacticalAnimation(svg, root, exercise) {
     }
     const holderRing = holder ? svg.querySelector(`#${holder.player} .holder-ring`) : null;
     if (holderRing) holderRing.classList.add('active');
+    if (possessionStatus) {
+      const status = teamLabelForHolder(holder);
+      possessionStatus.className = `possession-status ${status.className}`;
+      possessionStatus.textContent = status.text;
+    }
 
     const activeRoleCues = (exercise.roleCues || []).filter(({ from, to }) => t >= from && t < to).slice(0, 3);
     svg.querySelectorAll('.role-cue').forEach((cueEl, index) => {
