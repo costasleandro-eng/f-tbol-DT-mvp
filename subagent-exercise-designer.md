@@ -302,6 +302,13 @@ Entrenar la reacción colectiva tras pérdida: presionar al poseedor, cerrar lí
 4. Si el rival supera la primera presión y entra en zona objetivo, suma doble.
 5. Comodines juegan a máximo 2 toques.
 
+## Protocolo de repetición y puntuación para animación de 30s
+
+- Cada repetición dura máximo 30 segundos: 7s de ataque azul, 3s de robo rojo, 5s de contrapresión y cierre con recuperación o salida rival.
+- Reiniciar desde el comodín izquierdo si azul recupera y asegura pase; reiniciar desde zona objetivo si rojo supera la presión.
+- Puntuar en voz alta: +1 azul por 6 pases, +1 extra por recuperar en 5s, +2 rojo por salir controlado hacia zona objetivo.
+- Si hay falta, choque o despeje sin control, no puntúa nadie y se repite desde la pérdida para mantener el foco táctico.
+
 ## Secuencia de juego
 
 1. Equipo azul circula con ayuda de comodines.

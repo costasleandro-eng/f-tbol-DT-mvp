@@ -84,3 +84,9 @@
 - Cambios: `script.js` calcula el equipo del poseedor actual y actualiza `#possessionStatus` en cada frame; `styles.css` colorea el estado por azul, rojo, comodín o pelota en viaje/disputa.
 - Valor para MVP: además del aro y la pelota al pie/lado, el entrenador puede leer de un vistazo quién tiene la pelota mientras salta fases o revisa el timeline.
 - Verificación: `node --check script.js` OK.
+
+## 2026-06-16 12:01 UTC — exercise worker
+- Mejora pequeña aplicada: añadí un protocolo de repetición y puntuación para el ejercicio demo “Presión tras pérdida en carril central”.
+- En `subagent-exercise-designer.md` ahora queda claro cómo encajar la repetición en 30s, cuándo reiniciar, cómo puntuar y cuándo repetir sin punto.
+- En `script.js` el plan generado incluye el mismo protocolo, reforzando quién ataca/defiende, transición tras pérdida/recuperación y criterios observables.
+- Verificación: `node --check script.js` OK.

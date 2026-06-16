@@ -62,6 +62,12 @@ const tacticalExercise = {
     'Tras recuperación azul: primer pase seguro al comodín libre antes de volver a progresar.',
     'Tras recuperación roja: primer control hacia delante y pase diagonal para salir de la jaula.'
   ],
+  resetProtocol: [
+    'Cada repetición dura máximo 30 segundos: 7s de ataque azul, 3s de robo rojo, 5s de contrapresión y cierre con recuperación o salida rival.',
+    'Reiniciar desde el comodín izquierdo si azul recupera y asegura pase; reiniciar desde zona objetivo si rojo supera la presión.',
+    'Puntuar en voz alta: +1 azul por 6 pases, +1 extra por recuperar en 5s, +2 rojo por salir controlado hacia zona objetivo.',
+    'Si hay falta, choque o despeje sin control, no puntúa nadie y se repite desde la pérdida para mantener el foco táctico.'
+  ],
   roleResponsibilities: [
     'Azul poseedor: conservar/progresar con apoyo de comodines; si pierde, cambia inmediatamente a presión tras pérdida.',
     'Azul más cercano a la pérdida: presiona al nuevo poseedor sin lanzarse al suelo ni ser superado fácil.',
@@ -474,6 +480,9 @@ ${tacticalExercise.rules.map((rule) => `- ${rule}`).join('\n')}
 
 Transiciones:
 ${tacticalExercise.transitionRules.map((rule) => `- ${rule}`).join('\n')}
+
+Protocolo de repetición y puntuación:
+${tacticalExercise.resetProtocol.map((rule) => `- ${rule}`).join('\n')}
 
 Mapa de roles por momento:
 ${tacticalExercise.roleResponsibilities.map((role) => `- ${role}`).join('\n')}
