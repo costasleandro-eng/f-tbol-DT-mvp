@@ -118,6 +118,7 @@
     .help { font-size: 13px; line-height: 1.45; color: var(--muted); }
     .status { margin-top: 10px; color: var(--accent); min-height: 22px; font-size: 13px; }
     .mini-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .save-row { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 8px; }
     @media (max-width: 850px) {
       .layout { grid-template-columns: 1fr; padding: 10px; }
       .board-wrap { min-height: 360px; }
@@ -154,6 +155,14 @@
         <button id="clearBtn" class="danger">Limpiar recorridos</button>
       </div>
 
+      <label for="exerciseName">Guardar ejercicio</label>
+      <input id="exerciseName" placeholder="Ej: Rondo 4v2 - presión" />
+      <div class="mini-row">
+        <button id="saveExerciseBtn">Guardar</button>
+        <button id="loadExerciseBtn">Cargar</button>
+      </div>
+      <select id="savedExercises" aria-label="Ejercicios guardados"></select>
+
       <label>Terreno del ejercicio</label>
       <div class="mini-row">
         <button id="drawZoneBtn">▭ Dibujar zona</button>
@@ -182,7 +191,7 @@
 
       <p class="help" style="margin-top:14px">
         Uso: arrastra las fichas. Tocá una ficha para seleccionarla y poder quitarla. Con <b>Dibujar zona</b> podés marcar el terreno del ejercicio con línea blanca continua o intermitente.
-        Pulsa <b>Grabar</b>, mueve jugadores/pelota y luego pulsa <b>Reproducir</b>.
+        Pulsa <b>Grabar</b>, mueve jugadores/pelota y luego pulsa <b>Reproducir</b>. Los recorridos se guardan para animar, pero no quedan dibujados como rayas.
       </p>
       <div id="status" class="status"></div>
     </aside>
@@ -197,6 +206,10 @@
     const downloadVideoBtn = document.getElementById('downloadVideoBtn');
     const resetBtn = document.getElementById('resetBtn');
     const clearBtn = document.getElementById('clearBtn');
+    const exerciseName = document.getElementById('exerciseName');
+    const saveExerciseBtn = document.getElementById('saveExerciseBtn');
+    const loadExerciseBtn = document.getElementById('loadExerciseBtn');
+    const savedExercises = document.getElementById('savedExercises');
     const drawZoneBtn = document.getElementById('drawZoneBtn');
     const clearZonesBtn = document.getElementById('clearZonesBtn');
     const zoneLineType = document.getElementById('zoneLineType');
@@ -217,6 +230,7 @@
     const tracks = new Map();
     const initial = new Map();
     const zones = [];
+    const STORAGE_KEY = 'pizarra-tactica-exercises-v1';
 
     const seed = [
       ['blue', 18, 48, '1'], ['blue', 30, 34, '2'], ['blue', 30, 62, '3'], ['blue', 44, 48, '4'],
@@ -286,7 +300,7 @@
         const arr = tracks.get(selected.dataset.id) || [];
         const last = arr[arr.length - 1];
         if (!last || Math.hypot(last.x - pct.x, last.y - pct.y) > 1.4) addTrackPoint(selected);
-        drawPaths();
+        // El movimiento queda grabado para animar, pero no dejamos rayas visibles en la pizarra.
       }
     }
 
@@ -338,31 +352,105 @@
     }
 
     function drawPaths() {
+      // Intencionalmente solo limpiamos: las trayectorias quedan guardadas en datos
+      // para reproducir/exportar video, pero no quedan dibujadas como rayas.
       pathsSvg.innerHTML = '';
-      const r = boardRect();
       setupSvgSize(pathsSvg);
-      for (const [id, pts] of tracks) {
-        if (pts.length < 2) continue;
-        const token = document.querySelector(`[data-id="${id}"]`);
-        const color = token?.classList.contains('red') ? '#ffb0b0' : token?.classList.contains('blue') ? '#b9d3ff' : '#ffe280';
-        const d = pts.map((p, i) => {
-          const px = pctToPx(p.x, p.y);
-          return `${i ? 'L' : 'M'} ${px.x.toFixed(1)} ${px.y.toFixed(1)}`;
-        }).join(' ');
-        const path = document.createElementNS('http://www.w3.org/2000/svg','path');
-        path.setAttribute('d', d);
-        path.setAttribute('fill', 'none');
-        path.setAttribute('stroke', color);
-        path.setAttribute('stroke-width', '4');
-        path.setAttribute('stroke-linecap', 'round');
-        path.setAttribute('stroke-dasharray', '8 7');
-        pathsSvg.appendChild(path);
-      }
     }
 
     function saveInitial() {
       document.querySelectorAll('.token').forEach(el => initial.set(el.dataset.id, { x: +el.dataset.x, y: +el.dataset.y }));
     }
+
+
+    function getSavedExercises() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+      catch { return []; }
+    }
+
+    function setSavedExercises(items) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+      refreshSavedExercises();
+    }
+
+    function refreshSavedExercises() {
+      const items = getSavedExercises();
+      savedExercises.innerHTML = '';
+      if (!items.length) {
+        const opt = document.createElement('option');
+        opt.textContent = 'Sin ejercicios guardados';
+        opt.value = '';
+        savedExercises.appendChild(opt);
+        return;
+      }
+      for (const item of items) {
+        const opt = document.createElement('option');
+        opt.value = item.id;
+        opt.textContent = item.name;
+        savedExercises.appendChild(opt);
+      }
+    }
+
+    function serializeExercise() {
+      const tokens = [...document.querySelectorAll('.token')].map(el => ({
+        id: el.dataset.id,
+        type: el.dataset.type,
+        classes: [...el.classList].filter(c => c !== 'token' && c !== 'selected'),
+        x: +el.dataset.x,
+        y: +el.dataset.y,
+        label: el.textContent,
+        track: tracks.get(el.dataset.id) || [],
+        initial: initial.get(el.dataset.id) || { x: +el.dataset.x, y: +el.dataset.y }
+      }));
+      return { tokens, zones: [...zones] };
+    }
+
+    function clearBoardTokens() {
+      document.querySelectorAll('.token').forEach(el => el.remove());
+      tracks.clear();
+      initial.clear();
+      selectedToken = null;
+      selected = null;
+    }
+
+    function applyExercise(data) {
+      clearBoardTokens();
+      zones.length = 0;
+      (data.zones || []).forEach(z => zones.push(z));
+      for (const t of data.tokens || []) {
+        const typeClass = (t.classes || []).join(' ') || t.type;
+        const el = createToken(typeClass, t.x, t.y, t.label);
+        const generatedId = el.dataset.id;
+        el.dataset.id = t.id;
+        tracks.delete(generatedId);
+        tracks.set(t.id, t.track || []);
+        initial.delete(generatedId);
+        initial.set(t.id, t.initial || { x: t.x, y: t.y });
+      }
+      drawZones();
+      drawPaths();
+    }
+
+    saveExerciseBtn.onclick = () => {
+      const name = (exerciseName.value || '').trim() || `Ejercicio ${new Date().toLocaleString('es-ES')}`;
+      const items = getSavedExercises();
+      const id = crypto.randomUUID ? crypto.randomUUID() : String(Date.now());
+      items.unshift({ id, name, savedAt: new Date().toISOString(), data: serializeExercise() });
+      setSavedExercises(items.slice(0, 30));
+      savedExercises.value = id;
+      statusEl.textContent = 'Ejercicio guardado en este navegador.';
+    };
+
+    loadExerciseBtn.onclick = () => {
+      const id = savedExercises.value;
+      const item = getSavedExercises().find(x => x.id === id);
+      if (!item) { statusEl.textContent = 'No hay ejercicio seleccionado para cargar.'; return; }
+      exerciseName.value = item.name;
+      applyExercise(item.data);
+      statusEl.textContent = 'Ejercicio cargado.';
+    };
+
+    refreshSavedExercises();
 
     drawZoneBtn.onclick = () => {
       drawingZone = !drawingZone;
@@ -494,21 +582,6 @@
         ctx.restore();
       }
 
-      for (const [id, pts] of tracks) {
-        if (pts.length < 2) continue;
-        const el = document.querySelector(`[data-id="${id}"]`);
-        ctx.save();
-        ctx.strokeStyle = el?.classList.contains('red') ? '#ffb0b0' : el?.classList.contains('blue') ? '#b9d3ff' : '#ffe280';
-        ctx.lineWidth = 4;
-        ctx.setLineDash([10, 8]);
-        ctx.beginPath();
-        pts.forEach((p, i) => {
-          const x = p.x / 100 * width, y = p.y / 100 * height;
-          if (i) ctx.lineTo(x, y); else ctx.moveTo(x, y);
-        });
-        ctx.stroke();
-        ctx.restore();
-      }
 
       document.querySelectorAll('.token').forEach(el => {
         const pos = tokenPositionForProgress(el, progress);
