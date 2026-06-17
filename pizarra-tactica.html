@@ -64,6 +64,11 @@
     .pitch-area .half, .pitch-area .center-circle, .pitch-area .center-dot, .pitch-area .box-left, .pitch-area .small-left { display: none; }
     .pitch-area .box-right { right: 8%; top: 8%; width: 84%; height: 84%; border: 3px solid var(--line); }
     .pitch-area .small-right { right: 0; top: 34%; width: 14%; height: 32%; border: 3px solid var(--line); border-right: 0; }
+    .pitch-free .line, .pitch-free .field-goal { display: none; }
+    .field-goal { position: absolute; top: 42%; width: 12px; height: 16%; border: 3px solid var(--line); pointer-events: none; }
+    .field-goal.left { left: -3px; border-left: 0; }
+    .field-goal.right { right: -3px; border-right: 0; }
+    .pitch-half .field-goal.left, .pitch-area .field-goal.left { display: none; }
     .path-layer { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
     .zone-layer { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; }
     .zone-shape { pointer-events: all; cursor: move; }
@@ -106,6 +111,17 @@
     }
     .cone.small { border-left-width: 8px; border-right-width: 8px; border-bottom-width: 17px; }
     .cone.medium { border-left-width: 11px; border-right-width: 11px; border-bottom-width: 24px; }
+    .goal-small, .goal-large {
+      border-radius: 6px;
+      background: rgba(255,255,255,.08);
+      border: 4px solid #fff;
+      color: #fff;
+      font-size: 10px;
+      letter-spacing: .4px;
+      text-shadow: 0 1px 2px rgba(0,0,0,.5);
+    }
+    .goal-small { width: 46px; height: 26px; }
+    .goal-large { width: 76px; height: 38px; }
     aside {
       background: var(--panel);
       border: 1px solid rgba(255,255,255,.08);
@@ -154,6 +170,8 @@
       <div class="line box-right"></div>
       <div class="line small-left"></div>
       <div class="line small-right"></div>
+      <div class="field-goal left"></div>
+      <div class="field-goal right"></div>
       <svg id="zones" class="zone-layer"></svg>
       <svg id="paths" class="path-layer"></svg>
     </section>
@@ -165,6 +183,7 @@
         <option value="full" selected>Cancha completa</option>
         <option value="half">Media cancha</option>
         <option value="area">Zona de área</option>
+        <option value="free">Espacio verde libre</option>
       </select>
       <div class="buttons">
         <button id="recordBtn" class="primary">● Grabar movimiento</button>
@@ -209,6 +228,8 @@
         <option value="joker">Comodín / apoyo</option>
         <option value="cone">Cono</option>
         <option value="ball">Pelota</option>
+        <option value="goal-small">Arco chico</option>
+        <option value="goal-large">Arco grande</option>
       </select>
       <label for="sizeType">Tamaño</label>
       <select id="sizeType">
@@ -220,7 +241,7 @@
 
       <p class="help" style="margin-top:14px">
         Uso: arrastra las fichas. Tocá una ficha para seleccionarla y poder quitarla. Con <b>Dibujar zona</b> podés marcar el terreno del ejercicio con línea blanca continua o intermitente.
-        Pulsa <b>Grabar</b>, mueve jugadores/pelota y luego pulsa <b>Reproducir</b>. Al dibujar una zona, el modo dibujo se apaga. Tocá la zona y usá los botones de ancho/alto o la esquina amarilla para cambiar el tamaño.
+        Pulsa <b>Grabar</b>, mueve jugadores/pelota y luego pulsa <b>Reproducir</b>. Podés usar cancha completa, media cancha, área o espacio verde libre, y agregar arcos chicos/grandes.
       </p>
       <div id="status" class="status"></div>
     </aside>
@@ -285,13 +306,14 @@
     function applyPitchType(value = pitchType.value) {
       board.classList.toggle('pitch-half', value === 'half');
       board.classList.toggle('pitch-area', value === 'area');
+      board.classList.toggle('pitch-free', value === 'free');
       drawZones();
       drawPaths();
     }
 
     pitchType.onchange = () => {
       applyPitchType();
-      statusEl.textContent = pitchType.value === 'full' ? 'Cancha completa seleccionada.' : pitchType.value === 'half' ? 'Media cancha seleccionada.' : 'Zona de área seleccionada.';
+      statusEl.textContent = pitchType.value === 'full' ? 'Cancha completa seleccionada.' : pitchType.value === 'half' ? 'Media cancha seleccionada.' : pitchType.value === 'area' ? 'Zona de área seleccionada.' : 'Espacio verde libre seleccionado.';
     };
 
     function createToken(type, x = 50, y = 50, label = null) {
@@ -303,7 +325,7 @@
       el.dataset.type = baseType;
       el.dataset.x = x;
       el.dataset.y = y;
-      el.textContent = label ?? (baseType === 'ball' ? '⚽' : baseType === 'cone' ? '' : counter++);
+      el.textContent = label ?? (baseType === 'ball' ? '⚽' : baseType === 'cone' ? '' : baseType.startsWith('goal') ? 'ARCO' : counter++);
       position(el, x, y);
       el.addEventListener('pointerdown', pointerDown);
       board.appendChild(el);
@@ -779,18 +801,23 @@
       ctx.strokeStyle = 'rgba(255,255,255,.9)';
       ctx.lineWidth = 4;
       ctx.setLineDash([]);
+      if (mode === 'free') return;
       ctx.strokeRect(2, 2, width - 4, height - 4);
       if (mode === 'half') {
         ctx.strokeRect(width * .72, height * .18, width * .28, height * .64);
         ctx.strokeRect(width * .88, height * .34, width * .12, height * .32);
+        ctx.strokeRect(width - 14, height * .42, 14, height * .16);
         return;
       }
       if (mode === 'area') {
         ctx.lineWidth = 5;
         ctx.strokeRect(width * .08, height * .08, width * .84, height * .84);
         ctx.strokeRect(width * .86, height * .34, width * .14, height * .32);
+        ctx.strokeRect(width - 14, height * .42, 14, height * .16);
         return;
       }
+      ctx.strokeRect(0, height * .42, 14, height * .16);
+      ctx.strokeRect(width - 14, height * .42, 14, height * .16);
       ctx.beginPath(); ctx.moveTo(width / 2, 0); ctx.lineTo(width / 2, height); ctx.stroke();
       ctx.beginPath(); ctx.arc(width / 2, height / 2, width * .09, 0, Math.PI * 2); ctx.stroke();
       ctx.beginPath(); ctx.arc(width / 2, height / 2, 5, 0, Math.PI * 2); ctx.fillStyle = 'white'; ctx.fill();
@@ -832,7 +859,16 @@
         const y = pos.y / 100 * height;
         const type = el.dataset.type;
         ctx.save();
-        if (type === 'cone') {
+        if (type.startsWith('goal')) {
+          const gw = type === 'goal-large' ? 76 : 46;
+          const gh = type === 'goal-large' ? 38 : 26;
+          ctx.strokeStyle = '#fff';
+          ctx.fillStyle = 'rgba(255,255,255,.08)';
+          ctx.lineWidth = 5;
+          ctx.fillRect(x - gw / 2, y - gh / 2, gw, gh);
+          ctx.strokeRect(x - gw / 2, y - gh / 2, gw, gh);
+          ctx.fillStyle = '#fff'; ctx.font = 'bold 11px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('ARCO', x, y);
+        } else if (type === 'cone') {
           ctx.fillStyle = '#ff8b1a';
           const size = el.classList.contains('medium') ? 24 : 18;
           ctx.beginPath();
