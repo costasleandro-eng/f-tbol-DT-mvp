@@ -60,6 +60,9 @@
     .small-right { right: 0; top: 37%; width: 6%; height: 26%; border: 2px solid var(--line); border-right: 0; }
     .path-layer { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
     .zone-layer { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; }
+    .zone-shape { pointer-events: all; cursor: move; }
+    .zone-shape.selected-zone { filter: drop-shadow(0 0 6px rgba(246,199,68,.9)); }
+    .zone-handle { pointer-events: all; cursor: nwse-resize; fill: var(--accent); stroke: #111; stroke-width: 2; }
     .board-wrap.draw-mode { cursor: crosshair; }
     .token {
       position: absolute;
@@ -191,7 +194,7 @@
 
       <p class="help" style="margin-top:14px">
         Uso: arrastra las fichas. Tocá una ficha para seleccionarla y poder quitarla. Con <b>Dibujar zona</b> podés marcar el terreno del ejercicio con línea blanca continua o intermitente.
-        Pulsa <b>Grabar</b>, mueve jugadores/pelota y luego pulsa <b>Reproducir</b>. Las líneas de movimiento aparecen como referencia mientras grabás, pero desaparecen al terminar.
+        Pulsa <b>Grabar</b>, mueve jugadores/pelota y luego pulsa <b>Reproducir</b>. Las zonas se pueden seleccionar, mover como bloque y agrandar/achicar desde la esquina amarilla.
       </p>
       <div id="status" class="status"></div>
     </aside>
@@ -226,6 +229,8 @@
     let drawingZone = false;
     let zoneStart = null;
     let zoneDraft = null;
+    let selectedZoneIndex = null;
+    let zoneAction = null;
     let counter = 1;
     const tracks = new Map();
     const initial = new Map();
@@ -324,31 +329,60 @@
       svg.setAttribute('viewBox', `0 0 ${r.width} ${r.height}`);
     }
 
+    function normalizeZone(z) {
+      const left = Math.min(z.x1, z.x2);
+      const right = Math.max(z.x1, z.x2);
+      const top = Math.min(z.y1, z.y2);
+      const bottom = Math.max(z.y1, z.y2);
+      z.x1 = left; z.x2 = right; z.y1 = top; z.y2 = bottom;
+      return z;
+    }
+
     function drawZones() {
       zonesSvg.innerHTML = '';
       setupSvgSize(zonesSvg);
-      for (const z of zones) drawZoneRect(z);
-      if (zoneDraft) drawZoneRect(zoneDraft, true);
+      zones.forEach((z, i) => drawZoneRect(z, false, i));
+      if (zoneDraft) drawZoneRect(zoneDraft, true, null);
     }
 
-    function drawZoneRect(z, draft = false) {
+    function drawZoneRect(z, draft = false, index = null) {
       const r = boardRect();
       const x1 = z.x1 / 100 * r.width;
       const y1 = z.y1 / 100 * r.height;
       const x2 = z.x2 / 100 * r.width;
       const y2 = z.y2 / 100 * r.height;
+      const x = Math.min(x1, x2);
+      const y = Math.min(y1, y2);
+      const w = Math.abs(x2 - x1);
+      const h = Math.abs(y2 - y1);
       const rect = document.createElementNS('http://www.w3.org/2000/svg','rect');
-      rect.setAttribute('x', Math.min(x1, x2));
-      rect.setAttribute('y', Math.min(y1, y2));
-      rect.setAttribute('width', Math.abs(x2 - x1));
-      rect.setAttribute('height', Math.abs(y2 - y1));
+      rect.setAttribute('x', x);
+      rect.setAttribute('y', y);
+      rect.setAttribute('width', w);
+      rect.setAttribute('height', h);
       rect.setAttribute('fill', 'rgba(255,255,255,0.045)');
-      rect.setAttribute('stroke', '#ffffff');
-      rect.setAttribute('stroke-width', draft ? '3' : '4');
+      rect.setAttribute('stroke', index === selectedZoneIndex ? '#f6c744' : '#ffffff');
+      rect.setAttribute('stroke-width', index === selectedZoneIndex ? '5' : (draft ? '3' : '4'));
       rect.setAttribute('stroke-linejoin', 'round');
+      rect.classList.add('zone-shape');
+      if (index === selectedZoneIndex) rect.classList.add('selected-zone');
+      if (index !== null) rect.dataset.zoneIndex = String(index);
       if (z.line === 'dashed') rect.setAttribute('stroke-dasharray', '12 9');
       if (draft) rect.setAttribute('opacity', '0.75');
       zonesSvg.appendChild(rect);
+
+      if (index === selectedZoneIndex && !draft) {
+        const handle = document.createElementNS('http://www.w3.org/2000/svg','rect');
+        handle.setAttribute('x', x + w - 8);
+        handle.setAttribute('y', y + h - 8);
+        handle.setAttribute('width', 16);
+        handle.setAttribute('height', 16);
+        handle.setAttribute('rx', 3);
+        handle.classList.add('zone-handle');
+        handle.dataset.zoneIndex = String(index);
+        handle.dataset.handle = 'br';
+        zonesSvg.appendChild(handle);
+      }
     }
 
     function drawPaths() {
@@ -433,7 +467,9 @@
     function applyExercise(data) {
       clearBoardTokens();
       zones.length = 0;
-      (data.zones || []).forEach(z => zones.push(z));
+      selectedZoneIndex = null;
+      zoneAction = null;
+      (data.zones || []).forEach(z => zones.push(normalizeZone({ ...z })));
       for (const t of data.tokens || []) {
         const typeClass = (t.classes || []).join(' ') || t.type;
         const el = createToken(typeClass, t.x, t.y, t.label);
@@ -481,13 +517,15 @@
 
     clearZonesBtn.onclick = () => {
       zones.length = 0;
+      selectedZoneIndex = null;
+      zoneAction = null;
       zoneDraft = null;
       drawZones();
       statusEl.textContent = 'Zonas/terrenos limpiados.';
     };
 
     board.addEventListener('pointerdown', (e) => {
-      if (!drawingZone || e.target !== board) return;
+      if (!drawingZone || (e.target !== board && e.target !== zonesSvg)) return;
       const r = boardRect();
       zoneStart = pxToPct(e.clientX - r.left, e.clientY - r.top);
       zoneDraft = { x1: zoneStart.x, y1: zoneStart.y, x2: zoneStart.x, y2: zoneStart.y, line: zoneLineType.value };
@@ -508,12 +546,68 @@
       if (!drawingZone || !zoneStart || !zoneDraft) return;
       const width = Math.abs(zoneDraft.x2 - zoneDraft.x1);
       const height = Math.abs(zoneDraft.y2 - zoneDraft.y1);
-      if (width > 2 && height > 2) zones.push(zoneDraft);
+      if (width > 2 && height > 2) {
+        zones.push(normalizeZone(zoneDraft));
+        selectedZoneIndex = zones.length - 1;
+      }
       zoneStart = null;
       zoneDraft = null;
       board.releasePointerCapture(e.pointerId);
       drawZones();
       statusEl.textContent = 'Terreno marcado. Podés dibujar otro o desactivar el modo dibujo.';
+    });
+
+
+    zonesSvg.addEventListener('pointerdown', (e) => {
+      if (drawingZone) return;
+      const idxRaw = e.target.dataset.zoneIndex;
+      if (idxRaw === undefined) return;
+      e.preventDefault();
+      e.stopPropagation();
+      selectedZoneIndex = Number(idxRaw);
+      const r = boardRect();
+      const pct = pxToPct(e.clientX - r.left, e.clientY - r.top);
+      const z = zones[selectedZoneIndex];
+      zoneAction = {
+        type: e.target.dataset.handle === 'br' ? 'resize' : 'move',
+        startX: pct.x,
+        startY: pct.y,
+        original: { ...z }
+      };
+      zonesSvg.setPointerCapture(e.pointerId);
+      drawZones();
+      statusEl.textContent = zoneAction.type === 'move' ? 'Zona seleccionada: arrastrá para moverla.' : 'Redimensionando zona.';
+    });
+
+    zonesSvg.addEventListener('pointermove', (e) => {
+      if (!zoneAction || selectedZoneIndex === null || !zones[selectedZoneIndex]) return;
+      const r = boardRect();
+      const pct = pxToPct(clamp(e.clientX - r.left, 0, r.width), clamp(e.clientY - r.top, 0, r.height));
+      const dx = pct.x - zoneAction.startX;
+      const dy = pct.y - zoneAction.startY;
+      const z = zones[selectedZoneIndex];
+      const o = zoneAction.original;
+      if (zoneAction.type === 'move') {
+        const width = o.x2 - o.x1;
+        const height = o.y2 - o.y1;
+        let nx1 = clamp(o.x1 + dx, 0, 100 - width);
+        let ny1 = clamp(o.y1 + dy, 0, 100 - height);
+        z.x1 = nx1; z.x2 = nx1 + width; z.y1 = ny1; z.y2 = ny1 + height;
+      } else {
+        z.x1 = o.x1; z.y1 = o.y1;
+        z.x2 = clamp(o.x2 + dx, o.x1 + 2, 100);
+        z.y2 = clamp(o.y2 + dy, o.y1 + 2, 100);
+      }
+      drawZones();
+    });
+
+    zonesSvg.addEventListener('pointerup', (e) => {
+      if (!zoneAction) return;
+      zonesSvg.releasePointerCapture(e.pointerId);
+      if (selectedZoneIndex !== null && zones[selectedZoneIndex]) normalizeZone(zones[selectedZoneIndex]);
+      zoneAction = null;
+      drawZones();
+      statusEl.textContent = 'Zona editada.';
     });
 
     recordBtn.onclick = () => {
