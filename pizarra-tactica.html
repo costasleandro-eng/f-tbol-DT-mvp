@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pizarra táctica - Prototipo</title>
+  <style>
+    :root {
+      --grass: #1e8a4c;
+      --line: rgba(255,255,255,.88);
+      --panel: #101827;
+      --panel2: #172033;
+      --text: #f5f7fb;
+      --muted: #aab3c4;
+      --accent: #f6c744;
+      --blue: #2275ff;
+      --red: #e33d3d;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: #0b1020;
+      color: var(--text);
+    }
+    header {
+      padding: 14px 16px;
+      background: var(--panel);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    h1 { font-size: 18px; margin: 0 0 4px; }
+    p { margin: 0; color: var(--muted); font-size: 13px; }
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 14px;
+      padding: 14px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .board-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      min-height: 420px;
+      background: linear-gradient(90deg, #207e48 0 10%, #238d50 10% 20%, #207e48 20% 30%, #238d50 30% 40%, #207e48 40% 50%, #238d50 50% 60%, #207e48 60% 70%, #238d50 70% 80%, #207e48 80% 90%, #238d50 90% 100%);
+      border: 3px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+      touch-action: none;
+      box-shadow: 0 18px 45px rgba(0,0,0,.35);
+    }
+    .line { position: absolute; border-color: var(--line); pointer-events: none; }
+    .half { left: 50%; top: 0; height: 100%; border-left: 2px solid var(--line); }
+    .center-circle { width: 18%; aspect-ratio: 1; left: 41%; top: 34%; border: 2px solid var(--line); border-radius: 50%; }
+    .center-dot { width: 8px; height: 8px; left: calc(50% - 4px); top: calc(50% - 4px); background: var(--line); border-radius: 50%; }
+    .box-left { left: 0; top: 25%; width: 15%; height: 50%; border: 2px solid var(--line); border-left: 0; }
+    .box-right { right: 0; top: 25%; width: 15%; height: 50%; border: 2px solid var(--line); border-right: 0; }
+    .small-left { left: 0; top: 37%; width: 6%; height: 26%; border: 2px solid var(--line); border-left: 0; }
+    .small-right { right: 0; top: 37%; width: 6%; height: 26%; border: 2px solid var(--line); border-right: 0; }
+    .path-layer { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+    .token {
+      position: absolute;
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      display: grid; place-items: center;
+      font-weight: 800;
+      color: white;
+      transform: translate(-50%, -50%);
+      border: 3px solid rgba(255,255,255,.9);
+      box-shadow: 0 5px 12px rgba(0,0,0,.32);
+      cursor: grab;
+      user-select: none;
+      z-index: 3;
+    }
+    .token:active { cursor: grabbing; }
+    .blue { background: var(--blue); }
+    .red { background: var(--red); }
+    .ball { background: #f7f7f7; color: #111; width: 30px; height: 30px; border-color: #111; font-size: 16px; }
+    .cone {
+      width: 0; height: 0;
+      border-left: 18px solid transparent;
+      border-right: 18px solid transparent;
+      border-bottom: 38px solid #ff8b1a;
+      border-radius: 0;
+      background: transparent;
+      border-top: 0;
+      color: transparent;
+      box-shadow: none;
+    }
+    aside {
+      background: var(--panel);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 14px;
+      padding: 14px;
+      height: fit-content;
+    }
+    .buttons { display: grid; gap: 8px; margin: 12px 0; }
+    button, select, input {
+      width: 100%;
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 12px;
+      font-weight: 700;
+      color: var(--text);
+      background: var(--panel2);
+    }
+    button { cursor: pointer; }
+    button.primary { background: var(--accent); color: #1a1605; }
+    button.danger { background: #61212b; }
+    button.active { outline: 3px solid rgba(246,199,68,.35); }
+    label { display: block; color: var(--muted); font-size: 12px; margin: 10px 0 6px; }
+    .help { font-size: 13px; line-height: 1.45; color: var(--muted); }
+    .status { margin-top: 10px; color: var(--accent); min-height: 22px; font-size: 13px; }
+    @media (max-width: 850px) {
+      .layout { grid-template-columns: 1fr; padding: 10px; }
+      .board-wrap { min-height: 360px; }
+      aside { order: -1; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Pizarra táctica interactiva — prototipo</h1>
+    <p>Mueve fichas, graba recorridos y reproduce el ejercicio.</p>
+  </header>
+
+  <main class="layout">
+    <section id="board" class="board-wrap" aria-label="Cancha táctica">
+      <div class="line half"></div>
+      <div class="line center-circle"></div>
+      <div class="line center-dot"></div>
+      <div class="line box-left"></div>
+      <div class="line box-right"></div>
+      <div class="line small-left"></div>
+      <div class="line small-right"></div>
+      <svg id="paths" class="path-layer"></svg>
+    </section>
+
+    <aside>
+      <strong>Controles</strong>
+      <div class="buttons">
+        <button id="recordBtn" class="primary">● Grabar movimiento</button>
+        <button id="playBtn">▶ Reproducir ejercicio</button>
+        <button id="resetBtn">↺ Volver al inicio</button>
+        <button id="clearBtn" class="danger">Limpiar recorridos</button>
+      </div>
+
+      <label for="addType">Agregar elemento</label>
+      <select id="addType">
+        <option value="blue">Jugador azul</option>
+        <option value="red">Jugador rojo</option>
+        <option value="cone">Cono</option>
+        <option value="ball">Pelota</option>
+      </select>
+      <button id="addBtn">+ Agregar al centro</button>
+
+      <p class="help" style="margin-top:14px">
+        Uso: arrastra las fichas. Pulsa <b>Grabar</b>, mueve jugadores/pelota y luego pulsa <b>Reproducir</b>.
+        El prototipo dibuja los recorridos para explicar el ejercicio.
+      </p>
+      <div id="status" class="status"></div>
+    </aside>
+  </main>
+
+  <script>
+    const board = document.getElementById('board');
+    const pathsSvg = document.getElementById('paths');
+    const recordBtn = document.getElementById('recordBtn');
+    const playBtn = document.getElementById('playBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const addBtn = document.getElementById('addBtn');
+    const addType = document.getElementById('addType');
+    const statusEl = document.getElementById('status');
+
+    let recording = false;
+    let selected = null;
+    let offset = { x: 0, y: 0 };
+    let counter = 1;
+    const tracks = new Map();
+    const initial = new Map();
+
+    const seed = [
+      ['blue', 18, 48, '1'], ['blue', 30, 34, '2'], ['blue', 30, 62, '3'], ['blue', 44, 48, '4'],
+      ['red', 72, 35, '1'], ['red', 72, 61, '2'], ['red', 84, 48, '3'],
+      ['ball', 50, 50, '⚽'], ['cone', 58, 36, '']
+    ];
+    seed.forEach(([type, x, y, label]) => createToken(type, x, y, label));
+    saveInitial();
+
+    function boardRect() { return board.getBoundingClientRect(); }
+    function pctToPx(x, y) { const r = boardRect(); return { x: x / 100 * r.width, y: y / 100 * r.height }; }
+    function pxToPct(x, y) { const r = boardRect(); return { x: x / r.width * 100, y: y / r.height * 100 }; }
+    function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
+
+    function createToken(type, x = 50, y = 50, label = null) {
+      const el = document.createElement('div');
+      el.className = `token ${type}`;
+      el.dataset.id = crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random());
+      el.dataset.type = type;
+      el.dataset.x = x;
+      el.dataset.y = y;
+      el.textContent = label ?? (type === 'ball' ? '⚽' : type === 'cone' ? '' : counter++);
+      position(el, x, y);
+      el.addEventListener('pointerdown', pointerDown);
+      board.appendChild(el);
+      tracks.set(el.dataset.id, []);
+      initial.set(el.dataset.id, { x, y });
+      return el;
+    }
+
+    function position(el, x, y) {
+      el.dataset.x = x;
+      el.dataset.y = y;
+      el.style.left = x + '%';
+      el.style.top = y + '%';
+    }
+
+    function pointerDown(e) {
+      selected = e.currentTarget;
+      selected.setPointerCapture(e.pointerId);
+      const r = boardRect();
+      const px = pctToPx(+selected.dataset.x, +selected.dataset.y);
+      offset = { x: e.clientX - r.left - px.x, y: e.clientY - r.top - px.y };
+      if (recording) addTrackPoint(selected);
+      selected.addEventListener('pointermove', pointerMove);
+      selected.addEventListener('pointerup', pointerUp, { once: true });
+    }
+
+    function pointerMove(e) {
+      if (!selected) return;
+      const r = boardRect();
+      const x = clamp(e.clientX - r.left - offset.x, 10, r.width - 10);
+      const y = clamp(e.clientY - r.top - offset.y, 10, r.height - 10);
+      const pct = pxToPct(x, y);
+      position(selected, pct.x, pct.y);
+      if (recording) {
+        const arr = tracks.get(selected.dataset.id) || [];
+        const last = arr[arr.length - 1];
+        if (!last || Math.hypot(last.x - pct.x, last.y - pct.y) > 1.4) addTrackPoint(selected);
+        drawPaths();
+      }
+    }
+
+    function pointerUp(e) {
+      if (selected) {
+        selected.releasePointerCapture(e.pointerId);
+        selected.removeEventListener('pointermove', pointerMove);
+      }
+      selected = null;
+    }
+
+    function addTrackPoint(el) {
+      const id = el.dataset.id;
+      const arr = tracks.get(id) || [];
+      arr.push({ x: +el.dataset.x, y: +el.dataset.y });
+      tracks.set(id, arr);
+    }
+
+    function drawPaths() {
+      pathsSvg.innerHTML = '';
+      const r = boardRect();
+      pathsSvg.setAttribute('viewBox', `0 0 ${r.width} ${r.height}`);
+      for (const [id, pts] of tracks) {
+        if (pts.length < 2) continue;
+        const token = document.querySelector(`[data-id="${id}"]`);
+        const color = token?.classList.contains('red') ? '#ffb0b0' : token?.classList.contains('blue') ? '#b9d3ff' : '#ffe280';
+        const d = pts.map((p, i) => {
+          const px = pctToPx(p.x, p.y);
+          return `${i ? 'L' : 'M'} ${px.x.toFixed(1)} ${px.y.toFixed(1)}`;
+        }).join(' ');
+        const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+        path.setAttribute('d', d);
+        path.setAttribute('fill', 'none');
+        path.setAttribute('stroke', color);
+        path.setAttribute('stroke-width', '4');
+        path.setAttribute('stroke-linecap', 'round');
+        path.setAttribute('stroke-dasharray', '8 7');
+        pathsSvg.appendChild(path);
+      }
+    }
+
+    function saveInitial() {
+      document.querySelectorAll('.token').forEach(el => initial.set(el.dataset.id, { x: +el.dataset.x, y: +el.dataset.y }));
+    }
+
+    recordBtn.onclick = () => {
+      recording = !recording;
+      recordBtn.classList.toggle('active', recording);
+      recordBtn.textContent = recording ? '■ Detener grabación' : '● Grabar movimiento';
+      statusEl.textContent = recording ? 'Grabando: mueve fichas para crear recorridos.' : 'Grabación detenida.';
+      if (recording) saveInitial();
+    };
+
+    playBtn.onclick = async () => {
+      recording = false;
+      recordBtn.classList.remove('active');
+      recordBtn.textContent = '● Grabar movimiento';
+      const playable = [...tracks.entries()].filter(([, pts]) => pts.length > 1);
+      if (!playable.length) { statusEl.textContent = 'Todavía no hay recorridos grabados.'; return; }
+      resetPositions();
+      statusEl.textContent = 'Reproduciendo ejercicio...';
+      const duration = 1800;
+      const start = performance.now();
+      function frame(now) {
+        const t = Math.min(1, (now - start) / duration);
+        for (const [id, pts] of playable) {
+          const el = document.querySelector(`[data-id="${id}"]`);
+          if (!el) continue;
+          const scaled = t * (pts.length - 1);
+          const i = Math.min(pts.length - 2, Math.floor(scaled));
+          const local = scaled - i;
+          const a = pts[i], b = pts[i + 1];
+          position(el, a.x + (b.x - a.x) * local, a.y + (b.y - a.y) * local);
+        }
+        if (t < 1) requestAnimationFrame(frame);
+        else statusEl.textContent = 'Ejercicio reproducido.';
+      }
+      requestAnimationFrame(frame);
+    };
+
+    function resetPositions() {
+      for (const [id, pos] of initial) {
+        const el = document.querySelector(`[data-id="${id}"]`);
+        if (el) position(el, pos.x, pos.y);
+      }
+    }
+
+    resetBtn.onclick = () => { resetPositions(); statusEl.textContent = 'Fichas al punto inicial.'; };
+    clearBtn.onclick = () => {
+      tracks.forEach((_, id) => tracks.set(id, []));
+      drawPaths();
+      saveInitial();
+      statusEl.textContent = 'Recorridos limpiados.';
+    };
+    addBtn.onclick = () => {
+      const type = addType.value;
+      createToken(type, 50, 50);
+      statusEl.textContent = 'Elemento agregado al centro.';
+    };
+    window.addEventListener('resize', drawPaths);
+  </script>
+</body>
+</html>
