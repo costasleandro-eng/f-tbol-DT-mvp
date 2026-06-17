@@ -130,3 +130,11 @@
 - Cambios: `subagent-exercise-designer.md` documenta consignas por fase y `script.js` las incluye en el plan generado como “Guion verbal de 30 segundos”.
 - Valor para MVP: ayuda a que el entrenador lea la animación con comandos breves: quién ataca, quién defiende, cómo reaccionar tras pérdida, cómo asegurar la recuperación y cómo temporizar si rojo supera la presión.
 - Verificación: `node --check script.js` y `git diff --check` OK.
+
+## 2026-06-17 06:30 UTC — animation worker
+
+- Mejora implementada: agregué “congelados de entrenador” en la pizarra animada con botones a 10s, 15s, 18s y 24s.
+- Objetivo: que la animación explique mejor el juego y permita pausar justo en momentos de corrección: roles de contrapresión, decisión, primer pase seguro y repliegue/protección del centro.
+- Datos/UI: añadí `coachStops` al modelo del ejercicio, estado visual del próximo congelado y resaltado automático cuando el timeline cae cerca del punto.
+- Verificación: `node --check script.js` OK.
+- Sin dependencias nuevas; no se hizo push externo.

@@ -116,6 +116,12 @@ const tacticalExercise = {
     'Congelar en 18s: revisar primer pase tras recuperar; debe ir a apoyo libre, no al tráfico.',
     'Congelar en 24s: si rojo salió, pedir repliegue protegiendo centro antes que persecución individual.'
   ],
+  coachStops: [
+    { time: 10, label: '10s · Roles', text: 'Congelar: ¿quién presiona balón, quién tapa pase vertical y quién equilibra?' },
+    { time: 15, label: '15s · Decisión', text: 'Congelar: decidir si conviene robar, temporizar o forzar pase lateral.' },
+    { time: 18, label: '18s · Pase seguro', text: 'Congelar: revisar si el primer pase tras recuperar va a apoyo libre.' },
+    { time: 24, label: '24s · Repliegue', text: 'Congelar: si rojo salió, azul protege carril central antes de perseguir.' }
+  ],
   coachCommands: [
     '0-7s: “Azul, atrae y juega con apoyo; rojo, tapa el pase interior sin partirte.”',
     '7-10s: “Robo rojo: primer control orientado, no despeje.”',
@@ -291,12 +297,17 @@ function renderPitchDiagram(data) {
       </label>
       <span id="possessionStatus" class="possession-status neutral">Posesión: comodín</span>
       <span id="phaseProgress" class="phase-progress">Fase 1/5 · 0.0s de 7s</span>
+      <span id="coachStopStatus" class="coach-stop-status">Punto de entrenador: 10s · roles</span>
       <div class="possession-rail" aria-label="Línea de posesión: quién tiene la pelota en cada momento">
         ${possessionRail}
       </div>
       <div class="phase-jump-list" aria-label="Saltar a una fase de la animación">
         ${tacticalExercise.phases.map((phase, index) => `
           <button class="phase-jump" type="button" data-phase-index="${index}">${phase.label}</button>`).join('')}
+      </div>
+      <div class="coach-stop-list" aria-label="Congelados recomendados para corregir durante la animación">
+        ${tacticalExercise.coachStops.map((stop, index) => `
+          <button class="coach-stop" type="button" data-stop-index="${index}">${stop.label}</button>`).join('')}
       </div>
     </div>`;
 
@@ -315,6 +326,8 @@ function startTacticalAnimation(svg, root, exercise) {
   const phaseProgress = root.querySelector('#phaseProgress');
   const possessionSegments = Array.from(root.querySelectorAll('.possession-segment'));
   const phaseJumpButtons = Array.from(root.querySelectorAll('.phase-jump'));
+  const coachStopStatus = root.querySelector('#coachStopStatus');
+  const coachStopButtons = Array.from(root.querySelectorAll('.coach-stop'));
   let currentTime = 0;
   let isPlaying = true;
   let lastTick = performance.now();
@@ -431,6 +444,14 @@ function startTacticalAnimation(svg, root, exercise) {
     const phaseElapsed = Math.max(0, t - phase.from);
     const phaseDuration = Math.max(0.1, phase.to - phase.from);
     phaseJumpButtons.forEach((button, index) => button.classList.toggle('active', index === activePhaseIndex));
+    const activeStopIndex = (exercise.coachStops || []).findIndex(({ time }) => Math.abs(t - time) <= 0.45);
+    const nextStop = (exercise.coachStops || []).find(({ time }) => time >= t) || (exercise.coachStops || [])[0];
+    coachStopButtons.forEach((button, index) => button.classList.toggle('active', index === activeStopIndex));
+    if (coachStopStatus) {
+      const activeStop = activeStopIndex === -1 ? null : exercise.coachStops[activeStopIndex];
+      coachStopStatus.textContent = activeStop ? activeStop.text : `Próximo congelado: ${nextStop?.label || 'sin marca'}`;
+      coachStopStatus.classList.toggle('active', Boolean(activeStop));
+    }
     if (phaseProgress) {
       phaseProgress.textContent = `Fase ${activePhaseIndex + 1}/${exercise.phases.length} · ${phaseElapsed.toFixed(1)}s de ${phaseDuration.toFixed(0)}s`;
       phaseProgress.style.setProperty('--phase-progress', `${Math.min(100, (phaseElapsed / phaseDuration) * 100)}%`);
@@ -492,6 +513,16 @@ function startTacticalAnimation(svg, root, exercise) {
       const phase = exercise.phases[Number(button.dataset.phaseIndex)];
       if (!phase) return;
       currentTime = phase.from;
+      setPlaying(false);
+      renderAt(currentTime);
+    });
+  });
+
+  coachStopButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const stop = exercise.coachStops[Number(button.dataset.stopIndex)];
+      if (!stop) return;
+      currentTime = stop.time;
       setPlaying(false);
       renderAt(currentTime);
     });
@@ -617,6 +648,7 @@ LECTURA DE LA ANIMACIÓN
 - La píldora de fase muestra cuántos segundos van dentro del bloque activo para revisar timing de robo, contrapresión y pase seguro.
 - La tercera línea superior cambia por fase y explica qué debe mirar el entrenador: objetivo, disparador, regla o consecuencia.
 - La cuarta línea da una instrucción contextual: poseedor, robo, cuenta atrás de contrapresión, primer pase seguro o reorganización defensiva.
+- Los botones de congelado llevan directo a 10s, 15s, 18s o 24s para corregir roles, decisión, pase seguro y repliegue.
 - Las etiquetas cortas sobre jugadores marcan el rol activo de la fase: apoyo, roba, presiona, tapa vertical, cubre apoyo, asegura o temporiza.
 - Roles: azul ataca y hace contrapresión; rojo defiende, recupera y busca zona objetivo; comodines apoyan al poseedor.
 - En animación no usamos flechas: el movimiento debe explicar la acción.

@@ -60,6 +60,8 @@ button:hover { background: var(--accent-dark); transform: translateY(-1px); }
 .phase-progress { --phase-progress: 0%; position: relative; flex: 0 1 210px; overflow: hidden; border-radius: 999px; padding: 9px 12px; border: 1px solid rgba(255,255,255,.34); background: rgba(0,0,0,.22); color: #fff; font-size: 12px; font-weight: 950; box-shadow: 0 0 0 2px rgba(255,255,255,.08) inset; }
 .phase-progress::before { content: ''; position: absolute; inset: 0 auto 0 0; width: var(--phase-progress); background: rgba(255,228,92,.34); pointer-events: none; }
 .phase-progress { text-shadow: 0 1px 2px rgba(0,0,0,.45); }
+.coach-stop-status { flex: 1 1 260px; border-radius: 999px; padding: 9px 12px; border: 1px solid rgba(255,228,92,.38); background: rgba(255,228,92,.12); color: #fff7b0; font-size: 12px; font-weight: 950; }
+.coach-stop-status.active { background: #ffe45c; color: #21310f; }
 .possession-rail { flex: 1 0 100%; display: flex; min-height: 34px; overflow: hidden; border: 1px solid rgba(255,255,255,.28); border-radius: 999px; background: rgba(0,0,0,.16); }
 .possession-segment { display: grid; place-items: center; min-width: 42px; padding: 0 8px; color: rgba(255,255,255,.78); font-size: 10px; font-weight: 950; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-right: 1px solid rgba(255,255,255,.22); opacity: .62; transition: opacity .15s ease, box-shadow .15s ease, color .15s ease; }
 .possession-segment:last-child { border-right: 0; }
@@ -68,11 +70,13 @@ button:hover { background: var(--accent-dark); transform: translateY(-1px); }
 .possession-segment.neutral { background: #b77b00; }
 .possession-segment.loose { background: #2d3d2f; }
 .possession-segment.active { color: #fff; opacity: 1; box-shadow: 0 0 0 3px #ffe45c inset; }
-.phase-jump-list { flex: 1 0 100%; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
-.phase-jump-list .phase-jump { min-height: 42px; padding: 8px 10px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.86); font-size: 11px; line-height: 1.2; text-align: left; }
-.phase-jump-list .phase-jump.active { background: #ffe45c; color: #21310f; border-color: #fff3a3; box-shadow: 0 0 0 2px rgba(255,255,255,.26) inset; }
-.phase-jump-list .phase-jump:hover { transform: none; background: rgba(255,255,255,.2); }
-.phase-jump-list .phase-jump.active:hover { background: #ffe45c; }
+.phase-jump-list, .coach-stop-list { flex: 1 0 100%; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.phase-jump-list .phase-jump, .coach-stop-list .coach-stop { min-height: 42px; padding: 8px 10px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.86); font-size: 11px; line-height: 1.2; text-align: left; }
+.coach-stop-list { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.coach-stop-list .coach-stop { min-height: 36px; background: rgba(255,228,92,.12); }
+.phase-jump-list .phase-jump.active, .coach-stop-list .coach-stop.active { background: #ffe45c; color: #21310f; border-color: #fff3a3; box-shadow: 0 0 0 2px rgba(255,255,255,.26) inset; }
+.phase-jump-list .phase-jump:hover, .coach-stop-list .coach-stop:hover { transform: none; background: rgba(255,255,255,.2); }
+.phase-jump-list .phase-jump.active:hover, .coach-stop-list .coach-stop.active:hover { background: #ffe45c; }
 .player text { fill: #fff; font-weight: 900; font-size: 13px; text-anchor: middle; dominant-baseline: central; }
 .player circle { stroke: rgba(255,255,255,.85); stroke-width: 2; filter: drop-shadow(0 3px 4px rgba(0,0,0,.28)); }
 .player.blue circle:not(.holder-ring) { fill: #2067d1; }
@@ -114,5 +118,5 @@ button:hover { background: var(--accent-dark); transform: translateY(-1px); }
 .role-cue.visible { opacity: 1; }
 
 @media (max-width: 900px) {
-  .phase-jump-list { grid-template-columns: 1fr; }
+  .phase-jump-list, .coach-stop-list { grid-template-columns: 1fr; }
 }
