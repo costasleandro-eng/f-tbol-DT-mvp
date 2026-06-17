@@ -242,7 +242,7 @@
 
       <p class="help" style="margin-top:14px">
         Uso: arrastra las fichas. Tocá una ficha para seleccionarla y poder quitarla. Con <b>Dibujar zona</b> podés marcar el terreno del ejercicio con línea blanca continua o intermitente.
-        Pulsa <b>Grabar</b>, mueve jugadores/pelota y luego pulsa <b>Reproducir</b>. Seleccioná una zona ya dibujada para moverla, cambiar tamaño o aplicarle línea continua/intermitente.
+        Pulsa <b>Grabar</b>, mueve jugadores/pelota y luego pulsa <b>Reproducir</b>. Las zonas seleccionadas se mueven/cambian tamaño con imán para emparejar bordes cercanos.
       </p>
       <div id="status" class="status"></div>
     </aside>
@@ -427,6 +427,67 @@
       const bottom = Math.max(z.y1, z.y2);
       z.x1 = left; z.x2 = right; z.y1 = top; z.y2 = bottom;
       return z;
+    }
+
+    function getSnapGuides(exceptIndex = null) {
+      const vertical = [0, 50, 100];
+      const horizontal = [0, 50, 100];
+      zones.forEach((z, i) => {
+        if (i === exceptIndex) return;
+        vertical.push(z.x1, z.x2, (z.x1 + z.x2) / 2);
+        horizontal.push(z.y1, z.y2, (z.y1 + z.y2) / 2);
+      });
+      return { vertical, horizontal };
+    }
+
+    function nearestSnap(value, guides, threshold = 2.2) {
+      let best = value;
+      let bestDist = threshold;
+      for (const g of guides) {
+        const dist = Math.abs(value - g);
+        if (dist <= bestDist) { best = g; bestDist = dist; }
+      }
+      return best;
+    }
+
+    function snapZoneMove(z, exceptIndex = null) {
+      const width = z.x2 - z.x1;
+      const height = z.y2 - z.y1;
+      const cx = (z.x1 + z.x2) / 2;
+      const cy = (z.y1 + z.y2) / 2;
+      const guides = getSnapGuides(exceptIndex);
+      const candidatesX = [
+        { edge: 'x1', value: z.x1 },
+        { edge: 'x2', value: z.x2 },
+        { edge: 'cx', value: cx }
+      ].map(c => ({ ...c, snap: nearestSnap(c.value, guides.vertical) }));
+      const bestX = candidatesX.reduce((a, b) => Math.abs(b.value - b.snap) < Math.abs(a.value - a.snap) ? b : a);
+      const dx = bestX.snap - bestX.value;
+      if (Math.abs(dx) > 0) { z.x1 += dx; z.x2 += dx; }
+      const candidatesY = [
+        { edge: 'y1', value: z.y1 },
+        { edge: 'y2', value: z.y2 },
+        { edge: 'cy', value: cy }
+      ].map(c => ({ ...c, snap: nearestSnap(c.value, guides.horizontal) }));
+      const bestY = candidatesY.reduce((a, b) => Math.abs(b.value - b.snap) < Math.abs(a.value - a.snap) ? b : a);
+      const dy = bestY.snap - bestY.value;
+      if (Math.abs(dy) > 0) { z.y1 += dy; z.y2 += dy; }
+      if (z.x1 < 0) { z.x1 = 0; z.x2 = width; }
+      if (z.x2 > 100) { z.x2 = 100; z.x1 = 100 - width; }
+      if (z.y1 < 0) { z.y1 = 0; z.y2 = height; }
+      if (z.y2 > 100) { z.y2 = 100; z.y1 = 100 - height; }
+      return normalizeZone(z);
+    }
+
+    function snapZoneResize(z, exceptIndex = null) {
+      const guides = getSnapGuides(exceptIndex);
+      z.x2 = nearestSnap(z.x2, guides.vertical);
+      z.y2 = nearestSnap(z.y2, guides.horizontal);
+      if (z.x2 < z.x1 + 2) z.x2 = z.x1 + 2;
+      if (z.y2 < z.y1 + 2) z.y2 = z.y1 + 2;
+      z.x2 = clamp(z.x2, 0, 100);
+      z.y2 = clamp(z.y2, 0, 100);
+      return normalizeZone(z);
     }
 
     function drawZones() {
@@ -629,9 +690,9 @@
       if (z.x2 === 100) z.x1 = Math.max(0, 100 - width);
       if (z.y1 === 0) z.y2 = Math.min(height, 100);
       if (z.y2 === 100) z.y1 = Math.max(0, 100 - height);
-      normalizeZone(z);
+      snapZoneResize(normalizeZone(z), selectedZoneIndex);
       drawZones();
-      statusEl.textContent = 'Tamaño de zona ajustado.';
+      statusEl.textContent = 'Tamaño de zona ajustado con imán.';
     }
 
     zoneWiderBtn.onclick = () => resizeSelectedZone(8, 0);
@@ -690,7 +751,7 @@
       const width = Math.abs(zoneDraft.x2 - zoneDraft.x1);
       const height = Math.abs(zoneDraft.y2 - zoneDraft.y1);
       if (width > 2 && height > 2) {
-        zones.push(normalizeZone(zoneDraft));
+        zones.push(snapZoneResize(normalizeZone(zoneDraft), null));
         selectedZoneIndex = zones.length - 1;
         drawingZone = false;
         drawZoneBtn.classList.remove('active');
@@ -723,7 +784,7 @@
       };
       zonesSvg.setPointerCapture(e.pointerId);
       drawZones();
-      statusEl.textContent = zoneAction.type === 'move' ? 'Zona seleccionada: arrastrá para moverla.' : 'Redimensionando zona.';
+      statusEl.textContent = zoneAction.type === 'move' ? 'Zona seleccionada: arrastrá para moverla. Se pega a bordes cercanos.' : 'Redimensionando zona con imán.';
     });
 
     zonesSvg.addEventListener('pointermove', (e) => {
@@ -740,10 +801,12 @@
         let nx1 = clamp(o.x1 + dx, 0, 100 - width);
         let ny1 = clamp(o.y1 + dy, 0, 100 - height);
         z.x1 = nx1; z.x2 = nx1 + width; z.y1 = ny1; z.y2 = ny1 + height;
+        snapZoneMove(z, selectedZoneIndex);
       } else {
         z.x1 = o.x1; z.y1 = o.y1;
         z.x2 = clamp(o.x2 + dx, o.x1 + 2, 100);
         z.y2 = clamp(o.y2 + dy, o.y1 + 2, 100);
+        snapZoneResize(z, selectedZoneIndex);
       }
       drawZones();
     });
