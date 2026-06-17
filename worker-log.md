@@ -116,3 +116,11 @@
 - Archivos: `subagent-exercise-designer.md` documenta los criterios y `script.js` los incluye en el plan generado.
 - Foco: distinguir robos/salidas controladas de rebotes o despejes, y clarificar cuándo la contrapresión cuenta como éxito en una animación de 30s.
 - Verificación: `node --check script.js` OK.
+
+## 2026-06-17 00:30 UTC — animation worker
+- Revisé `script.js`, `styles.css`, `index.html` y `subagent-animation-engineer.md`.
+- Mejora pequeña aplicada: añadí una píldora de progreso de fase junto a los controles. Muestra fase activa, segundos transcurridos dentro del bloque y una barra amarilla de avance.
+- Valor para MVP: al pausar, saltar fases o mover el timeline, el entrenador entiende mejor el timing de ataque, robo, 5s de contrapresión, primer pase seguro y salida rival, manteniendo clara la posesión y la pelota al pie/lado.
+- Archivos modificados: `script.js`, `styles.css`.
+- Verificación: `node --check script.js` y `git diff --check` OK.
+- Sin push externo.

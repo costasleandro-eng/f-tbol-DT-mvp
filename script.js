@@ -283,6 +283,7 @@ function renderPitchDiagram(data) {
         <input id="animationTimeline" type="range" min="0" max="${duration}" value="0" step="0.1" />
       </label>
       <span id="possessionStatus" class="possession-status neutral">Posesión: comodín</span>
+      <span id="phaseProgress" class="phase-progress">Fase 1/5 · 0.0s de 7s</span>
       <div class="possession-rail" aria-label="Línea de posesión: quién tiene la pelota en cada momento">
         ${possessionRail}
       </div>
@@ -304,6 +305,7 @@ function startTacticalAnimation(svg, root, exercise) {
   const timeline = root.querySelector('#animationTimeline');
   const timeReadout = root.querySelector('#timeReadout');
   const possessionStatus = root.querySelector('#possessionStatus');
+  const phaseProgress = root.querySelector('#phaseProgress');
   const possessionSegments = Array.from(root.querySelectorAll('.possession-segment'));
   const phaseJumpButtons = Array.from(root.querySelectorAll('.phase-jump'));
   let currentTime = 0;
@@ -419,7 +421,13 @@ function startTacticalAnimation(svg, root, exercise) {
     const phaseIndex = exercise.phases.findIndex(({ from, to }) => t >= from && t < to);
     const activePhaseIndex = phaseIndex === -1 ? 0 : phaseIndex;
     const phase = exercise.phases[activePhaseIndex] || exercise.phases[0];
+    const phaseElapsed = Math.max(0, t - phase.from);
+    const phaseDuration = Math.max(0.1, phase.to - phase.from);
     phaseJumpButtons.forEach((button, index) => button.classList.toggle('active', index === activePhaseIndex));
+    if (phaseProgress) {
+      phaseProgress.textContent = `Fase ${activePhaseIndex + 1}/${exercise.phases.length} · ${phaseElapsed.toFixed(1)}s de ${phaseDuration.toFixed(0)}s`;
+      phaseProgress.style.setProperty('--phase-progress', `${Math.min(100, (phaseElapsed / phaseDuration) * 100)}%`);
+    }
     const label = svg.querySelector('#phaseLabel');
     if (label) label.textContent = phase.label;
     const possessionLabel = svg.querySelector('#possessionLabel');
@@ -596,6 +604,7 @@ LECTURA DE LA ANIMACIÓN
 - La secuencia dura 30 segundos: azul conserva, pierde, presiona 5 segundos, recupera o concede salida rival.
 - Cada bloque temporal tiene una intención única: ataque, robo, reacción tras pérdida, primer pase tras recuperación y reorganización si el rival sale.
 - La barra de posesión debajo de los controles resume quién tiene la pelota en cada tramo y se ilumina al avanzar la animación.
+- La píldora de fase muestra cuántos segundos van dentro del bloque activo para revisar timing de robo, contrapresión y pase seguro.
 - La tercera línea superior cambia por fase y explica qué debe mirar el entrenador: objetivo, disparador, regla o consecuencia.
 - La cuarta línea da una instrucción contextual: poseedor, robo, cuenta atrás de contrapresión, primer pase seguro o reorganización defensiva.
 - Las etiquetas cortas sobre jugadores marcan el rol activo de la fase: apoyo, roba, presiona, tapa vertical, cubre apoyo, asegura o temporiza.

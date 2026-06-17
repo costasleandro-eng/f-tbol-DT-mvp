@@ -57,6 +57,9 @@ button:hover { background: var(--accent-dark); transform: translateY(-1px); }
 .possession-status.red { background: #d43a37; }
 .possession-status.neutral { background: #b77b00; }
 .possession-status.loose { background: #2d3d2f; }
+.phase-progress { --phase-progress: 0%; position: relative; flex: 0 1 210px; overflow: hidden; border-radius: 999px; padding: 9px 12px; border: 1px solid rgba(255,255,255,.34); background: rgba(0,0,0,.22); color: #fff; font-size: 12px; font-weight: 950; box-shadow: 0 0 0 2px rgba(255,255,255,.08) inset; }
+.phase-progress::before { content: ''; position: absolute; inset: 0 auto 0 0; width: var(--phase-progress); background: rgba(255,228,92,.34); pointer-events: none; }
+.phase-progress { text-shadow: 0 1px 2px rgba(0,0,0,.45); }
 .possession-rail { flex: 1 0 100%; display: flex; min-height: 34px; overflow: hidden; border: 1px solid rgba(255,255,255,.28); border-radius: 999px; background: rgba(0,0,0,.16); }
 .possession-segment { display: grid; place-items: center; min-width: 42px; padding: 0 8px; color: rgba(255,255,255,.78); font-size: 10px; font-weight: 950; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-right: 1px solid rgba(255,255,255,.22); opacity: .62; transition: opacity .15s ease, box-shadow .15s ease, color .15s ease; }
 .possession-segment:last-child { border-right: 0; }
