@@ -149,6 +149,7 @@
       <div class="buttons">
         <button id="recordBtn" class="primary">● Grabar movimiento</button>
         <button id="playBtn">▶ Reproducir ejercicio</button>
+        <button id="downloadVideoBtn">⬇ Descargar video</button>
         <button id="resetBtn">↺ Volver al inicio</button>
         <button id="clearBtn" class="danger">Limpiar recorridos</button>
       </div>
@@ -193,6 +194,7 @@
     const pathsSvg = document.getElementById('paths');
     const recordBtn = document.getElementById('recordBtn');
     const playBtn = document.getElementById('playBtn');
+    const downloadVideoBtn = document.getElementById('downloadVideoBtn');
     const resetBtn = document.getElementById('resetBtn');
     const clearBtn = document.getElementById('clearBtn');
     const drawZoneBtn = document.getElementById('drawZoneBtn');
@@ -444,6 +446,142 @@
       requestAnimationFrame(frame);
     };
 
+
+    function tokenPositionForProgress(el, progress) {
+      const pts = tracks.get(el.dataset.id) || [];
+      if (pts.length > 1) {
+        const scaled = progress * (pts.length - 1);
+        const i = Math.min(pts.length - 2, Math.floor(scaled));
+        const local = scaled - i;
+        const a = pts[i], b = pts[i + 1];
+        return { x: a.x + (b.x - a.x) * local, y: a.y + (b.y - a.y) * local };
+      }
+      return { x: +el.dataset.x, y: +el.dataset.y };
+    }
+
+    function drawVideoFrame(ctx, width, height, progress) {
+      ctx.clearRect(0, 0, width, height);
+      const stripeW = width / 10;
+      for (let i = 0; i < 10; i++) {
+        ctx.fillStyle = i % 2 ? '#238d50' : '#207e48';
+        ctx.fillRect(i * stripeW, 0, stripeW, height);
+      }
+
+      ctx.strokeStyle = 'rgba(255,255,255,.9)';
+      ctx.lineWidth = 4;
+      ctx.setLineDash([]);
+      ctx.strokeRect(2, 2, width - 4, height - 4);
+      ctx.beginPath(); ctx.moveTo(width / 2, 0); ctx.lineTo(width / 2, height); ctx.stroke();
+      ctx.beginPath(); ctx.arc(width / 2, height / 2, width * .09, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.arc(width / 2, height / 2, 5, 0, Math.PI * 2); ctx.fillStyle = 'white'; ctx.fill();
+      ctx.strokeRect(0, height * .25, width * .15, height * .5);
+      ctx.strokeRect(width * .85, height * .25, width * .15, height * .5);
+      ctx.strokeRect(0, height * .37, width * .06, height * .26);
+      ctx.strokeRect(width * .94, height * .37, width * .06, height * .26);
+
+      for (const z of zones) {
+        ctx.save();
+        ctx.strokeStyle = '#fff';
+        ctx.fillStyle = 'rgba(255,255,255,.045)';
+        ctx.lineWidth = 5;
+        ctx.setLineDash(z.line === 'dashed' ? [18, 13] : []);
+        const x = Math.min(z.x1, z.x2) / 100 * width;
+        const y = Math.min(z.y1, z.y2) / 100 * height;
+        const w = Math.abs(z.x2 - z.x1) / 100 * width;
+        const h = Math.abs(z.y2 - z.y1) / 100 * height;
+        ctx.fillRect(x, y, w, h);
+        ctx.strokeRect(x, y, w, h);
+        ctx.restore();
+      }
+
+      for (const [id, pts] of tracks) {
+        if (pts.length < 2) continue;
+        const el = document.querySelector(`[data-id="${id}"]`);
+        ctx.save();
+        ctx.strokeStyle = el?.classList.contains('red') ? '#ffb0b0' : el?.classList.contains('blue') ? '#b9d3ff' : '#ffe280';
+        ctx.lineWidth = 4;
+        ctx.setLineDash([10, 8]);
+        ctx.beginPath();
+        pts.forEach((p, i) => {
+          const x = p.x / 100 * width, y = p.y / 100 * height;
+          if (i) ctx.lineTo(x, y); else ctx.moveTo(x, y);
+        });
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      document.querySelectorAll('.token').forEach(el => {
+        const pos = tokenPositionForProgress(el, progress);
+        const x = pos.x / 100 * width;
+        const y = pos.y / 100 * height;
+        const type = el.dataset.type;
+        ctx.save();
+        if (type === 'cone') {
+          ctx.fillStyle = '#ff8b1a';
+          const size = el.classList.contains('medium') ? 24 : 18;
+          ctx.beginPath();
+          ctx.moveTo(x, y - size / 1.2);
+          ctx.lineTo(x - size / 2, y + size / 1.2);
+          ctx.lineTo(x + size / 2, y + size / 1.2);
+          ctx.closePath();
+          ctx.fill();
+        } else if (type === 'ball') {
+          ctx.fillStyle = '#f7f7f7';
+          ctx.strokeStyle = '#111';
+          ctx.lineWidth = 3;
+          ctx.beginPath(); ctx.arc(x, y, 13, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+          ctx.fillStyle = '#111'; ctx.font = '14px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('⚽', x, y + 1);
+        } else {
+          ctx.fillStyle = type === 'red' ? '#e33d3d' : '#2275ff';
+          ctx.strokeStyle = '#fff';
+          ctx.lineWidth = 4;
+          ctx.beginPath(); ctx.arc(x, y, 22, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+          ctx.fillStyle = '#fff'; ctx.font = 'bold 18px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(el.textContent, x, y);
+        }
+        ctx.restore();
+      });
+    }
+
+    async function downloadVideo() {
+      if (!('MediaRecorder' in window)) {
+        statusEl.textContent = 'Este navegador no permite grabar video desde la página.';
+        return;
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = 1280;
+      canvas.height = 800;
+      const ctx = canvas.getContext('2d');
+      const stream = canvas.captureStream(30);
+      const mime = MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm';
+      const recorder = new MediaRecorder(stream, { mimeType: mime });
+      const chunks = [];
+      recorder.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
+      recorder.onstop = () => {
+        const blob = new Blob(chunks, { type: 'video/webm' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'pizarra-tactica.webm';
+        a.click();
+        URL.revokeObjectURL(url);
+        statusEl.textContent = 'Video descargado.';
+      };
+      statusEl.textContent = 'Generando video...';
+      recorder.start();
+      const duration = 2600;
+      const start = performance.now();
+      await new Promise(resolve => {
+        function step(now) {
+          const t = Math.min(1, (now - start) / duration);
+          drawVideoFrame(ctx, canvas.width, canvas.height, t);
+          if (t < 1) requestAnimationFrame(step);
+          else resolve();
+        }
+        requestAnimationFrame(step);
+      });
+      setTimeout(() => recorder.stop(), 250);
+    }
+
     function resetPositions() {
       for (const [id, pos] of initial) {
         const el = document.querySelector(`[data-id="${id}"]`);
@@ -451,6 +589,7 @@
       }
     }
 
+    downloadVideoBtn.onclick = downloadVideo;
     resetBtn.onclick = () => { resetPositions(); statusEl.textContent = 'Fichas al punto inicial.'; };
     clearBtn.onclick = () => {
       tracks.forEach((_, id) => tracks.set(id, []));
