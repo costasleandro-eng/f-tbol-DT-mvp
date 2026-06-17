@@ -110,3 +110,9 @@
 - Archivos modificados: `script.js`, `styles.css`.
 - Verificación: `node --check script.js` OK.
 - Sin push externo.
+
+## 2026-06-17 00:01 UTC — exercise worker
+- Mejora pequeña: agregué reglas de validez para puntuar transiciones en el ejercicio MVP de presión tras pérdida.
+- Archivos: `subagent-exercise-designer.md` documenta los criterios y `script.js` los incluye en el plan generado.
+- Foco: distinguir robos/salidas controladas de rebotes o despejes, y clarificar cuándo la contrapresión cuenta como éxito en una animación de 30s.
+- Verificación: `node --check script.js` OK.

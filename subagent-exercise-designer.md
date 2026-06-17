@@ -384,6 +384,14 @@ Entrenar la reacción colectiva tras pérdida: presionar al poseedor, cerrar lí
 - No parar si el rival juega lateral o atrás: eso también cumple el objetivo de impedir progresión central.
 - Repetir inmediatamente si la recuperación termina en nueva pérdida por no asegurar el primer pase.
 
+## Reglas de validez para puntuar la transición en animación
+
+- La recuperación roja solo es válida si el primer control queda orientado hacia zona objetivo o hacia un apoyo visible.
+- La contrapresión azul solo cuenta como éxito si combina presión al balón con cierre del pase vertical; robar por rebote sin estructura no suma punto extra.
+- La recuperación azul debe terminar con pase seguro a comodín o compañero de cara; si vuelve a perder antes de 2 segundos, se registra como fallo de transición.
+- La salida roja solo vale doble si supera la primera línea de presión con pase o conducción controlada, no con despeje largo sin destinatario.
+- Si el rival juega lateral o atrás durante la ventana de 5 segundos, azul obtiene éxito defensivo parcial aunque no recupere.
+
 ## Intervenciones sugeridas para una animación de 30s
 
 - 10s: congelar la imagen y nombrar tres roles: presionante, cierre vertical y equilibrio.

@@ -103,6 +103,13 @@ const tacticalExercise = {
     'No parar por un pase lateral rojo: el objetivo azul también es orientar fuera y reorganizar.',
     'Repetir inmediatamente si la recuperación azul termina en pérdida por no asegurar el primer pase.'
   ],
+  transitionValidationRules: [
+    'La recuperación roja solo es válida si el primer control queda orientado hacia zona objetivo o hacia un apoyo visible.',
+    'La contrapresión azul solo cuenta como éxito si combina presión al balón con cierre del pase vertical; robar por rebote sin estructura no suma punto extra.',
+    'La recuperación azul debe terminar con pase seguro a comodín o compañero de cara; si vuelve a perder antes de 2 segundos, se registra como fallo de transición.',
+    'La salida roja solo vale doble si supera la primera línea de presión con pase o conducción controlada, no con despeje largo sin destinatario.',
+    'Si el rival juega lateral o atrás durante la ventana de 5 segundos, azul obtiene éxito defensivo parcial aunque no recupere.'
+  ],
   coachInterventions: [
     'Congelar en 10s: señalar quién presiona, quién tapa pase vertical y quién equilibra.',
     'Congelar en 15s: preguntar si conviene robar, temporizar o hacer falta táctica no lesiva según distancia.',
@@ -567,6 +574,9 @@ ${tacticalExercise.decisionGates.map((gate) => `- ${gate}`).join('\n')}
 
 Cuándo parar y corregir:
 ${tacticalExercise.stopRules.map((rule) => `- ${rule}`).join('\n')}
+
+Reglas de validez para puntuar la transición:
+${tacticalExercise.transitionValidationRules.map((rule) => `- ${rule}`).join('\n')}
 
 Intervenciones del entrenador durante la animación:
 ${tacticalExercise.coachInterventions.map((intervention) => `- ${intervention}`).join('\n')}
