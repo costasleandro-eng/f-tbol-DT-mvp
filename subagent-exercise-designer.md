@@ -579,6 +579,85 @@ Mejorar la transición ofensiva inmediata: decidir si atacar profundidad, fijar 
 
 ---
 
+# Ejercicio 6 — Primer pase tras recuperación: 4v4 + 3 apoyos
+
+## Objetivo
+
+Mejorar la primera decisión después de robar: asegurar un pase útil si hay presión inmediata o atacar hacia delante si la recuperación deja ventaja clara.
+
+## Organización
+
+- Equipo azul inicia atacando en posesión 4v4 dentro del rectángulo.
+- Equipo rojo defiende, recupera y debe conectar rápido con uno de los tres apoyos exteriores.
+- Tres apoyos exteriores: uno de seguridad detrás del robo y dos de salida en diagonal.
+- Después del primer pase rojo, azul activa presión tras pérdida para impedir la continuidad.
+
+## Jugadores
+
+- 8 jugadores dentro + 3 apoyos exteriores.
+- Adaptable a 7: 3v3 + 1 comodín interior + 2 apoyos.
+- Adaptable a 14: dos estaciones simultáneas con rotación cada 3 repeticiones.
+
+## Espacio
+
+- 30 x 24 metros.
+- Tres puertas de salida de 3 metros: una central de seguridad y dos diagonales.
+- Zona de robo marcada en el centro para que la animación muestre claramente la transición.
+
+## Reglas
+
+1. Azul suma punto si completa 5 pases o encuentra pase interior al delantero objetivo.
+2. Rojo suma punto si recupera y conecta el primer pase con un apoyo exterior en menos de 4 segundos.
+3. El primer pase rojo debe ser controlado: no vale despeje, rebote ni pase sin destinatario.
+4. Si azul recupera de nuevo antes del segundo pase rojo, suma punto extra por presión tras pérdida.
+5. Tras conectar con apoyo, rojo tiene 6 segundos para entrar conduciendo por una puerta diagonal; si no puede, usa apoyo de seguridad.
+
+## Secuencia de juego
+
+1. Azul circula y atrae a rojo hacia un lado.
+2. Rojo intercepta un pase interior o roba tras mal control.
+3. El recuperador rojo hace primer control orientado fuera de la presión.
+4. Apoyo cercano se muestra de cara; apoyo diagonal amenaza salida progresiva.
+5. Rojo elige: pase seguro si está acosado, pase diagonal si tiene tiempo y perfil.
+6. Azul presiona 4 segundos: uno va al balón y dos tapan apoyos exteriores.
+7. Si rojo conecta y sale, progresa por puerta; si azul roba, reinicia posesión.
+
+## Qué debe verse en la animación de 30s
+
+- 0-6s: azul ataca con 4 jugadores; rojo defiende compacto y espera mal pase.
+- 6-10s: robo rojo claro, con primer control orientado y apoyos exteriores visibles.
+- 10-14s: decisión del primer pase: seguridad atrás o diagonal progresiva según presión azul.
+- 14-20s: azul presiona tras pérdida: uno aprieta balón, dos niegan apoyos, uno equilibra.
+- 20-26s: rojo conecta segundo pase y entra por puerta diagonal.
+- 26-30s: variante negativa: primer pase rojo al tráfico, azul recupera y reinicia ataque.
+
+## Criterios de éxito
+
+- El recuperador rojo levanta la cabeza antes del segundo toque.
+- El primer pase tiene destinatario de cara o en diagonal, no es un despeje.
+- Los apoyos exteriores aparecen en ángulos distintos: seguridad, diagonal izquierda y diagonal derecha.
+- Azul reacciona con roles claros tras pérdida, no con todos detrás de la pelota.
+- La salida roja se considera exitosa solo si conserva control durante dos pases.
+
+## Coaching points
+
+- Recuperar no termina la acción: el primer pase decide si la transición vive o muere.
+- Si estás de espaldas o presionado, asegurá de cara; si estás perfilado, jugá diagonal hacia ventaja.
+- Apoyos exteriores deben moverse antes del robo, no después.
+- Tras pérdida azul: tapar apoyos es tan importante como presionar al poseedor.
+- Medir calidad por continuidad controlada, no solo por robar muchas pelotas.
+
+## Guion verbal de 30 segundos
+
+- 0-6s: “Azul atrae; rojo espera el pase interior y prepara apoyos de salida.”
+- 6-10s: “Robo rojo: control orientado, cabeza arriba.”
+- 10-14s: “Primer pase: si hay presión, seguridad; si hay perfil, diagonal.”
+- 14-20s: “Azul, cuatro segundos: uno presiona, dos tapan apoyos.”
+- 20-26s: “Rojo conecta segundo pase y sale controlado por puerta.”
+- 26-30s: “Si el primer pase va al tráfico, azul recupera y vuelve a atacar.”
+
+---
+
 ## 3) Recomendación: ejercicio para implementar primero
 
 ## Implementar primero: Ejercicio 3 — Presión tras pérdida en carril central: 5v5 + 2 comodines

@@ -152,3 +152,8 @@
 - Archivos modificados: `script.js`, `styles.css`.
 - Verificación: `node --check script.js` OK.
 - Sin push externo.
+
+## 2026-06-17 18:01 UTC — football-mvp-exercise-worker
+- Mejora pequeña: añadí el **Ejercicio 6 — Primer pase tras recuperación: 4v4 + 3 apoyos** en `subagent-exercise-designer.md`.
+- Foco: animación de 30s con roles claros, quién ataca/defiende, regla de transición tras recuperación/pérdida, criterios de éxito y guion verbal.
+- No hice push externo.
