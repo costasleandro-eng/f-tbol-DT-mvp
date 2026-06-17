@@ -116,6 +116,11 @@ button:hover { background: var(--accent-dark); transform: translateY(-1px); }
 .possession-label { fill: #ffe45c; font-size: 13px; font-weight: 900; paint-order: stroke; stroke: rgba(0,0,0,.55); stroke-width: 4px; }
 .role-cue { opacity: 0; fill: #fff7b0; font-size: 12px; font-weight: 950; text-anchor: middle; text-transform: uppercase; letter-spacing: .03em; paint-order: stroke; stroke: rgba(0,0,0,.62); stroke-width: 5px; }
 .role-cue.visible { opacity: 1; }
+.pressure-window { pointer-events: none; }
+.pressure-window-ring { fill: rgba(255,228,92,.12); stroke: rgba(255,255,255,.78); stroke-width: 4; }
+.pressure-window-progress { fill: none; stroke: #ffe45c; stroke-width: 7; stroke-linecap: round; transform: rotate(-90deg); stroke-dasharray: 100; stroke-dashoffset: 0; }
+.pressure-window-count { fill: #ffe45c; font-size: 16px; font-weight: 950; text-anchor: middle; paint-order: stroke; stroke: rgba(0,0,0,.62); stroke-width: 4px; }
+.pressure-window-label { fill: #fff7b0; font-size: 11px; font-weight: 950; text-anchor: middle; text-transform: uppercase; paint-order: stroke; stroke: rgba(0,0,0,.62); stroke-width: 4px; }
 
 @media (max-width: 900px) {
   .phase-jump-list, .coach-stop-list { grid-template-columns: 1fr; }

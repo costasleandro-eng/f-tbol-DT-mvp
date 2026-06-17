@@ -293,6 +293,12 @@ function renderPitchDiagram(data) {
       <circle id="footContact" class="foot-contact" cx="227" cy="267" r="5" />
       <circle id="ball" class="ball" cx="227" cy="267" r="10" />
       <text id="footContactLabel" class="contact-label" x="242" y="252">al pie</text>
+      <g id="pressureWindow" class="pressure-window" transform="translate(500 260)" hidden>
+        <circle class="pressure-window-ring" r="34" />
+        <circle class="pressure-window-progress" r="34" pathLength="100" />
+        <text class="pressure-window-count" y="4">5s</text>
+        <text class="pressure-window-label" y="51">ventana de presión</text>
+      </g>
     </svg>
     <div class="animation-controls" aria-label="Controles de la animación táctica">
       <button id="playPauseBtn" type="button">Pausar</button>
@@ -423,6 +429,26 @@ function startTacticalAnimation(svg, root, exercise) {
     }
     const holderRing = holder ? svg.querySelector(`#${holder.player} .holder-ring`) : null;
     if (holderRing) holderRing.classList.add('active');
+
+    const pressureWindow = svg.querySelector('#pressureWindow');
+    if (pressureWindow) {
+      const isPressureWindow = t >= 10 && t < 15;
+      if (isPressureWindow) {
+        const pressureX = holderPosition ? holderPosition.x : ballX;
+        const pressureY = holderPosition ? holderPosition.y : ballY;
+        const remaining = Math.max(0, 15 - t);
+        const elapsed = Math.min(1, Math.max(0, (t - 10) / 5));
+        pressureWindow.setAttribute('transform', `translate(${pressureX} ${pressureY})`);
+        pressureWindow.removeAttribute('hidden');
+        const progress = pressureWindow.querySelector('.pressure-window-progress');
+        const count = pressureWindow.querySelector('.pressure-window-count');
+        if (progress) progress.style.strokeDashoffset = String(elapsed * 100);
+        if (count) count.textContent = `${Math.ceil(remaining)}s`;
+      } else {
+        pressureWindow.setAttribute('hidden', 'true');
+      }
+    }
+
     if (possessionStatus) {
       const status = teamLabelForHolder(holder);
       possessionStatus.className = `possession-status ${status.className}`;
@@ -657,6 +683,7 @@ LECTURA DE LA ANIMACIÓN
 - La píldora de fase muestra cuántos segundos van dentro del bloque activo para revisar timing de robo, contrapresión y pase seguro.
 - La tercera línea superior cambia por fase y explica qué debe mirar el entrenador: objetivo, disparador, regla o consecuencia.
 - La cuarta línea da una instrucción contextual: poseedor, robo, cuenta atrás de contrapresión, primer pase seguro o reorganización defensiva.
+- Entre 10s y 15s aparece un aro de cuenta atrás alrededor del foco de presión para ver cuánto queda de la ventana real de 5 segundos.
 - Los botones de congelado llevan directo a 10s, 15s, 18s o 24s para corregir roles, decisión, pase seguro y repliegue.
 - Las etiquetas cortas sobre jugadores marcan el rol activo de la fase: apoyo, roba, presiona, tapa vertical, cubre apoyo, asegura o temporiza.
 - Roles: azul ataca y hace contrapresión; rojo defiende, recupera y busca zona objetivo; comodines apoyan al poseedor.

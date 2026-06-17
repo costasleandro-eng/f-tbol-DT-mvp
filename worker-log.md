@@ -144,3 +144,11 @@
 - Cambios: `subagent-exercise-designer.md` documenta cuándo azul/rojo cambian entre atacar, defender, disputar, recuperar y reorganizar; `script.js` incluye esos gatillos en el plan generado.
 - Valor para MVP: la animación de 30s queda más clara sobre quién ataca, quién defiende y cuándo una transición tras pérdida/recuperación es válida.
 - Verificación: `node --check script.js` OK.
+
+## 2026-06-17 12:30 UTC — animation worker
+- Revisé `script.js`, `styles.css`, `index.html` y `subagent-animation-engineer.md`.
+- Mejora pequeña aplicada: añadí un aro de cuenta atrás de la ventana real de 5 segundos entre 10s y 15s, colocado sobre el foco/poseedor de la contrapresión.
+- Valor para MVP: la animación explica mejor la regla central de presión tras pérdida: cuánto tiempo queda para recuperar o cerrar el pase vertical, manteniendo pelota al pie/lado y fase/posesión claras.
+- Archivos modificados: `script.js`, `styles.css`.
+- Verificación: `node --check script.js` OK.
+- Sin push externo.
