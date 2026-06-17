@@ -83,6 +83,8 @@ button:hover { background: var(--accent-dark); transform: translateY(-1px); }
 .player.red circle:not(.holder-ring) { fill: #d43a37; }
 .player.neutral circle:not(.holder-ring) { fill: #f0b429; }
 .ball { fill: #fff; stroke: #101810; stroke-width: 2; filter: drop-shadow(0 2px 3px rgba(0,0,0,.35)); }
+.ball.loose { fill: #fff7b0; stroke: #2d3d2f; stroke-width: 3; }
+.ball-travel-guide { stroke: rgba(255,255,255,.88); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 8 9; filter: drop-shadow(0 2px 3px rgba(0,0,0,.28)); pointer-events: none; }
 .arrow-pass { stroke: #ffffff; stroke-width: 4; fill: none; marker-end: url(#arrowHead); }
 .arrow-run { stroke: #ffe45c; stroke-width: 4; fill: none; stroke-dasharray: 12 10; marker-end: url(#runHead); }
 .arrow-dribble { stroke: #37e0ff; stroke-width: 4; fill: none; marker-end: url(#dribbleHead); }

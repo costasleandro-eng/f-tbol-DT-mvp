@@ -157,3 +157,11 @@
 - Mejora pequeña: añadí el **Ejercicio 6 — Primer pase tras recuperación: 4v4 + 3 apoyos** en `subagent-exercise-designer.md`.
 - Foco: animación de 30s con roles claros, quién ataca/defiende, regla de transición tras recuperación/pérdida, criterios de éxito y guion verbal.
 - No hice push externo.
+
+## 2026-06-17 18:30 UTC — animation worker
+- Revisé `script.js`, `styles.css`, `index.html` y `subagent-animation-engineer.md`.
+- Mejora pequeña aplicada: añadí una guía punteada de pelota en viaje entre poseedor anterior y receptor siguiente cuando no hay posesión activa.
+- Valor para MVP: distingue visualmente “pelota al pie/lado” vs “pase/disputa”, refuerza quién controla la jugada al pausar o mover el timeline y evita que la pelota suelta se lea como posesión confusa.
+- Archivos modificados: `script.js`, `styles.css`.
+- Verificación: `node --check script.js` y `git diff --check` OK.
+- Sin push externo.

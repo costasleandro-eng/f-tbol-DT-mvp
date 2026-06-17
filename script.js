@@ -290,6 +290,7 @@ function renderPitchDiagram(data) {
         <text class="role-cue" data-cue-index="1"></text>
         <text class="role-cue" data-cue-index="2"></text>
       </g>
+      <line id="ballTravelGuide" class="ball-travel-guide" x1="0" y1="0" x2="0" y2="0" hidden />
       <circle id="footContact" class="foot-contact" cx="227" cy="267" r="5" />
       <circle id="ball" class="ball" cx="227" cy="267" r="10" />
       <text id="footContactLabel" class="contact-label" x="242" y="252">al pie</text>
@@ -386,6 +387,22 @@ function startTacticalAnimation(svg, root, exercise) {
     };
   }
 
+  function findTravelWindow(t) {
+    const previous = [...exercise.possessions].reverse().find(({ to }) => to <= t);
+    const next = exercise.possessions.find(({ from }) => from >= t);
+    if (!previous || !next || previous.player === next.player || t < previous.to || t > next.from) return null;
+    return { previous, next };
+  }
+
+  function contactPoint(segment, positions) {
+    const position = positions[segment.player];
+    if (!position) return null;
+    return {
+      x: position.x + segment.offset.x * 0.72,
+      y: position.y + segment.offset.y * 0.72
+    };
+  }
+
   function renderAt(t) {
     const playerPositions = {};
     exercise.players.forEach(({ id }) => {
@@ -407,6 +424,22 @@ function startTacticalAnimation(svg, root, exercise) {
     if (ball) {
       ball.setAttribute('cx', ballX);
       ball.setAttribute('cy', ballY);
+      ball.classList.toggle('loose', !holderPosition);
+    }
+    const ballTravelGuide = svg.querySelector('#ballTravelGuide');
+    const travelWindow = holderPosition ? null : findTravelWindow(t);
+    if (ballTravelGuide && travelWindow) {
+      const fromPoint = contactPoint(travelWindow.previous, playerPositions);
+      const toPoint = contactPoint(travelWindow.next, playerPositions);
+      if (fromPoint && toPoint) {
+        ballTravelGuide.setAttribute('x1', fromPoint.x);
+        ballTravelGuide.setAttribute('y1', fromPoint.y);
+        ballTravelGuide.setAttribute('x2', toPoint.x);
+        ballTravelGuide.setAttribute('y2', toPoint.y);
+        ballTravelGuide.removeAttribute('hidden');
+      }
+    } else if (ballTravelGuide) {
+      ballTravelGuide.setAttribute('hidden', 'true');
     }
     const footContact = svg.querySelector('#footContact');
     const footContactLabel = svg.querySelector('#footContactLabel');
@@ -676,7 +709,8 @@ ${tacticalExercise.coachingPoints.map((point) => `- ${point}`).join('\n')}
 
 LECTURA DE LA ANIMACIÓN
 - Círculos grandes: jugadores.
-- Círculo pequeño: pelota, siempre al pie/lado del poseedor.
+- Círculo pequeño: pelota, siempre al pie/lado del poseedor cuando hay control.
+- Línea punteada blanca: pelota en viaje entre dos poseedores; desaparece cuando vuelve a estar al pie.
 - La secuencia dura 30 segundos: azul conserva, pierde, presiona 5 segundos, recupera o concede salida rival.
 - Cada bloque temporal tiene una intención única: ataque, robo, reacción tras pérdida, primer pase tras recuperación y reorganización si el rival sale.
 - La barra de posesión debajo de los controles resume quién tiene la pelota en cada tramo y se ilumina al avanzar la animación.
