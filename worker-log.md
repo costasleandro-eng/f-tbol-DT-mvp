@@ -138,3 +138,9 @@
 - Datos/UI: añadí `coachStops` al modelo del ejercicio, estado visual del próximo congelado y resaltado automático cuando el timeline cae cerca del punto.
 - Verificación: `node --check script.js` OK.
 - Sin dependencias nuevas; no se hizo push externo.
+
+## 2026-06-17 12:01 UTC — exercise worker
+- Mejora pequeña aplicada: añadí “Gatillos de cambio de rol” para el ejercicio MVP de presión tras pérdida.
+- Cambios: `subagent-exercise-designer.md` documenta cuándo azul/rojo cambian entre atacar, defender, disputar, recuperar y reorganizar; `script.js` incluye esos gatillos en el plan generado.
+- Valor para MVP: la animación de 30s queda más clara sobre quién ataca, quién defiende y cuándo una transición tras pérdida/recuperación es válida.
+- Verificación: `node --check script.js` OK.

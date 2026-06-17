@@ -62,6 +62,12 @@ const tacticalExercise = {
     'Tras recuperación azul: primer pase seguro al comodín libre antes de volver a progresar.',
     'Tras recuperación roja: primer control hacia delante y pase diagonal para salir de la jaula.'
   ],
+  roleSwitchTriggers: [
+    'Azul pasa de atacar a defender cuando el pase interior es interceptado o el poseedor pierde control orientado.',
+    'Rojo pasa de defender a atacar solo si el robo queda controlado al pie; si la pelota queda dividida, sigue siendo disputa.',
+    'Azul recupera el rol atacante cuando roba y completa un primer pase seguro a comodín o compañero de cara.',
+    'Si rojo supera la primera presión con pase diagonal o conducción controlada, azul abandona la contrapresión y reorganiza protegiendo carril central.'
+  ],
   resetProtocol: [
     'Cada repetición dura máximo 30 segundos: 7s de ataque azul, 3s de robo rojo, 5s de contrapresión y cierre con recuperación o salida rival.',
     'Reiniciar desde el comodín izquierdo si azul recupera y asegura pase; reiniciar desde zona objetivo si rojo supera la presión.',
@@ -602,6 +608,9 @@ ${tacticalExercise.rules.map((rule) => `- ${rule}`).join('\n')}
 
 Transiciones:
 ${tacticalExercise.transitionRules.map((rule) => `- ${rule}`).join('\n')}
+
+Gatillos de cambio de rol:
+${tacticalExercise.roleSwitchTriggers.map((trigger) => `- ${trigger}`).join('\n')}
 
 Protocolo de repetición y puntuación:
 ${tacticalExercise.resetProtocol.map((rule) => `- ${rule}`).join('\n')}

@@ -309,6 +309,13 @@ Entrenar la reacción colectiva tras pérdida: presionar al poseedor, cerrar lí
 - Puntuar en voz alta: +1 azul por 6 pases, +1 extra por recuperar en 5s, +2 rojo por salir controlado hacia zona objetivo.
 - Si hay falta, choque o despeje sin control, no puntúa nadie y se repite desde la pérdida para mantener el foco táctico.
 
+## Gatillos de cambio de rol para la animación
+
+- Azul pasa de atacar a defender cuando el pase interior es interceptado o el poseedor pierde control orientado.
+- Rojo pasa de defender a atacar solo si el robo queda controlado al pie; si la pelota queda dividida, sigue siendo disputa.
+- Azul recupera el rol atacante cuando roba y completa un primer pase seguro a comodín o compañero de cara.
+- Si rojo supera la primera presión con pase diagonal o conducción controlada, azul abandona la contrapresión y reorganiza protegiendo carril central.
+
 ## Secuencia de juego
 
 1. Equipo azul circula con ayuda de comodines.
