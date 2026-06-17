@@ -124,3 +124,9 @@
 - Archivos modificados: `script.js`, `styles.css`.
 - Verificación: `node --check script.js` y `git diff --check` OK.
 - Sin push externo.
+
+## 2026-06-17 06:01 UTC — exercise worker
+- Mejora pequeña aplicada: añadí un guion verbal de 30 segundos para el ejercicio MVP “Presión tras pérdida en carril central”.
+- Cambios: `subagent-exercise-designer.md` documenta consignas por fase y `script.js` las incluye en el plan generado como “Guion verbal de 30 segundos”.
+- Valor para MVP: ayuda a que el entrenador lea la animación con comandos breves: quién ataca, quién defiende, cómo reaccionar tras pérdida, cómo asegurar la recuperación y cómo temporizar si rojo supera la presión.
+- Verificación: `node --check script.js` y `git diff --check` OK.

@@ -116,6 +116,13 @@ const tacticalExercise = {
     'Congelar en 18s: revisar primer pase tras recuperar; debe ir a apoyo libre, no al tráfico.',
     'Congelar en 24s: si rojo salió, pedir repliegue protegiendo centro antes que persecución individual.'
   ],
+  coachCommands: [
+    '0-7s: “Azul, atrae y juega con apoyo; rojo, tapa el pase interior sin partirte.”',
+    '7-10s: “Robo rojo: primer control orientado, no despeje.”',
+    '10-16s: “Cinco segundos: uno aprieta balón, dos cierran dentro, los otros equilibran.”',
+    '16-21s: “Si azul recupera, primer pase seguro al comodín; no jugar otra vez al tráfico.”',
+    '21-30s: “Si rojo sale, azul protege el centro y temporiza antes de perseguir.”'
+  ],
   animationChecklist: [
     '0-7s: azul ataca/conserva; rojo ajusta distancias sin desordenarse.',
     '7-10s: rojo defiende y roba; se ve claramente quién recupera.',
@@ -588,6 +595,9 @@ ${tacticalExercise.transitionValidationRules.map((rule) => `- ${rule}`).join('\n
 
 Intervenciones del entrenador durante la animación:
 ${tacticalExercise.coachInterventions.map((intervention) => `- ${intervention}`).join('\n')}
+
+Guion verbal de 30 segundos:
+${tacticalExercise.coachCommands.map((command) => `- ${command}`).join('\n')}
 
 Checklist para animación de 30 segundos:
 ${tacticalExercise.animationChecklist.map((item) => `- ${item}`).join('\n')}

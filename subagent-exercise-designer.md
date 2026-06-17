@@ -399,6 +399,14 @@ Entrenar la reacción colectiva tras pérdida: presionar al poseedor, cerrar lí
 - 18s: revisar el primer pase tras recuperar; debe ir al apoyo libre, no al tráfico.
 - 24s: si rojo supera la presión, pedir repliegue protegiendo centro antes que persecución individual.
 
+## Guion verbal de 30 segundos
+
+- 0-7s: “Azul, atrae y juega con apoyo; rojo, tapa el pase interior sin partirte.”
+- 7-10s: “Robo rojo: primer control orientado, no despeje.”
+- 10-16s: “Cinco segundos: uno aprieta balón, dos cierran dentro, los otros equilibran.”
+- 16-21s: “Si azul recupera, primer pase seguro al comodín; no jugar otra vez al tráfico.”
+- 21-30s: “Si rojo sale, azul protege el centro y temporiza antes de perseguir.”
+
 ## Coaching points
 
 - Cinco segundos de máxima intensidad mental y física.
