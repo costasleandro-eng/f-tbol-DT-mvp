@@ -211,6 +211,7 @@
         <option value="solid" selected>Blanca continua</option>
         <option value="dashed">Blanca intermitente</option>
       </select>
+      <button id="applyZoneLineBtn">Aplicar línea a zona seleccionada</button>
       <label>Editar zona seleccionada</label>
       <div class="mini-row">
         <button id="zoneWiderBtn">+ Ancho</button>
@@ -241,7 +242,7 @@
 
       <p class="help" style="margin-top:14px">
         Uso: arrastra las fichas. Tocá una ficha para seleccionarla y poder quitarla. Con <b>Dibujar zona</b> podés marcar el terreno del ejercicio con línea blanca continua o intermitente.
-        Pulsa <b>Grabar</b>, mueve jugadores/pelota y luego pulsa <b>Reproducir</b>. Podés usar cancha completa, media cancha, área o espacio verde libre, y agregar arcos chicos/grandes.
+        Pulsa <b>Grabar</b>, mueve jugadores/pelota y luego pulsa <b>Reproducir</b>. Seleccioná una zona ya dibujada para moverla, cambiar tamaño o aplicarle línea continua/intermitente.
       </p>
       <div id="status" class="status"></div>
     </aside>
@@ -264,6 +265,7 @@
     const drawZoneBtn = document.getElementById('drawZoneBtn');
     const clearZonesBtn = document.getElementById('clearZonesBtn');
     const zoneLineType = document.getElementById('zoneLineType');
+    const applyZoneLineBtn = document.getElementById('applyZoneLineBtn');
     const zoneWiderBtn = document.getElementById('zoneWiderBtn');
     const zoneNarrowerBtn = document.getElementById('zoneNarrowerBtn');
     const zoneTallerBtn = document.getElementById('zoneTallerBtn');
@@ -637,6 +639,14 @@
     zoneTallerBtn.onclick = () => resizeSelectedZone(0, 8);
     zoneShorterBtn.onclick = () => resizeSelectedZone(0, -8);
 
+    applyZoneLineBtn.onclick = () => {
+      const z = requireSelectedZone();
+      if (!z) return;
+      z.line = zoneLineType.value;
+      drawZones();
+      statusEl.textContent = zoneLineType.value === 'dashed' ? 'Zona seleccionada cambiada a línea intermitente.' : 'Zona seleccionada cambiada a línea continua.';
+    };
+
 
     drawZoneBtn.onclick = () => {
       drawingZone = !drawingZone;
@@ -701,6 +711,7 @@
       e.preventDefault();
       e.stopPropagation();
       selectedZoneIndex = Number(idxRaw);
+      if (zones[selectedZoneIndex]?.line) zoneLineType.value = zones[selectedZoneIndex].line;
       const r = boardRect();
       const pct = pxToPct(e.clientX - r.left, e.clientY - r.top);
       const z = zones[selectedZoneIndex];
