@@ -194,7 +194,7 @@
 
       <p class="help" style="margin-top:14px">
         Uso: arrastra las fichas. Tocá una ficha para seleccionarla y poder quitarla. Con <b>Dibujar zona</b> podés marcar el terreno del ejercicio con línea blanca continua o intermitente.
-        Pulsa <b>Grabar</b>, mueve jugadores/pelota y luego pulsa <b>Reproducir</b>. Las zonas se pueden seleccionar, mover como bloque y agrandar/achicar desde la esquina amarilla.
+        Pulsa <b>Grabar</b>, mueve jugadores/pelota y luego pulsa <b>Reproducir</b>. Al dibujar una zona, el modo dibujo se apaga para que puedas moverla como bloque o agrandar/achicar desde la esquina amarilla.
       </p>
       <div id="status" class="status"></div>
     </aside>
@@ -549,12 +549,15 @@
       if (width > 2 && height > 2) {
         zones.push(normalizeZone(zoneDraft));
         selectedZoneIndex = zones.length - 1;
+        drawingZone = false;
+        drawZoneBtn.classList.remove('active');
+        board.classList.remove('draw-mode');
       }
       zoneStart = null;
       zoneDraft = null;
       board.releasePointerCapture(e.pointerId);
       drawZones();
-      statusEl.textContent = 'Terreno marcado. Podés dibujar otro o desactivar el modo dibujo.';
+      statusEl.textContent = 'Terreno marcado. Ahora podés moverlo o cambiarle el tamaño.';
     });
 
 
