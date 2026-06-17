@@ -58,6 +58,12 @@
     .box-right { right: 0; top: 25%; width: 15%; height: 50%; border: 2px solid var(--line); border-right: 0; }
     .small-left { left: 0; top: 37%; width: 6%; height: 26%; border: 2px solid var(--line); border-left: 0; }
     .small-right { right: 0; top: 37%; width: 6%; height: 26%; border: 2px solid var(--line); border-right: 0; }
+    .pitch-half .half, .pitch-half .center-circle, .pitch-half .center-dot, .pitch-half .box-left, .pitch-half .small-left { display: none; }
+    .pitch-half .box-right { right: 0; top: 18%; width: 28%; height: 64%; }
+    .pitch-half .small-right { right: 0; top: 34%; width: 12%; height: 32%; }
+    .pitch-area .half, .pitch-area .center-circle, .pitch-area .center-dot, .pitch-area .box-left, .pitch-area .small-left { display: none; }
+    .pitch-area .box-right { right: 8%; top: 8%; width: 84%; height: 84%; border: 3px solid var(--line); }
+    .pitch-area .small-right { right: 0; top: 34%; width: 14%; height: 32%; border: 3px solid var(--line); border-right: 0; }
     .path-layer { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
     .zone-layer { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; }
     .zone-shape { pointer-events: all; cursor: move; }
@@ -154,6 +160,12 @@
 
     <aside>
       <strong>Controles</strong>
+      <label for="pitchType">Tipo de cancha</label>
+      <select id="pitchType">
+        <option value="full" selected>Cancha completa</option>
+        <option value="half">Media cancha</option>
+        <option value="area">Zona de área</option>
+      </select>
       <div class="buttons">
         <button id="recordBtn" class="primary">● Grabar movimiento</button>
         <button id="playBtn">▶ Reproducir ejercicio</button>
@@ -218,6 +230,7 @@
     const board = document.getElementById('board');
     const zonesSvg = document.getElementById('zones');
     const pathsSvg = document.getElementById('paths');
+    const pitchType = document.getElementById('pitchType');
     const recordBtn = document.getElementById('recordBtn');
     const playBtn = document.getElementById('playBtn');
     const downloadVideoBtn = document.getElementById('downloadVideoBtn');
@@ -262,11 +275,24 @@
     ];
     seed.forEach(([type, x, y, label]) => createToken(type, x, y, label));
     saveInitial();
+    applyPitchType();
 
     function boardRect() { return board.getBoundingClientRect(); }
     function pctToPx(x, y) { const r = boardRect(); return { x: x / 100 * r.width, y: y / 100 * r.height }; }
     function pxToPct(x, y) { const r = boardRect(); return { x: x / r.width * 100, y: y / r.height * 100 }; }
     function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
+
+    function applyPitchType(value = pitchType.value) {
+      board.classList.toggle('pitch-half', value === 'half');
+      board.classList.toggle('pitch-area', value === 'area');
+      drawZones();
+      drawPaths();
+    }
+
+    pitchType.onchange = () => {
+      applyPitchType();
+      statusEl.textContent = pitchType.value === 'full' ? 'Cancha completa seleccionada.' : pitchType.value === 'half' ? 'Media cancha seleccionada.' : 'Zona de área seleccionada.';
+    };
 
     function createToken(type, x = 50, y = 50, label = null) {
       const el = document.createElement('div');
@@ -500,7 +526,7 @@
         track: tracks.get(el.dataset.id) || [],
         initial: initial.get(el.dataset.id) || { x: +el.dataset.x, y: +el.dataset.y }
       }));
-      return { tokens, zones: [...zones] };
+      return { pitch: pitchType.value, tokens, zones: [...zones] };
     }
 
     function clearBoardTokens() {
@@ -513,6 +539,10 @@
 
     function applyExercise(data) {
       clearBoardTokens();
+      if (data.pitch) {
+        pitchType.value = data.pitch;
+        applyPitchType(data.pitch);
+      }
       zones.length = 0;
       selectedZoneIndex = null;
       zoneAction = null;
@@ -744,6 +774,32 @@
       return { x: +el.dataset.x, y: +el.dataset.y };
     }
 
+
+    function drawPitchLines(ctx, width, height, mode) {
+      ctx.strokeStyle = 'rgba(255,255,255,.9)';
+      ctx.lineWidth = 4;
+      ctx.setLineDash([]);
+      ctx.strokeRect(2, 2, width - 4, height - 4);
+      if (mode === 'half') {
+        ctx.strokeRect(width * .72, height * .18, width * .28, height * .64);
+        ctx.strokeRect(width * .88, height * .34, width * .12, height * .32);
+        return;
+      }
+      if (mode === 'area') {
+        ctx.lineWidth = 5;
+        ctx.strokeRect(width * .08, height * .08, width * .84, height * .84);
+        ctx.strokeRect(width * .86, height * .34, width * .14, height * .32);
+        return;
+      }
+      ctx.beginPath(); ctx.moveTo(width / 2, 0); ctx.lineTo(width / 2, height); ctx.stroke();
+      ctx.beginPath(); ctx.arc(width / 2, height / 2, width * .09, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.arc(width / 2, height / 2, 5, 0, Math.PI * 2); ctx.fillStyle = 'white'; ctx.fill();
+      ctx.strokeRect(0, height * .25, width * .15, height * .5);
+      ctx.strokeRect(width * .85, height * .25, width * .15, height * .5);
+      ctx.strokeRect(0, height * .37, width * .06, height * .26);
+      ctx.strokeRect(width * .94, height * .37, width * .06, height * .26);
+    }
+
     function drawVideoFrame(ctx, width, height, progress) {
       ctx.clearRect(0, 0, width, height);
       const stripeW = width / 10;
@@ -752,17 +808,7 @@
         ctx.fillRect(i * stripeW, 0, stripeW, height);
       }
 
-      ctx.strokeStyle = 'rgba(255,255,255,.9)';
-      ctx.lineWidth = 4;
-      ctx.setLineDash([]);
-      ctx.strokeRect(2, 2, width - 4, height - 4);
-      ctx.beginPath(); ctx.moveTo(width / 2, 0); ctx.lineTo(width / 2, height); ctx.stroke();
-      ctx.beginPath(); ctx.arc(width / 2, height / 2, width * .09, 0, Math.PI * 2); ctx.stroke();
-      ctx.beginPath(); ctx.arc(width / 2, height / 2, 5, 0, Math.PI * 2); ctx.fillStyle = 'white'; ctx.fill();
-      ctx.strokeRect(0, height * .25, width * .15, height * .5);
-      ctx.strokeRect(width * .85, height * .25, width * .15, height * .5);
-      ctx.strokeRect(0, height * .37, width * .06, height * .26);
-      ctx.strokeRect(width * .94, height * .37, width * .06, height * .26);
+      drawPitchLines(ctx, width, height, pitchType.value);
 
       for (const z of zones) {
         ctx.save();
