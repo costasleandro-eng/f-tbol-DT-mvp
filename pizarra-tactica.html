@@ -74,20 +74,23 @@
       z-index: 3;
     }
     .token:active { cursor: grabbing; }
+    .token.selected { outline: 4px solid var(--accent); outline-offset: 3px; }
     .blue { background: var(--blue); }
     .red { background: var(--red); }
-    .ball { background: #f7f7f7; color: #111; width: 30px; height: 30px; border-color: #111; font-size: 16px; }
+    .ball { background: #f7f7f7; color: #111; width: 24px; height: 24px; border-color: #111; font-size: 13px; }
     .cone {
       width: 0; height: 0;
-      border-left: 18px solid transparent;
-      border-right: 18px solid transparent;
-      border-bottom: 38px solid #ff8b1a;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-bottom: 22px solid #ff8b1a;
       border-radius: 0;
       background: transparent;
       border-top: 0;
       color: transparent;
       box-shadow: none;
     }
+    .cone.small { border-left-width: 8px; border-right-width: 8px; border-bottom-width: 17px; }
+    .cone.medium { border-left-width: 11px; border-right-width: 11px; border-bottom-width: 24px; }
     aside {
       background: var(--panel);
       border: 1px solid rgba(255,255,255,.08);
@@ -153,10 +156,16 @@
         <option value="cone">Cono</option>
         <option value="ball">Pelota</option>
       </select>
+      <label for="sizeType">Tamaño</label>
+      <select id="sizeType">
+        <option value="small" selected>Chico</option>
+        <option value="medium">Mediano</option>
+      </select>
       <button id="addBtn">+ Agregar al centro</button>
+      <button id="deleteBtn" class="danger">− Quitar ficha seleccionada</button>
 
       <p class="help" style="margin-top:14px">
-        Uso: arrastra las fichas. Pulsa <b>Grabar</b>, mueve jugadores/pelota y luego pulsa <b>Reproducir</b>.
+        Uso: arrastra las fichas. Tocá una ficha para seleccionarla y poder quitarla. Pulsa <b>Grabar</b>, mueve jugadores/pelota y luego pulsa <b>Reproducir</b>.
         El prototipo dibuja los recorridos para explicar el ejercicio.
       </p>
       <div id="status" class="status"></div>
@@ -171,11 +180,14 @@
     const resetBtn = document.getElementById('resetBtn');
     const clearBtn = document.getElementById('clearBtn');
     const addBtn = document.getElementById('addBtn');
+    const deleteBtn = document.getElementById('deleteBtn');
     const addType = document.getElementById('addType');
+    const sizeType = document.getElementById('sizeType');
     const statusEl = document.getElementById('status');
 
     let recording = false;
     let selected = null;
+    let selectedToken = null;
     let offset = { x: 0, y: 0 };
     let counter = 1;
     const tracks = new Map();
@@ -184,7 +196,7 @@
     const seed = [
       ['blue', 18, 48, '1'], ['blue', 30, 34, '2'], ['blue', 30, 62, '3'], ['blue', 44, 48, '4'],
       ['red', 72, 35, '1'], ['red', 72, 61, '2'], ['red', 84, 48, '3'],
-      ['ball', 50, 50, '⚽'], ['cone', 58, 36, '']
+      ['ball', 50, 50, '⚽'], ['cone small', 58, 36, '']
     ];
     seed.forEach(([type, x, y, label]) => createToken(type, x, y, label));
     saveInitial();
@@ -196,12 +208,14 @@
 
     function createToken(type, x = 50, y = 50, label = null) {
       const el = document.createElement('div');
+      const parts = type.split(' ');
+      const baseType = parts[0];
       el.className = `token ${type}`;
       el.dataset.id = crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random());
-      el.dataset.type = type;
+      el.dataset.type = baseType;
       el.dataset.x = x;
       el.dataset.y = y;
-      el.textContent = label ?? (type === 'ball' ? '⚽' : type === 'cone' ? '' : counter++);
+      el.textContent = label ?? (baseType === 'ball' ? '⚽' : baseType === 'cone' ? '' : counter++);
       position(el, x, y);
       el.addEventListener('pointerdown', pointerDown);
       board.appendChild(el);
@@ -217,8 +231,16 @@
       el.style.top = y + '%';
     }
 
+    function selectToken(el) {
+      if (selectedToken) selectedToken.classList.remove('selected');
+      selectedToken = el;
+      if (selectedToken) selectedToken.classList.add('selected');
+      statusEl.textContent = 'Ficha seleccionada. Podés moverla o quitarla.';
+    }
+
     function pointerDown(e) {
       selected = e.currentTarget;
+      selectToken(selected);
       selected.setPointerCapture(e.pointerId);
       const r = boardRect();
       const px = pctToPx(+selected.dataset.x, +selected.dataset.y);
@@ -335,9 +357,22 @@
       statusEl.textContent = 'Recorridos limpiados.';
     };
     addBtn.onclick = () => {
-      const type = addType.value;
-      createToken(type, 50, 50);
+      const base = addType.value;
+      const size = sizeType.value;
+      const type = base === 'cone' ? `cone ${size}` : base;
+      const el = createToken(type, 50, 50);
+      selectToken(el);
       statusEl.textContent = 'Elemento agregado al centro.';
+    };
+    deleteBtn.onclick = () => {
+      if (!selectedToken) { statusEl.textContent = 'Primero seleccioná una ficha para quitarla.'; return; }
+      const id = selectedToken.dataset.id;
+      selectedToken.remove();
+      tracks.delete(id);
+      initial.delete(id);
+      selectedToken = null;
+      drawPaths();
+      statusEl.textContent = 'Ficha quitada.';
     };
     window.addEventListener('resize', drawPaths);
   </script>
