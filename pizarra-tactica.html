@@ -59,6 +59,8 @@
     .small-left { left: 0; top: 37%; width: 6%; height: 26%; border: 2px solid var(--line); border-left: 0; }
     .small-right { right: 0; top: 37%; width: 6%; height: 26%; border: 2px solid var(--line); border-right: 0; }
     .path-layer { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+    .zone-layer { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; }
+    .board-wrap.draw-mode { cursor: crosshair; }
     .token {
       position: absolute;
       width: 42px; height: 42px;
@@ -115,6 +117,7 @@
     label { display: block; color: var(--muted); font-size: 12px; margin: 10px 0 6px; }
     .help { font-size: 13px; line-height: 1.45; color: var(--muted); }
     .status { margin-top: 10px; color: var(--accent); min-height: 22px; font-size: 13px; }
+    .mini-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     @media (max-width: 850px) {
       .layout { grid-template-columns: 1fr; padding: 10px; }
       .board-wrap { min-height: 360px; }
@@ -137,6 +140,7 @@
       <div class="line box-right"></div>
       <div class="line small-left"></div>
       <div class="line small-right"></div>
+      <svg id="zones" class="zone-layer"></svg>
       <svg id="paths" class="path-layer"></svg>
     </section>
 
@@ -148,6 +152,17 @@
         <button id="resetBtn">↺ Volver al inicio</button>
         <button id="clearBtn" class="danger">Limpiar recorridos</button>
       </div>
+
+      <label>Terreno del ejercicio</label>
+      <div class="mini-row">
+        <button id="drawZoneBtn">▭ Dibujar zona</button>
+        <button id="clearZonesBtn" class="danger">Limpiar zonas</button>
+      </div>
+      <label for="zoneLineType">Línea de zona</label>
+      <select id="zoneLineType">
+        <option value="solid" selected>Blanca continua</option>
+        <option value="dashed">Blanca intermitente</option>
+      </select>
 
       <label for="addType">Agregar elemento</label>
       <select id="addType">
@@ -165,8 +180,8 @@
       <button id="deleteBtn" class="danger">− Quitar ficha seleccionada</button>
 
       <p class="help" style="margin-top:14px">
-        Uso: arrastra las fichas. Tocá una ficha para seleccionarla y poder quitarla. Pulsa <b>Grabar</b>, mueve jugadores/pelota y luego pulsa <b>Reproducir</b>.
-        El prototipo dibuja los recorridos para explicar el ejercicio.
+        Uso: arrastra las fichas. Tocá una ficha para seleccionarla y poder quitarla. Con <b>Dibujar zona</b> podés marcar el terreno del ejercicio con línea blanca continua o intermitente.
+        Pulsa <b>Grabar</b>, mueve jugadores/pelota y luego pulsa <b>Reproducir</b>.
       </p>
       <div id="status" class="status"></div>
     </aside>
@@ -174,11 +189,15 @@
 
   <script>
     const board = document.getElementById('board');
+    const zonesSvg = document.getElementById('zones');
     const pathsSvg = document.getElementById('paths');
     const recordBtn = document.getElementById('recordBtn');
     const playBtn = document.getElementById('playBtn');
     const resetBtn = document.getElementById('resetBtn');
     const clearBtn = document.getElementById('clearBtn');
+    const drawZoneBtn = document.getElementById('drawZoneBtn');
+    const clearZonesBtn = document.getElementById('clearZonesBtn');
+    const zoneLineType = document.getElementById('zoneLineType');
     const addBtn = document.getElementById('addBtn');
     const deleteBtn = document.getElementById('deleteBtn');
     const addType = document.getElementById('addType');
@@ -189,9 +208,13 @@
     let selected = null;
     let selectedToken = null;
     let offset = { x: 0, y: 0 };
+    let drawingZone = false;
+    let zoneStart = null;
+    let zoneDraft = null;
     let counter = 1;
     const tracks = new Map();
     const initial = new Map();
+    const zones = [];
 
     const seed = [
       ['blue', 18, 48, '1'], ['blue', 30, 34, '2'], ['blue', 30, 62, '3'], ['blue', 44, 48, '4'],
@@ -280,10 +303,42 @@
       tracks.set(id, arr);
     }
 
+    function setupSvgSize(svg) {
+      const r = boardRect();
+      svg.setAttribute('viewBox', `0 0 ${r.width} ${r.height}`);
+    }
+
+    function drawZones() {
+      zonesSvg.innerHTML = '';
+      setupSvgSize(zonesSvg);
+      for (const z of zones) drawZoneRect(z);
+      if (zoneDraft) drawZoneRect(zoneDraft, true);
+    }
+
+    function drawZoneRect(z, draft = false) {
+      const r = boardRect();
+      const x1 = z.x1 / 100 * r.width;
+      const y1 = z.y1 / 100 * r.height;
+      const x2 = z.x2 / 100 * r.width;
+      const y2 = z.y2 / 100 * r.height;
+      const rect = document.createElementNS('http://www.w3.org/2000/svg','rect');
+      rect.setAttribute('x', Math.min(x1, x2));
+      rect.setAttribute('y', Math.min(y1, y2));
+      rect.setAttribute('width', Math.abs(x2 - x1));
+      rect.setAttribute('height', Math.abs(y2 - y1));
+      rect.setAttribute('fill', 'rgba(255,255,255,0.045)');
+      rect.setAttribute('stroke', '#ffffff');
+      rect.setAttribute('stroke-width', draft ? '3' : '4');
+      rect.setAttribute('stroke-linejoin', 'round');
+      if (z.line === 'dashed') rect.setAttribute('stroke-dasharray', '12 9');
+      if (draft) rect.setAttribute('opacity', '0.75');
+      zonesSvg.appendChild(rect);
+    }
+
     function drawPaths() {
       pathsSvg.innerHTML = '';
       const r = boardRect();
-      pathsSvg.setAttribute('viewBox', `0 0 ${r.width} ${r.height}`);
+      setupSvgSize(pathsSvg);
       for (const [id, pts] of tracks) {
         if (pts.length < 2) continue;
         const token = document.querySelector(`[data-id="${id}"]`);
@@ -306,6 +361,53 @@
     function saveInitial() {
       document.querySelectorAll('.token').forEach(el => initial.set(el.dataset.id, { x: +el.dataset.x, y: +el.dataset.y }));
     }
+
+    drawZoneBtn.onclick = () => {
+      drawingZone = !drawingZone;
+      drawZoneBtn.classList.toggle('active', drawingZone);
+      board.classList.toggle('draw-mode', drawingZone);
+      zoneStart = null;
+      zoneDraft = null;
+      drawZones();
+      statusEl.textContent = drawingZone ? 'Modo dibujo: arrastrá sobre la cancha para marcar el terreno.' : 'Modo dibujo desactivado.';
+    };
+
+    clearZonesBtn.onclick = () => {
+      zones.length = 0;
+      zoneDraft = null;
+      drawZones();
+      statusEl.textContent = 'Zonas/terrenos limpiados.';
+    };
+
+    board.addEventListener('pointerdown', (e) => {
+      if (!drawingZone || e.target !== board) return;
+      const r = boardRect();
+      zoneStart = pxToPct(e.clientX - r.left, e.clientY - r.top);
+      zoneDraft = { x1: zoneStart.x, y1: zoneStart.y, x2: zoneStart.x, y2: zoneStart.y, line: zoneLineType.value };
+      board.setPointerCapture(e.pointerId);
+      drawZones();
+    });
+    board.addEventListener('pointermove', (e) => {
+      if (!drawingZone || !zoneStart || !zoneDraft) return;
+      const r = boardRect();
+      const x = clamp(e.clientX - r.left, 0, r.width);
+      const y = clamp(e.clientY - r.top, 0, r.height);
+      const pct = pxToPct(x, y);
+      zoneDraft.x2 = pct.x;
+      zoneDraft.y2 = pct.y;
+      drawZones();
+    });
+    board.addEventListener('pointerup', (e) => {
+      if (!drawingZone || !zoneStart || !zoneDraft) return;
+      const width = Math.abs(zoneDraft.x2 - zoneDraft.x1);
+      const height = Math.abs(zoneDraft.y2 - zoneDraft.y1);
+      if (width > 2 && height > 2) zones.push(zoneDraft);
+      zoneStart = null;
+      zoneDraft = null;
+      board.releasePointerCapture(e.pointerId);
+      drawZones();
+      statusEl.textContent = 'Terreno marcado. Podés dibujar otro o desactivar el modo dibujo.';
+    });
 
     recordBtn.onclick = () => {
       recording = !recording;
@@ -374,7 +476,7 @@
       drawPaths();
       statusEl.textContent = 'Ficha quitada.';
     };
-    window.addEventListener('resize', drawPaths);
+    window.addEventListener('resize', () => { drawZones(); drawPaths(); });
   </script>
 </body>
 </html>
