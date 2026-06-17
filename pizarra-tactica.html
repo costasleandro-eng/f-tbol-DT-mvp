@@ -191,7 +191,7 @@
 
       <p class="help" style="margin-top:14px">
         Uso: arrastra las fichas. Tocá una ficha para seleccionarla y poder quitarla. Con <b>Dibujar zona</b> podés marcar el terreno del ejercicio con línea blanca continua o intermitente.
-        Pulsa <b>Grabar</b>, mueve jugadores/pelota y luego pulsa <b>Reproducir</b>. Los recorridos se guardan para animar, pero no quedan dibujados como rayas.
+        Pulsa <b>Grabar</b>, mueve jugadores/pelota y luego pulsa <b>Reproducir</b>. Las líneas de movimiento aparecen como referencia mientras grabás, pero desaparecen al terminar.
       </p>
       <div id="status" class="status"></div>
     </aside>
@@ -300,7 +300,7 @@
         const arr = tracks.get(selected.dataset.id) || [];
         const last = arr[arr.length - 1];
         if (!last || Math.hypot(last.x - pct.x, last.y - pct.y) > 1.4) addTrackPoint(selected);
-        // El movimiento queda grabado para animar, pero no dejamos rayas visibles en la pizarra.
+        drawPaths(); // referencia visible solo mientras se graba
       }
     }
 
@@ -352,10 +352,27 @@
     }
 
     function drawPaths() {
-      // Intencionalmente solo limpiamos: las trayectorias quedan guardadas en datos
-      // para reproducir/exportar video, pero no quedan dibujadas como rayas.
       pathsSvg.innerHTML = '';
       setupSvgSize(pathsSvg);
+      if (!recording) return;
+      const r = boardRect();
+      for (const [id, pts] of tracks) {
+        if (pts.length < 2) continue;
+        const token = document.querySelector(`[data-id="${id}"]`);
+        const color = token?.classList.contains('red') ? '#ffb0b0' : token?.classList.contains('blue') ? '#b9d3ff' : '#ffe280';
+        const d = pts.map((p, i) => {
+          const px = { x: p.x / 100 * r.width, y: p.y / 100 * r.height };
+          return `${i ? 'L' : 'M'} ${px.x.toFixed(1)} ${px.y.toFixed(1)}`;
+        }).join(' ');
+        const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+        path.setAttribute('d', d);
+        path.setAttribute('fill', 'none');
+        path.setAttribute('stroke', color);
+        path.setAttribute('stroke-width', '4');
+        path.setAttribute('stroke-linecap', 'round');
+        path.setAttribute('stroke-dasharray', '8 7');
+        pathsSvg.appendChild(path);
+      }
     }
 
     function saveInitial() {
@@ -503,14 +520,16 @@
       recording = !recording;
       recordBtn.classList.toggle('active', recording);
       recordBtn.textContent = recording ? '■ Detener grabación' : '● Grabar movimiento';
-      statusEl.textContent = recording ? 'Grabando: mueve fichas para crear recorridos.' : 'Grabación detenida.';
+      statusEl.textContent = recording ? 'Grabando: mueve fichas para crear recorridos.' : 'Grabación detenida. Las líneas de referencia se ocultaron.';
       if (recording) saveInitial();
+      drawPaths();
     };
 
     playBtn.onclick = async () => {
       recording = false;
       recordBtn.classList.remove('active');
       recordBtn.textContent = '● Grabar movimiento';
+      drawPaths();
       const playable = [...tracks.entries()].filter(([, pts]) => pts.length > 1);
       if (!playable.length) { statusEl.textContent = 'Todavía no hay recorridos grabados.'; return; }
       resetPositions();
