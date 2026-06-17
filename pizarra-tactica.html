@@ -82,6 +82,9 @@
     .token.selected { outline: 4px solid var(--accent); outline-offset: 3px; }
     .blue { background: var(--blue); }
     .red { background: var(--red); }
+    .yellow { background: #ffd233; color: #1d1600; }
+    .green { background: #25b66a; }
+    .joker { background: #8b5cf6; }
     .ball { background: #f7f7f7; color: #111; width: 24px; height: 24px; border-color: #111; font-size: 13px; }
     .cone {
       width: 0; height: 0;
@@ -181,6 +184,9 @@
       <select id="addType">
         <option value="blue">Jugador azul</option>
         <option value="red">Jugador rojo</option>
+        <option value="yellow">Jugador amarillo</option>
+        <option value="green">Jugador verde</option>
+        <option value="joker">Comodín / apoyo</option>
         <option value="cone">Cono</option>
         <option value="ball">Pelota</option>
       </select>
@@ -329,6 +335,29 @@
       svg.setAttribute('viewBox', `0 0 ${r.width} ${r.height}`);
     }
 
+
+    function colorForToken(el, fallback = '#ffe280') {
+      if (!el) return fallback;
+      if (el.classList.contains('red')) return '#ffb0b0';
+      if (el.classList.contains('blue')) return '#b9d3ff';
+      if (el.classList.contains('yellow')) return '#ffd233';
+      if (el.classList.contains('green')) return '#8ff0b9';
+      if (el.classList.contains('joker')) return '#d6c4ff';
+      return fallback;
+    }
+
+    function fillForPlayerType(type) {
+      return type === 'red' ? '#e33d3d'
+        : type === 'yellow' ? '#ffd233'
+        : type === 'green' ? '#25b66a'
+        : type === 'joker' ? '#8b5cf6'
+        : '#2275ff';
+    }
+
+    function textForPlayerType(type) {
+      return type === 'yellow' ? '#1d1600' : '#fff';
+    }
+
     function normalizeZone(z) {
       const left = Math.min(z.x1, z.x2);
       const right = Math.max(z.x1, z.x2);
@@ -393,7 +422,7 @@
       for (const [id, pts] of tracks) {
         if (pts.length < 2) continue;
         const token = document.querySelector(`[data-id="${id}"]`);
-        const color = token?.classList.contains('red') ? '#ffb0b0' : token?.classList.contains('blue') ? '#b9d3ff' : '#ffe280';
+        const color = colorForToken(token);
         const d = pts.map((p, i) => {
           const px = { x: p.x / 100 * r.width, y: p.y / 100 * r.height };
           return `${i ? 'L' : 'M'} ${px.x.toFixed(1)} ${px.y.toFixed(1)}`;
@@ -721,11 +750,11 @@
           ctx.beginPath(); ctx.arc(x, y, 13, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
           ctx.fillStyle = '#111'; ctx.font = '14px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('⚽', x, y + 1);
         } else {
-          ctx.fillStyle = type === 'red' ? '#e33d3d' : '#2275ff';
+          ctx.fillStyle = fillForPlayerType(type);
           ctx.strokeStyle = '#fff';
           ctx.lineWidth = 4;
           ctx.beginPath(); ctx.arc(x, y, 22, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-          ctx.fillStyle = '#fff'; ctx.font = 'bold 18px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(el.textContent, x, y);
+          ctx.fillStyle = textForPlayerType(type); ctx.font = 'bold 18px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(el.textContent, x, y);
         }
         ctx.restore();
       });
